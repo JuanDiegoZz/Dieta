@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { AppShell, type AppRoute } from './components/AppShell'
 import { SkeletonCard } from './components/SkeletonCard'
-import { createHistory, deleteHistory, isOffline, loadBootstrap, loadWeekly, saveMeal, saveWeekly, updateMealPreference, updatePantry, type DataSource } from './data/api'
+import { createHistory, createIngredient as createIngredientRequest, deleteHistory, isOffline, loadBootstrap, loadWeekly, mergeIngredients, permanentlyDeleteMeal, saveMeal, saveWeekly, updateIngredient, updateMealPreference, updatePantry, type DataSource } from './data/api'
 const AdminScreen = lazy(() => import('./features/AdminScreen').then((module) => ({ default: module.AdminScreen })))
 import { FavoritesScreen } from './features/FavoritesScreen'
 import { HistoryScreen } from './features/HistoryScreen'
@@ -45,6 +45,7 @@ export default function App() {
   const [offline, setOffline] = useState(() => isOffline())
   const [error, setError] = useState<string | null>(null)
   const [selectedMealId, setSelectedMealId] = useState<string | null>(null)
+  const [adminDirty, setAdminDirty] = useState(false)
   const enrichedMeals = useMemo(() => enrichMealsWithCompatibility(meals, pantry), [meals, pantry])
   const selectedMeal = useMemo(() => enrichedMeals.find((meal) => meal.id === selectedMealId) ?? enrichedMeals[0], [enrichedMeals, selectedMealId])
   const visibleMeals = useMemo(() => enrichedMeals.filter((meal) => meal.active !== false && !meal.hidden), [enrichedMeals])
@@ -80,7 +81,7 @@ export default function App() {
     return () => { window.removeEventListener('popstate', onHistoryChange); window.removeEventListener('hashchange', onHistoryChange) }
   }, [])
 
-  function navigate(route: AppRoute) { setView(route); setSelectedMealId(null); writeHash(route) }
+  function navigate(route: AppRoute) { if (view === 'admin' && route !== 'admin' && adminDirty && !window.confirm('Tienes cambios sin guardar. Pulsa Cancelar para seguir editando o Aceptar para descartarlos.')) return; setAdminDirty(false); setView(route); setSelectedMealId(null); writeHash(route) }
   function openMeal(meal: MealOption) { setSelectedMealId(meal.id); setView('detail'); writeHash('detail') }
   function openKitchen(meal: MealOption) { setSelectedMealId(meal.id); setView('kitchen'); writeHash('kitchen') }
 
@@ -116,6 +117,7 @@ export default function App() {
   async function refreshCatalog() {
     const payload = await loadBootstrap()
     setMeals(payload.meals); setHistory(payload.history); setIngredients(payload.ingredients); setPantry(payload.pantry); setDataSource(payload.source ?? 'api')
+    return payload
   }
 
   async function saveAdminMeal(meal: MealOption) {
@@ -123,7 +125,36 @@ export default function App() {
     try { await saveMeal({ ...meal, components: meal.components }); await refreshCatalog() }
     catch { throw new Error(`No se pudo guardar la comida. ${dataSource === 'api' ? 'Inténtalo de nuevo.' : 'La API no está disponible; no se guardó.'}`) }
   }
-  async function changeMealActive(meal: MealOption, active: boolean) { try { await saveAdminMeal({ ...meal, active }) } catch { setError(`No se pudo actualizar el estado de la comida. ${dataSource === 'api' ? 'Inténtalo de nuevo.' : 'La API no está disponible; no se guardó.'}`) } }
+  async function changeMealActive(meal: MealOption, active: boolean) { await saveAdminMeal({ ...meal, active }) }
+  async function changeMealHidden(meal: MealOption, hidden: boolean) {
+    if (!canWrite()) throw new Error('Necesitas conexión para guardar este cambio.')
+    await updateMealPreference(meal.id, { hidden })
+    await refreshCatalog()
+  }
+  async function createAdminIngredient(name: string) {
+    if (!canWrite()) throw new Error('Necesitas conexión para guardar este cambio.')
+    const created = await createIngredientRequest(name)
+    const payload = await refreshCatalog()
+    const createdId = typeof created === 'object' && created && 'id' in created && typeof created.id === 'string' ? created.id : ''
+    const found = payload.ingredients.find((ingredient) => ingredient.id === createdId || ingredient.canonicalName.toLocaleLowerCase('es') === name.toLocaleLowerCase('es'))
+    if (!found) throw new Error('El Ingredient se guardó, pero no pudo volver a cargarse.')
+    return found
+  }
+  async function updateAdminIngredient(ingredient: Ingredient, aliases: string[]) {
+    if (!canWrite()) throw new Error('Necesitas conexión para guardar este cambio.')
+    await updateIngredient(ingredient.id, { canonicalName: ingredient.canonicalName, category: ingredient.category, aliases })
+    await refreshCatalog()
+  }
+  async function mergeAdminIngredients(source: Ingredient, destination: Ingredient) {
+    if (!canWrite()) throw new Error('Necesitas conexión para guardar este cambio.')
+    await mergeIngredients(source.id, destination.id)
+    await refreshCatalog()
+  }
+  async function deleteAdminMeal(meal: MealOption) {
+    if (!canWrite()) throw new Error('Necesitas conexión para guardar este cambio.')
+    await permanentlyDeleteMeal(meal.id)
+    await refreshCatalog()
+  }
 
   async function recordHistory(meal: MealOption) {
     if (!canWrite()) return
@@ -166,7 +197,7 @@ export default function App() {
   } else if (view === 'week') {
     content = <WeeklyScreen meals={visibleMeals} pantry={pantry} avoidRepeatDays={avoidRepeatDays} plan={weeklyPlan} onSave={savePlan} onOpen={openMeal} onPantryChange={patchPantry} />
   } else if (view === 'admin') {
-    content = <AdminScreen meals={enrichedMeals} ingredients={ingredients} onSave={saveAdminMeal} onActiveChange={(meal, active) => { void changeMealActive(meal, active) }} />
+    content = <AdminScreen meals={enrichedMeals} ingredients={ingredients} history={history} pantry={pantry} weeklyPlan={weeklyPlan} settings={{ avoidRepeatDays }} onSave={saveAdminMeal} onActiveChange={changeMealActive} onHiddenChange={changeMealHidden} onCreateIngredient={createAdminIngredient} onUpdateIngredient={updateAdminIngredient} onMergeIngredients={mergeAdminIngredients} onDeleteMeal={deleteAdminMeal} onDirtyChange={setAdminDirty} />
   } else {
     content = <PlaceholderScreen eyebrow="Mantén tu plan al día" title="Administrar" icon="settings" description="La edición del plan y sus componentes llegará en la siguiente macrofase." />
   }

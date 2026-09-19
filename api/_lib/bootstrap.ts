@@ -1,4 +1,4 @@
-import { handleApiError, json, selectAllRows, selectRows } from './supabase.js'
+import { handleApiError, json, selectAllRows } from './supabase.js'
 import { empty, getHeader, type ApiRequest, type ApiResponse } from './http.js'
 
 interface OptionRow { id: string; source_key: string; meal_slot: string; title: string; notes: string | null; active: boolean; edited: boolean; source_index: number; option_position: number; updated_at: string }
@@ -39,7 +39,7 @@ export async function getBootstrap() {
   console.info('bootstrap:personal:start')
   const personalPromise = Promise.all([
     selectAllRows<PreferenceRow>('meal_preferences', 'meal_option_id,favorite,hidden,rating,updated_at'),
-    selectRows<HistoryRow>('meal_history', 'id,meal_option_id,eaten_at,rating,note,created_at', { order: 'eaten_at.desc', limit: '300' }),
+    selectAllRows<HistoryRow>('meal_history', 'id,meal_option_id,eaten_at,rating,note,created_at', { order: 'eaten_at.desc' }),
     selectAllRows<PantryRow>('pantry_items', 'ingredient_id,available,use_soon,updated_at'),
   ]).then((result) => {
     console.info(`bootstrap:personal:done ${Date.now() - personalStartedAt}ms`)

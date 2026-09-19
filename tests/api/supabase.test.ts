@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { buildSupabaseHeaders, isUuid, selectAllRows } from '../../api/_lib/supabase.js'
+import { buildSupabaseHeaders, isUuid, rpc, selectAllRows } from '../../api/_lib/supabase.js'
 
 describe('Supabase REST headers', () => {
   it('sends secret keys only as apikey, never as a bearer token', () => {
@@ -63,6 +63,36 @@ describe('Supabase REST headers', () => {
     try {
       await expect(selectAllRows('meal_options', 'id')).rejects.toMatchObject({ code: 'DATA_PROVIDER_ERROR' })
       expect(fetchMock).toHaveBeenCalledTimes(1)
+    } finally {
+      vi.unstubAllGlobals()
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it('invokes Postgres RPC through the server-side REST boundary', async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      expect(String(input)).toBe('https://example.supabase.co/rest/v1/rpc/admin_save_meal')
+      expect(init?.method).toBe('POST')
+      expect(JSON.parse(String(init?.body))).toEqual({ payload: { title: 'Prueba' }, existing_id: null })
+      return new Response(JSON.stringify({ id: 'meal-1' }), { status: 200 })
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    vi.stubEnv('SUPABASE_URL', 'https://example.supabase.co')
+    vi.stubEnv('SUPABASE_SECRET_KEY', 'sb_secret_test')
+    try {
+      await expect(rpc<{ id: string }>('admin_save_meal', { payload: { title: 'Prueba' }, existing_id: null })).resolves.toEqual({ id: 'meal-1' })
+    } finally {
+      vi.unstubAllGlobals()
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it('maps validated RPC conflicts to safe API errors', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ code: '23503', message: 'referenced row' }), { status: 400 })))
+    vi.stubEnv('SUPABASE_URL', 'https://example.supabase.co')
+    vi.stubEnv('SUPABASE_SECRET_KEY', 'sb_secret_test')
+    try {
+      await expect(rpc('admin_delete_meal', { p_meal_id: 'meal-1' })).rejects.toMatchObject({ status: 409, code: 'ADMIN_REFERENCE_CONFLICT' })
     } finally {
       vi.unstubAllGlobals()
       vi.unstubAllEnvs()

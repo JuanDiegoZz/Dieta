@@ -54,4 +54,30 @@ describe('bootstrap request resilience', () => {
       vi.resetModules()
     }
   })
+
+  it('invalidates session cache after a confirmed catalog mutation', async () => {
+    const browser = makeWindow()
+    browser.sessionStorage.setItem('mi-dieta:bootstrap:v2', JSON.stringify({ payload: fallbackPayload, etag: '"old"' }))
+    vi.stubGlobal('window', browser)
+    try {
+      const { invalidateBootstrapCache } = await import('./api.js')
+      await invalidateBootstrapCache()
+      expect(browser.sessionStorage.getItem('mi-dieta:bootstrap:v2')).toBeNull()
+    } finally {
+      vi.unstubAllGlobals()
+      vi.resetModules()
+    }
+  })
+
+  it('accepts empty 204 responses from delete mutations', async () => {
+    vi.stubGlobal('window', makeWindow())
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(null, { status: 204 })))
+    try {
+      const { deleteHistory } = await import('./api.js')
+      await expect(deleteHistory('history-1')).resolves.toBeUndefined()
+    } finally {
+      vi.unstubAllGlobals()
+      vi.resetModules()
+    }
+  })
 })

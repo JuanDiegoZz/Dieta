@@ -1,4 +1,5 @@
 import { handleApiError, isUuid, json, patchRows } from '../_lib/supabase.js'
+import { deleteMealRecord } from '../_lib/admin-write.js'
 import { empty, pathSegment, readJsonBody, type ApiRequest, type ApiResponse } from '../_lib/http.js'
 import { saveMealRecord, validateMealPayload } from '../_lib/meal-write.js'
 
@@ -12,6 +13,10 @@ export default async function handler(request: ApiRequest, response: ApiResponse
       return json(response, await saveMealRecord(body, id))
     }
     if (request.method === 'DELETE') {
+      if (new URL(request.url ?? '/', 'http://localhost').searchParams.get('permanent') === 'true') {
+        await deleteMealRecord(id)
+        return empty(response, 204)
+      }
       await patchRows('meal_options', { id: `eq.${id}` }, { active: false, edited: true })
       return empty(response, 204)
     }

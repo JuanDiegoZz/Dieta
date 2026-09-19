@@ -29,6 +29,14 @@ pnpm diet:import
 
 El importador es reproducible y no modifica Supabase al parsear o validar.
 
+## Administrar v2
+
+Administrar permite buscar y filtrar platillos por estado y franja, editar MealOptions completos, componentes y relaciones de ingredientes, duplicar platillos, ocultar/restaurar preferencias y cambiar por separado el estado administrativo `active`. También gestiona Ingredients y aliases, fusión protegida, exportación JSON y validación de backups sin escritura.
+
+La edición usa `/api/meals` y `/api/meals/:id`, que invocan la RPC transaccional `admin_save_meal` de `supabase/migrations/003_admin_v2.sql`. Los endpoints nuevos son `PATCH /api/ingredients/:id`, `POST /api/ingredients/:id/merge` y `DELETE /api/meals/:id?permanent=true`. El ocultamiento normal sigue usando `PATCH /api/preferences/:id` y nunca cambia `active`.
+
+Para usarlo en otro proyecto, revisa el schema y aplica `003_admin_v2.sql` después de `001` y `002`. La importación de backup valida versión, estructura y referencias, pero todavía no restaura datos.
+
 ## Build y producción
 
 ```bash

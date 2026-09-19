@@ -57,6 +57,10 @@ async function request<T>(table: string, init: RequestInit = {}, query = '', opt
       })
       if (!response.ok) {
         console.error(`supabase:error table=${table} status=${response.status} duration=${Date.now() - startedAt}ms`)
+        let providerCode = ''
+        try { providerCode = String((await response.json() as { code?: unknown }).code ?? '') } catch { /* provider body is optional */ }
+        if (providerCode === '23503') throw new ApiError(409, 'ADMIN_REFERENCE_CONFLICT', 'La operación tiene referencias; conserva el registro u ocúltalo.')
+        if (providerCode === '22023') throw new ApiError(400, 'INVALID_PAYLOAD', 'Los datos enviados no son válidos.')
         throw new ApiError(502, 'DATA_PROVIDER_ERROR', 'No se pudo consultar el catalogo.')
       }
       return { status: response.status, value: response.status === 204 ? undefined : await response.json() as T }
@@ -124,6 +128,11 @@ export function patchRows<T>(table: string, filters: Record<string, string>, bod
 export function deleteRows(table: string, filters: Record<string, string>) {
   const params = new URLSearchParams(filters)
   return request<undefined>(table, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }, `?${params.toString()}`)
+}
+
+export function rpc<T>(functionName: string, body: Record<string, unknown>, options: SupabaseRequestOptions = {}) {
+  if (!/^[a-z][a-z0-9_]*$/i.test(functionName)) throw new ApiError(500, 'INVALID_RPC', 'La función de datos no es válida.')
+  return request<T>(`rpc/${encodeURIComponent(functionName)}`, { method: 'POST', body: JSON.stringify(body) }, '', options)
 }
 
 export function handleApiError(response: ApiResponse, error: unknown) {

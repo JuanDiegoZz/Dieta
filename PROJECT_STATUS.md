@@ -102,7 +102,7 @@ La migración remota `002_macrofase_c.sql` ya está aplicada y sincronizada; no 
 - Se mantiene una única implementación REST en `api/_lib/supabase.ts`, reutilizada por el BFF y el importador.
 - Preferencias y despensa usan upsert por `meal_option_id`/`ingredient_id`; funcionan aunque la fila no exista. La validación UUID acepta el formato PostgreSQL completo sin imponer bits RFC que rechazaban algunas opciones importadas.
 - `pnpm verify` ejecuta lint, typecheck, tests, build, lectura real de las 12 tablas, BFF y escrituras E2E con limpieza: favoritos 10/10, despensa, historial, semana y supervivencia ante errores de handler/proveedor.
-- `pnpm dlx supabase migration list --linked` confirma `001` y `002` aplicadas remotamente y sincronizadas. No fue necesaria una migración `003`; no se ejecutó `db push` automáticamente.
+- `pnpm dlx supabase migration list --linked` confirma `001`, `002` y `003_admin_v2.sql` aplicadas remotamente y sincronizadas.
 
 ### Resultado comprobado
 
@@ -158,6 +158,19 @@ Correccion preparada en codigo:
 
 La correccion fue validada localmente con `pnpm verify`; falta hacer push y redeploy para comprobar los Runtime Logs de Vercel.
 
+## Administrar v2 implementado
+
+- Administrar separa `Todos`, `Activos` y `Ocultos`, con filtros por las seis franjas y búsqueda por nombre, ingrediente y alias.
+- `meal_preferences.hidden` continúa siendo ocultamiento personal; `meal_options.active` continúa siendo estado administrativo. Restaurar ocultos solo actualiza `hidden`.
+- El editor permite crear, editar, duplicar, reordenar y eliminar componentes; editar cantidades, unidades, medidas caseras, texto original, importancia y relaciones de ingredientes.
+- Las nuevas comidas y ediciones completas usan `admin_save_meal` en la migración aditiva `003_admin_v2.sql`, con rollback transaccional y preservación de IDs retenidos.
+- Ingredients globales permiten renombrar conservando ID, editar aliases, crear registros y fusionar de forma transaccional conservando relaciones, cantidades y unidades.
+- La eliminación permanente solo se ofrece en Administrar y se rechaza si existen referencias en historial, semana, preferencias o tags; ocultar permanece como alternativa segura.
+- El backup se exporta desde el cliente sin secretos. La importación valida y resume, pero no escribe en DB.
+- Se añadió cobertura de dominio/API/cache para Administrar v2; la suite local queda en 72 tests.
+
+La migración `003_admin_v2.sql` fue revisada con `db push --dry-run` y aplicada al proyecto remoto mediante `pnpm dlx supabase db push --linked`; no recrea tablas ni importa datos.
+
 ## Cierre final de Macrofase D
 
 La estabilización, cache de lectura, auditoría legacy y preparación de producción están completas. Esta sección supersede los estados históricos anteriores de este documento.
@@ -166,11 +179,11 @@ La estabilización, cache de lectura, auditoría legacy y preparación de produc
 - `pnpm build`: **PASS**.
 - `pnpm lint`: **PASS**.
 - `pnpm typecheck`: **PASS**.
-- `pnpm test`: **PASS**, 13 archivos / 30 tests.
-- E2E real: conectividad de las 12 tablas, bootstrap completo, ETag/304, favoritos 10/10, despensa, historial, semana y supervivencia ante errores del handler/proveedor: **PASS**.
-- Build final: JS moderno inicial 82.84 kB gzip; JS legacy inicial 87.05 kB gzip; CSS 6.02 kB gzip. Chunks lazy: Semana 2.84 kB moderno / 2.86 kB legacy; Administrar 2.61 kB moderno / 2.63 kB legacy.
+- `pnpm test`: **PASS**, 20 archivos / 72 tests.
+- E2E real: conectividad de las 12 tablas, bootstrap completo, integridad FK, ETag/304, Administrar crear/editar/duplicar/restaurar/merge, favoritos 10/10, despensa, historial, semana y supervivencia ante errores del handler/proveedor: **PASS**.
+- Build final: JS moderno inicial 83.69 kB gzip; JS legacy inicial 89.95 kB gzip; CSS 8.03 kB gzip. Chunks lazy: Semana 5.36 kB moderno / 5.31 kB legacy; Administrar 7.90 kB moderno / 7.86 kB legacy.
 - `GET /api/health`: **PASS**; no expone secretos.
-- Migraciones remotas 001 y 002: aplicadas y sincronizadas; no hay `db push` pendiente.
+- Migraciones remotas 001, 002 y 003: aplicadas y sincronizadas; no hay `db push` pendiente.
 - El único paso externo pendiente es probar físicamente el iPad Air con `IPAD_LEGACY_TEST.md` y ejecutar un smoke test posterior al despliegue de Vercel.
 ## Corrección de contrato Node/Vercel pendiente de deployment
 

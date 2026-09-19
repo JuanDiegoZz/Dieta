@@ -146,6 +146,16 @@ La paginación se concentra en una utilidad pequeña y un control accesible de 4
 
 La implementación REST común en `api/_lib/supabase.ts` lee las variables en runtime y envía `SUPABASE_SECRET_KEY` exclusivamente en `apikey`. El importador reutiliza `upsertRows` del mismo helper, evitando que BFF e importador diverjan. `Authorization: Bearer` queda limitado al fallback legacy `SUPABASE_SERVICE_ROLE_KEY`, que sí puede ser un JWT.
 
+## Administrar v2
+
+Se conserva la separación de estados: `meal_preferences.hidden` es una preferencia personal y `meal_options.active` es una decisión administrativa. Restaurar y ocultar solo llaman a preferencias; reactivar e inactivar administrativamente solo modifican `active` mediante el guardado atómico del MealOption.
+
+La edición de un MealOption completo no usa una secuencia cliente de PATCH/DELETE/INSERT. `003_admin_v2.sql` define `admin_save_meal`, que valida slot, nombre, IDs, ingredientes y cantidades dentro de una función PostgreSQL; la transacción revierte todos los cambios si falla una relación. Los componentes y DishIngredients existentes enviados por ID se actualizan conservando su identidad; los nuevos reciben UUIDs en DB.
+
+La fusión de Ingredients usa `admin_merge_ingredients`: mueve DishIngredients, combina pantry cuando existe, conserva aliases no duplicados y elimina el origen solo después de comprobar que no quedan referencias. La eliminación permanente de comidas verifica historial, semana, preferencias y tags antes de borrar explícitamente el árbol; ante referencias devuelve conflicto y la UI recomienda ocultar.
+
+El backup es un documento `mi-dieta-backup` versión 1 generado en cliente desde bootstrap, historial, despensa, semana y configuración. La validación de importación es pura y solo muestra errores/resumen; no existe todavía un endpoint de restauración porque no sería seguro hacer importación parcial.
+
 ## Macrofase D: cache, versionado y compatibilidad
 
 Se elige IndexedDB nativo en lugar de una librería de estado o cache. El registro contiene únicamente el bootstrap y su ETag; si IndexedDB falla, la app cae a sessionStorage/memoria. El API se revalida en cada carga y un `304 Not Modified` evita descargar de nuevo el payload.

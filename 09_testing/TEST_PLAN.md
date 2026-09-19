@@ -36,6 +36,18 @@
 - modales,
 - forms.
 
+### Administrar v2
+- listar activos y ocultos sin mezclar `active` con `hidden`,
+- restaurar ocultamiento sin reactivar administrativamente,
+- editar nombre, slot, cantidad, unidad, texto original y relaciones,
+- crear, duplicar y reordenar componentes,
+- crear/buscar Ingredients y aliases,
+- renombrar conservando ID,
+- fusionar con confirmación y rollback,
+- rechazar eliminación permanente con referencias,
+- exportar backup y validar importación sin escrituras,
+- mantener cache coherente después de mutaciones confirmadas.
+
 ## Rendimiento
 
 Medir:

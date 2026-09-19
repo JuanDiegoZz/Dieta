@@ -56,3 +56,18 @@ export async function writePersistentCache<T>(record: PersistentCacheRecord<T>) 
     database.close()
   }
 }
+
+export async function deletePersistentCache(key: string) {
+  const database = await openDatabase()
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const transaction = database.transaction(STORE_NAME, 'readwrite')
+      transaction.objectStore(STORE_NAME).delete(key)
+      transaction.oncomplete = () => resolve()
+      transaction.onerror = () => reject(transaction.error ?? new Error('INDEXED_DB_DELETE_FAILED'))
+      transaction.onabort = () => reject(transaction.error ?? new Error('INDEXED_DB_DELETE_ABORTED'))
+    })
+  } finally {
+    database.close()
+  }
+}

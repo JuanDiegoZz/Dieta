@@ -10,4 +10,9 @@ describe('CRUD meal validation', () => {
     expect(validateMealPayload({ slot: 'snack', title: 'Prueba', components: [] })).toBe(false)
     expect(validateMealPayload({ slot: 'lunch', title: 'Prueba', components: [{ ingredients: [{ name: 'Pollo', importance: 'critical' }] }] })).toBe(false)
   })
+
+  it('rejects negative amounts and missing components', () => {
+    expect(validateMealPayload({ slot: 'lunch', title: 'Prueba', components: [{ ingredients: [{ name: 'Pollo', ingredientId: '11111111-1111-4111-8111-111111111111', amount: -1 }] }] })).toBe(false)
+    expect(validateMealPayload({ slot: 'lunch', title: 'Prueba', components: [] })).toBe(false)
+  })
 })

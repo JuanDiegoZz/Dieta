@@ -1,6 +1,6 @@
 import { formatLastEaten } from '../domain/recommendations'
 import type { HistoryEntry, Ingredient, MealOption, PantryItem, WeeklyPlan } from '../domain/types'
-import { readPersistentCache, writePersistentCache, type PersistentCacheRecord } from './persistent-cache'
+import { deletePersistentCache, readPersistentCache, writePersistentCache, type PersistentCacheRecord } from './persistent-cache'
 
 export type DataSource = 'api' | 'cache' | 'fallback'
 
@@ -87,6 +87,13 @@ async function writeCache(payload: BootstrapPayload, etag: string | null) {
   void writePersistentCache({ key: PERSISTENT_CACHE_KEY, payload, etag, savedAt: Date.now() }).catch(() => undefined)
 }
 
+export async function invalidateBootstrapCache() {
+  memoryCache = null
+  memoryEtag = null
+  try { window.sessionStorage.removeItem(CACHE_KEY) } catch { /* storage is optional */ }
+  await deletePersistentCache(PERSISTENT_CACHE_KEY).catch(() => undefined)
+}
+
 function resolveWithin<T>(promise: Promise<T>, milliseconds: number, fallback: T): Promise<T> {
   return new Promise((resolve) => {
     const timer = window.setTimeout(() => resolve(fallback), milliseconds)
@@ -114,6 +121,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutM
 async function fetchJson<T>(url: string, options?: RequestInit, timeoutMs = API_TIMEOUT_MS): Promise<T> {
   const response = await fetchWithTimeout(url, { ...options, headers: { Accept: 'application/json', ...(options?.headers ?? {}) } }, timeoutMs)
   if (!response.ok) throw new Error(`API ${response.status}`)
+  if (response.status === 204) return undefined as T
   return response.json() as Promise<T>
 }
 
@@ -159,19 +167,27 @@ export async function loadBootstrap(onCached?: (payload: BootstrapPayload) => vo
 }
 
 export async function updateMealPreference(mealOptionId: string, patch: { favorite?: boolean; hidden?: boolean; rating?: number | null }) {
-  return fetchJson(`/api/preferences/${encodeURIComponent(mealOptionId)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) })
+  const result = await fetchJson(`/api/preferences/${encodeURIComponent(mealOptionId)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) })
+  await invalidateBootstrapCache()
+  return result
 }
 
 export async function createHistory(entry: { mealOptionId: string; eatenAt?: string; rating?: number | null; note?: string | null }) {
-  return fetchJson('/api/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entry) })
+  const result = await fetchJson('/api/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entry) })
+  await invalidateBootstrapCache()
+  return result
 }
 
 export async function deleteHistory(id: string) {
-  return fetchJson(`/api/history/${encodeURIComponent(id)}`, { method: 'DELETE' })
+  const result = await fetchJson(`/api/history/${encodeURIComponent(id)}`, { method: 'DELETE' })
+  await invalidateBootstrapCache()
+  return result
 }
 
 export async function updatePantry(ingredientId: string, patch: { available?: boolean; useSoon?: boolean }) {
-  return fetchJson(`/api/pantry/${encodeURIComponent(ingredientId)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) })
+  const result = await fetchJson(`/api/pantry/${encodeURIComponent(ingredientId)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) })
+  await invalidateBootstrapCache()
+  return result
 }
 
 export async function loadWeekly(): Promise<WeeklyPlan | null> {
@@ -179,13 +195,41 @@ export async function loadWeekly(): Promise<WeeklyPlan | null> {
 }
 
 export async function saveWeekly(plan: WeeklyPlan) {
-  return fetchJson<WeeklyPlan>('/api/weekly', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(plan) })
+  const result = await fetchJson<WeeklyPlan>('/api/weekly', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(plan) })
+  await invalidateBootstrapCache()
+  return result
 }
 
 export async function saveMeal(meal: Partial<MealOption> & { components: MealOption['components'] }) {
   const method = meal.id ? 'PATCH' : 'POST'
   const url = meal.id ? `/api/meals/${encodeURIComponent(meal.id)}` : '/api/meals'
-  return fetchJson<MealOption>(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(meal) })
+  const result = await fetchJson<MealOption>(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(meal) })
+  await invalidateBootstrapCache()
+  return result
+}
+
+export async function createIngredient(canonicalName: string, category = 'other') {
+  const result = await fetchJson('/api/ingredients', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ canonicalName, category }) })
+  await invalidateBootstrapCache()
+  return result
+}
+
+export async function updateIngredient(id: string, body: { canonicalName: string; category: string; aliases: string[] }) {
+  const result = await fetchJson(`/api/ingredients/${encodeURIComponent(id)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+  await invalidateBootstrapCache()
+  return result
+}
+
+export async function mergeIngredients(sourceId: string, destinationId: string) {
+  const result = await fetchJson(`/api/ingredients/${encodeURIComponent(sourceId)}/merge`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ destinationId }) })
+  await invalidateBootstrapCache()
+  return result
+}
+
+export async function permanentlyDeleteMeal(id: string) {
+  const result = await fetchJson(`/api/meals/${encodeURIComponent(id)}?permanent=true`, { method: 'DELETE' })
+  await invalidateBootstrapCache()
+  return result
 }
 
 export type { BootstrapPayload }

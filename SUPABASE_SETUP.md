@@ -40,6 +40,12 @@ https://<project-ref>.supabase.co
 No incluyas `/rest/v1/`: el importador y el BFF agregan esa ruta internamente.
 
 `SUPABASE_SECRET_KEY` es la credencial principal para scripts controlados y Vercel Functions. Nunca debe tener prefijo `VITE_`, aparecer en `public/`, entrar en respuestas API o llegar al navegador. Durante la transición, el código acepta `SUPABASE_SERVICE_ROLE_KEY` como fallback legacy si `SUPABASE_SECRET_KEY` no está definida; no la uses en configuraciones nuevas.
+## Administrar v2
+
+Después de revisar el schema, aplica `supabase/migrations/003_admin_v2.sql` después de `001` y `002`. La migración define las RPCs transaccionales de administración y no modifica datos existentes por sí sola. Usa `db push --dry-run` antes de aplicarla.
+
+Administrar usa `admin_save_meal`, `admin_update_ingredient`, `admin_merge_ingredients` y `admin_delete_meal` mediante el BFF. La importación de backup solo valida el JSON y muestra un resumen; no escribe en DB.
+
 ## Desarrollo local completo
 
 El comando normal levanta Vite y los mismos handlers `api/*.ts` en un único proceso:
@@ -60,7 +66,7 @@ El fallback `public/catalog.json` solo sirve lecturas. Cuando aparece `Data sour
 
 ## Migración 002
 
-No se ejecuta automáticamente desde este repositorio. En el proyecto remoto usado por esta validación, `001` y `002` ya aparecen aplicadas y sincronizadas. Para otro proyecto, revisa primero el estado:
+No se ejecuta automáticamente desde este repositorio. En el proyecto remoto usado por esta validación, `001`, `002` y `003_admin_v2.sql` ya aparecen aplicadas y sincronizadas. Para otro proyecto, revisa primero el estado:
 
 ```bash
 pnpm dlx supabase db push --dry-run
@@ -82,4 +88,4 @@ La migración remota se comprobó con:
 pnpm dlx supabase migration list --linked
 ```
 
-El proyecto remoto tiene `001` y `002` aplicadas y sincronizadas. No hace falta ejecutar `db push` para esta corrección; si se modifica el esquema en el futuro, revisar primero con `pnpm dlx supabase db push --dry-run`.
+El proyecto remoto tiene `001`, `002` y `003_admin_v2.sql` aplicadas y sincronizadas. Si se modifica el esquema en el futuro, revisar primero con `pnpm dlx supabase db push --dry-run`.

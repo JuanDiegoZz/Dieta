@@ -5,7 +5,7 @@ import { createServer as createViteServer, type ViteDevServer } from 'vite'
 import type { ApiRequest, ApiResponse } from '../api/_lib/http.js'
 
 type Handler = (request: ApiRequest, response: ApiResponse) => void | Promise<void>
-type ApiHandlers = Record<'bootstrap' | 'health' | 'history' | 'historyById' | 'ingredients' | 'meals' | 'mealsById' | 'pantryById' | 'preferencesById' | 'weekly' | 'weeklyEntryById', Handler>
+type ApiHandlers = Record<'bootstrap' | 'health' | 'history' | 'historyById' | 'ingredients' | 'mergeIngredients' | 'meals' | 'mealsById' | 'pantryById' | 'preferencesById' | 'weekly' | 'weeklyEntryById', Handler>
 
 function safeErrorMessage(error: unknown) {
   const message = error instanceof Error ? error.message : String(error)
@@ -29,6 +29,7 @@ function route(pathname: string): Handler | null {
   if (pathname === '/api/history') return apiHandlers.history
   if (pathname.startsWith('/api/history/')) return apiHandlers.historyById
   if (pathname === '/api/ingredients') return apiHandlers.ingredients
+  if (/^\/api\/ingredients\/[^/]+\/merge$/.test(pathname)) return apiHandlers.mergeIngredients
   if (pathname === '/api/meals') return apiHandlers.meals
   if (pathname.startsWith('/api/meals/')) return apiHandlers.mealsById
   if (pathname.startsWith('/api/pantry/')) return apiHandlers.pantryById
@@ -50,12 +51,13 @@ loadLocalEnv()
 process.env.VERCEL_ENV ??= 'development'
 process.env.VERCEL ??= '1'
 
-const [bootstrapModule, healthModule, historyModule, historyByIdModule, ingredientsModule, mealsModule, mealsByIdModule, pantryByIdModule, preferencesByIdModule, weeklyModule, weeklyEntryByIdModule] = await Promise.all([
+const [bootstrapModule, healthModule, historyModule, historyByIdModule, ingredientsModule, mergeIngredientsModule, mealsModule, mealsByIdModule, pantryByIdModule, preferencesByIdModule, weeklyModule, weeklyEntryByIdModule] = await Promise.all([
   import('../api/bootstrap.js'),
   import('../api/health.js'),
   import('../api/history.js'),
   import('../api/history/[id].js'),
   import('../api/ingredients.js'),
+  import('../api/ingredients/[id]/merge.js'),
   import('../api/meals.js'),
   import('../api/meals/[id].js'),
   import('../api/pantry/[id].js'),
@@ -69,6 +71,7 @@ const apiHandlers: ApiHandlers = {
   history: historyModule.default,
   historyById: historyByIdModule.default,
   ingredients: ingredientsModule.default,
+  mergeIngredients: mergeIngredientsModule.default,
   meals: mealsModule.default,
   mealsById: mealsByIdModule.default,
   pantryById: pantryByIdModule.default,
