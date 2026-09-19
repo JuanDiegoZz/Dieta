@@ -1,4 +1,4 @@
-import { handleApiError, isUuid, json, upsertRows } from '../_lib/supabase'
+import { handleApiError, isUuid, json, upsertRows } from '../_lib/supabase.js'
 
 const allowed = new Set(['favorite', 'hidden', 'rating'])
 

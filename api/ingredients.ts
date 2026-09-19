@@ -1,5 +1,5 @@
-import { handleApiError, insertRows, json, selectRows } from './_lib/supabase'
-import { normalizeName } from '../src/domain/ingredient-normalization'
+import { handleApiError, insertRows, json, selectRows } from './_lib/supabase.js'
+import { normalizeName } from '../src/domain/ingredient-normalization.js'
 
 export default async function handler(request: Request) {
   try {

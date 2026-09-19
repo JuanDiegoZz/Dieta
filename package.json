@@ -9,6 +9,7 @@
     "build": "pnpm typecheck && vite build",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.app.json --noEmit --pretty false && tsc -p tsconfig.node.json --noEmit --pretty false && tsc -p tsconfig.scripts.json --noEmit --pretty false",
+    "typecheck:vercel": "tsc -p tsconfig.vercel.json --noEmit --pretty false",
     "test": "vitest run",
     "verify": "tsx --env-file=.env.local scripts/verify.ts",
     "smoke:api": "tsx scripts/smoke-local-api.ts",

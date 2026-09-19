@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { buildSupabaseHeaders, isUuid, selectAllRows } from './_lib/supabase'
+import { buildSupabaseHeaders, isUuid, selectAllRows } from '../../api/_lib/supabase.js'
 
 describe('Supabase REST headers', () => {
   it('sends secret keys only as apikey, never as a bearer token', () => {

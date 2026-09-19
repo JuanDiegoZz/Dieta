@@ -1,1 +1,1 @@
-export { default } from './_lib/bootstrap'
+export { default } from './_lib/bootstrap.js'

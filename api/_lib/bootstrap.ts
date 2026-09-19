@@ -1,4 +1,4 @@
-import { handleApiError, json, selectAllRows, selectRows } from './supabase'
+import { handleApiError, json, selectAllRows, selectRows } from './supabase.js'
 
 interface OptionRow { id: string; source_key: string; meal_slot: string; title: string; notes: string | null; active: boolean; edited: boolean; source_index: number; option_position: number; updated_at: string }
 interface ComponentRow { id: string; meal_option_id: string; source_label: string | null; position: number; optional: boolean; notes: string | null }

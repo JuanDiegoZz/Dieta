@@ -1,4 +1,4 @@
-import { deleteRows, handleApiError, isUuid, json } from '../_lib/supabase'
+import { deleteRows, handleApiError, isUuid, json } from '../_lib/supabase.js'
 
 export default async function handler(request: Request) {
   try {

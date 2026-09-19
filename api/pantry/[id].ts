@@ -1,5 +1,5 @@
-import { handleApiError, isUuid, json, selectRows, upsertRows } from '../_lib/supabase'
-import { mergePantryRow } from '../_lib/pantry'
+import { handleApiError, isUuid, json, selectRows, upsertRows } from '../_lib/supabase.js'
+import { mergePantryRow } from '../_lib/pantry.js'
 
 export default async function handler(request: Request) {
   try {

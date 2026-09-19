@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { validateMealPayload } from './_lib/meal-write'
+import { validateMealPayload } from '../../api/_lib/meal-write.js'
 
 describe('CRUD meal validation', () => {
   it('accepts a meal with existing ingredient references', () => {

@@ -1,5 +1,5 @@
-import { handleApiError, isUuid, json, patchRows } from '../_lib/supabase'
-import { saveMealRecord, validateMealPayload } from '../_lib/meal-write'
+import { handleApiError, isUuid, json, patchRows } from '../_lib/supabase.js'
+import { saveMealRecord, validateMealPayload } from '../_lib/meal-write.js'
 
 export default async function handler(request: Request) {
   try {

@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto'
-import { deleteRows, insertRows, isUuid, patchRows, selectRows } from './supabase'
+import { deleteRows, insertRows, isUuid, patchRows, selectRows } from './supabase.js'
 
 export interface MealPayload {
   id?: string

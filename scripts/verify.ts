@@ -230,6 +230,7 @@ async function weeklyE2E(mealIds: string[]) {
 async function run() {
   runCommand(pnpm, ['lint'])
   runCommand(pnpm, ['typecheck'])
+  runCommand(pnpm, ['typecheck:vercel'])
   runCommand(pnpm, ['test'])
   runCommand(pnpm, ['build'])
 

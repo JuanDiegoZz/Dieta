@@ -1,4 +1,4 @@
-import { handleApiError, json, selectRows } from './_lib/supabase'
+import { handleApiError, json, selectRows } from './_lib/supabase.js'
 
 export default async function handler(request?: Request) {
   try {

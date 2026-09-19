@@ -1,4 +1,4 @@
-import { handleApiError, insertRows, isUuid, json } from './_lib/supabase'
+import { handleApiError, insertRows, isUuid, json } from './_lib/supabase.js'
 
 export default async function handler(request: Request) {
   try {

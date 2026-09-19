@@ -1,4 +1,4 @@
-import { handleApiError, insertRows, isUuid, json, selectRows, upsertRows } from './_lib/supabase'
+import { handleApiError, insertRows, isUuid, json, selectRows, upsertRows } from './_lib/supabase.js'
 
 const slots = new Set(['breakfast', 'midday', 'lunch', 'afternoon', 'dinner'])
 
