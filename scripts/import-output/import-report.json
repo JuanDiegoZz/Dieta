@@ -1,0 +1,60 @@
+{
+  "sourceFile": "dieta.docx",
+  "sourceHash": "e377ef53e06d30125a222625a8c90d056a7ed90c62aee96cf993d77926cfd548",
+  "parsedAt": "2026-09-19T02:57:13.850Z",
+  "stats": {
+    "dailyPlans": 55,
+    "mealOptions": 276,
+    "mealOptionsBySlot": {
+      "wake_up": 3,
+      "breakfast": 55,
+      "midday": 55,
+      "lunch": 54,
+      "afternoon": 54,
+      "dinner": 55
+    },
+    "components": 314,
+    "dishIngredients": 1370,
+    "uniqueIngredients": 321,
+    "aliases": 25,
+    "notes": 50,
+    "warnings": 3,
+    "potentialDuplicates": 16,
+    "linesUnclassified": 0,
+    "linesWithoutSlot": 0,
+    "orphanIngredients": 0,
+    "orphanNotes": 0,
+    "fusedLines": 22,
+    "repairedLineBreaks": 0,
+    "mealOptionsWithoutIngredients": 0
+  },
+  "warnings": [
+    {
+      "code": "approximate-quantity",
+      "severity": "warning",
+      "message": "La cantidad está marcada como aproximada.",
+      "sourceIndex": 1619,
+      "rawText": "Granola — 2 cucharadas (aproximadamente)",
+      "planIndex": 42,
+      "slot": "midday"
+    },
+    {
+      "code": "approximate-quantity",
+      "severity": "warning",
+      "message": "La cantidad está marcada como aproximada.",
+      "sourceIndex": 1627,
+      "rawText": "Ejotes cocidos — 63 g (aproximadamente ¾ taza)",
+      "planIndex": 42,
+      "slot": "lunch"
+    },
+    {
+      "code": "unspecified-quantity",
+      "severity": "warning",
+      "message": "La fuente declara una cantidad no especificada; no se asumió un valor.",
+      "sourceIndex": 1982,
+      "rawText": "Pera — cantidad no especificada (se asume 1 pieza)",
+      "planIndex": 51,
+      "slot": "afternoon"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+DIET REPAIR HUMAN REVIEW — READ ONLY
+Fuente: dieta.docx
+Catálogo consultado: Supabase catalog read-only
+
+1. Jugo verde
+Plan index: 42
+Franja: wake_up
+Source key nueva: dieta.docx:plan:42:slot:wake_up:option:0
+Identificador actual: 3d4fe9df-138a-4b3b-8255-8ac08ccaac30
+Source key actual: dietacompleta.docx:plan:42:slot:wake_up:option:0
+Nivel de confianza: ALTA — planIndex + slot únicos
+
+COMPONENTES ACTUALES
+(componente principal): Agua — 100 ml; Piña (cualquier variedad) — 34 g (½ taza); Apio — 20 g (¾ pieza); Espinaca cruda — 15 g (¼ taza); Perejil picado — 2 unidad (unidades); Stevia — 1 g (1 sobre)
+
+COMPONENTES SEGÚN dieta.docx
+(componente principal): Agua — 100 ml; Piña (cualquier variedad) — 34 g (½ taza); Apio — 20 g (¾ pieza); Espinaca cruda — 15 g (¼ taza); Perejil picado — 2 unidad (unidades); Stevia — 1 g (1 sobre)
+
+INGREDIENTES ACTUALES
+- Agua — 100 ml [principal]
+- Piña (cualquier variedad) — 34 g (½ taza) [principal]
+- Apio — 20 g (¾ pieza) [principal]
+- Espinaca cruda — 15 g (¼ taza) [principal]
+- Perejil picado — 2 unidad (unidades) [principal]
+- Stevia — 1 g (1 sobre) [principal]
+
+INGREDIENTES SEGÚN dieta.docx
+- Agua — 100 ml [principal]
+- Piña (cualquier variedad) — 34 g (½ taza) [principal]
+- Apio — 20 g (¾ pieza) [principal]
+- Espinaca cruda — 15 g (¼ taza) [principal]
+- Perejil picado — 2 unidad (unidades) [principal]
+- Stevia — 1 g (1 sobre) [principal]
+
+RELACIONES QUE SE ELIMINARÍAN
+- Ninguna
+
+RELACIONES QUE SE AÑADIRÍAN
+- Ninguna
+
+CANTIDADES QUE CAMBIARÍAN
+- Ninguna
+
+COMPONENTES QUE CAMBIARÍAN
+- Ninguno
+
+Notas: sin cambios
+
+------------------------------------------------------------------------
+
+RESUMEN
+10 MealOptions afectadas
+9 relaciones a eliminar
+0 relaciones a añadir
+7 cantidades a cambiar
+5 componentes a cambiar
+0 ambiguas
+0 nuevas
+0 eliminadas
+
+No se escribió en Supabase. No se ejecutó repair. No se modificaron datos personales.

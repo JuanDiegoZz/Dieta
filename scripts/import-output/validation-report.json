@@ -1,0 +1,32 @@
+{
+  "valid": true,
+  "checks": {
+    "hasDailyPlans": true,
+    "hasMainSlots": true,
+    "hasComponents": true,
+    "hasIngredients": true,
+    "stableKeys": true
+  },
+  "errors": [],
+  "stats": {
+    "dailyPlans": 55,
+    "mealOptions": 276,
+    "mealOptionsBySlot": {
+      "wake_up": 3,
+      "breakfast": 55,
+      "midday": 55,
+      "lunch": 54,
+      "afternoon": 54,
+      "dinner": 55
+    },
+    "components": 312,
+    "dishIngredients": 1367,
+    "uniqueIngredients": 323,
+    "aliases": 25,
+    "notes": 50,
+    "warnings": 6,
+    "potentialDuplicates": 16
+  },
+  "warnings": 6,
+  "recommendation": "Revisar warnings antes de ejecutar diet:import."
+}

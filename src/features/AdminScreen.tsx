@@ -1,0 +1,62 @@
+import { useEffect, useState } from 'react'
+import { EmptyState } from '../components/EmptyState'
+import { Icon } from '../components/Icon'
+import { Pagination } from '../components/Pagination'
+import { clampPage, pageCount, paginate } from '../domain/pagination'
+import type { DishComponent, DishIngredient, Ingredient, MealOption, MealSlot } from '../domain/types'
+
+const slots: Array<[MealSlot, string]> = [['breakfast', 'Desayuno'], ['midday', 'Medio día'], ['lunch', 'Comida'], ['afternoon', 'Media tarde'], ['dinner', 'Cena'], ['wake_up', 'Al despertar']]
+function blankIngredient(): DishIngredient { return { id: `new-ingredient-${Date.now()}`, ingredientId: '', name: '', quantity: '', aliases: [], amount: null, unit: null, householdMeasure: '', householdAmount: null, householdUnit: null, optional: false, importance: 'normal' } }
+function blankComponent(): DishComponent { return { id: `new-component-${Date.now()}`, label: 'Componente', ingredients: [blankIngredient()] } }
+function blankMeal(): MealOption { return { id: '', slot: 'lunch', title: '', summary: '', tags: [], favorite: false, availability: null, lastEaten: 'Nunca', components: [blankComponent()] } }
+function cloneMeal(meal: MealOption): MealOption { return { ...meal, id: '', title: `Copia de ${meal.title}`, components: meal.components.map((component) => ({ ...component, id: '', ingredients: component.ingredients.map((ingredient) => ({ ...ingredient, id: '', aliases: [...ingredient.aliases] })) })) } }
+
+interface AdminProps { meals: MealOption[]; ingredients: Ingredient[]; onSave: (meal: MealOption) => Promise<void>; onActiveChange: (meal: MealOption, active: boolean) => void }
+
+export function AdminScreen({ meals, ingredients, onSave, onActiveChange }: AdminProps) {
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [draft, setDraft] = useState<MealOption | null>(null)
+  const [showInactive, setShowInactive] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const allVisible = meals.filter((meal) => showInactive || meal.active !== false)
+  const [page, setPage] = useState(1)
+  const pages = pageCount(allVisible.length, 12)
+  const safePage = clampPage(page, allVisible.length, 12)
+  const visible = paginate(allVisible, safePage, 12)
+
+  useEffect(() => { if (selectedId) setDraft(meals.find((meal) => meal.id === selectedId) ?? null) }, [meals, selectedId])
+  useEffect(() => { setPage(1) }, [showInactive])
+  useEffect(() => { setPage((current) => clampPage(current, allVisible.length, 12)) }, [allVisible.length])
+
+  function edit(meal: MealOption) { setSelectedId(meal.id); setDraft({ ...meal, components: meal.components.map((component) => ({ ...component, ingredients: component.ingredients.map((ingredient) => ({ ...ingredient, aliases: [...ingredient.aliases] })) })) }) }
+  function updateDraft(patch: Partial<MealOption>) { setDraft((current) => current ? { ...current, ...patch } : current) }
+  function updateComponent(index: number, patch: Partial<DishComponent>) { setDraft((current) => current ? { ...current, components: current.components.map((component, item) => item === index ? { ...component, ...patch } : component) } : current) }
+  function updateIngredient(componentIndex: number, ingredientIndex: number, patch: Partial<DishIngredient>) { setDraft((current) => current ? { ...current, components: current.components.map((component, index) => index === componentIndex ? { ...component, ingredients: component.ingredients.map((ingredient, item) => item === ingredientIndex ? { ...ingredient, ...patch } : ingredient) } : component) } : current) }
+  function moveComponent(index: number, direction: -1 | 1) { setDraft((current) => { if (!current) return current; const components = [...current.components]; const target = index + direction; if (target < 0 || target >= components.length) return current; [components[index], components[target]] = [components[target], components[index]]; return { ...current, components } }) }
+  async function save() { if (!draft || !draft.title.trim()) { setError('Escribe un nombre para la comida.'); return } setSaving(true); setError(null); try { await onSave(draft); setSelectedId(null); setDraft(null) } catch (saveError) { setError(saveError instanceof Error ? saveError.message : 'Revisa que cada ingrediente tenga una selección válida e inténtalo de nuevo.') } finally { setSaving(false) } }
+
+  function newMeal() { setSelectedId(null); setError(null); setDraft(blankMeal()) }
+
+  return <div className="page admin-page">
+    <header className="page-header"><div><p className="page-kicker">Mantén tu plan fiel a ti</p><h1>Administrar</h1><p className="page-subtitle">Edita opciones y conserva siempre su origen.</p></div><button className="button button--primary" onClick={newMeal} type="button"><Icon name="sparkles" size={16} /> Nueva comida</button></header>
+    <div className="admin-layout">
+      <aside className="admin-list-panel">
+        <div className="admin-list-panel__heading"><div><p className="section-kicker">Catálogo</p><h2>Comidas</h2></div><span>{allVisible.length}</span></div>
+        <label className="check-control admin-list-panel__filter"><input checked={showInactive} onChange={(event) => setShowInactive(event.target.checked)} type="checkbox" /> Mostrar desactivadas</label>
+        <div className="admin-list">{visible.map((meal) => <button className={`admin-list__item${draft?.id === meal.id ? ' is-selected' : ''}${meal.active === false ? ' is-inactive' : ''}`} key={meal.id} onClick={() => edit(meal)} type="button"><strong>{meal.title}</strong><small>{slots.find(([value]) => value === meal.slot)?.[1] ?? meal.slot}{meal.active === false ? ' · Desactivada' : ''}</small></button>)}{!visible.length && <EmptyState title="No hay opciones" message="Crea una nueva comida para empezar." />}</div>
+        <Pagination page={safePage} pages={pages} onChange={setPage} />
+      </aside>
+      <section className="admin-editor">{draft ? <>
+        {error && <div className="status-banner" role="alert">{error}</div>}
+        <div className="editor-heading"><div><p className="section-kicker">{draft.id ? 'Editar opción' : 'Nueva opción'}</p><h2>{draft.title || 'Sin título'}</h2><p className="editor-heading__hint">Los cambios se guardan en la opción seleccionada.</p></div><div className="editor-actions"><button className="button button--secondary" onClick={() => setDraft(draft.id ? cloneMeal(draft) : blankMeal())} type="button">{draft.id ? 'Duplicar' : 'Limpiar'}</button>{draft.id && <button className="button button--secondary" onClick={() => onActiveChange(draft, draft.active === false)} type="button">{draft.active === false ? 'Reactivar' : 'Desactivar'}</button>}</div></div>
+        <section className="editor-block"><div className="editor-block__heading"><div><p className="section-kicker">Información base</p><h3>Datos generales</h3></div><span>01</span></div><div className="editor-form-grid"><label className="form-field form-field--wide"><span>Nombre</span><input value={draft.title} onChange={(event) => updateDraft({ title: event.target.value })} /></label><label className="form-field"><span>Franja</span><select value={draft.slot} onChange={(event) => updateDraft({ slot: event.target.value as MealSlot })}>{slots.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label><label className="form-field form-field--wide"><span>Notas</span><textarea value={draft.note ?? ''} onChange={(event) => updateDraft({ note: event.target.value })} rows={3} /></label></div></section>
+        <section className="editor-block editor-components"><div className="editor-block__heading"><div><p className="section-kicker">Estructura del plato</p><h3>Componentes</h3></div><button className="text-button" onClick={() => setDraft({ ...draft, components: [...draft.components, blankComponent()] })} type="button">+ Añadir componente</button></div>
+          {draft.components.map((component, componentIndex) => <article className="component-editor" key={component.id || componentIndex}><div className="component-editor__heading"><div className="component-editor__title"><span className="component-index">{componentIndex + 1 < 10 ? `0${componentIndex + 1}` : componentIndex + 1}</span><input aria-label={`Nombre del componente ${componentIndex + 1}`} value={component.label ?? ''} onChange={(event) => updateComponent(componentIndex, { label: event.target.value })} placeholder="Nombre del componente" /></div><div className="component-editor__actions"><button className="icon-button" aria-label="Subir componente" disabled={componentIndex === 0} onClick={() => moveComponent(componentIndex, -1)} type="button">↑</button><button className="icon-button" aria-label="Bajar componente" disabled={componentIndex === draft.components.length - 1} onClick={() => moveComponent(componentIndex, 1)} type="button">↓</button><button className="text-button text-button--muted" onClick={() => setDraft({ ...draft, components: draft.components.filter((_, index) => index !== componentIndex) })} type="button">Eliminar</button></div><label className="check-control component-optional"><input checked={!!component.optional} onChange={(event) => updateComponent(componentIndex, { optional: event.target.checked })} type="checkbox" /> Opcional</label></div><label className="component-note"><span>Nota del componente</span><input value={component.note ?? ''} onChange={(event) => updateComponent(componentIndex, { note: event.target.value })} placeholder="Ej. servir aparte" /></label>
+            <div className="ingredient-list-editor">{component.ingredients.map((ingredient, ingredientIndex) => <div className="ingredient-editor" key={ingredient.id || ingredientIndex}><label><span>Ingrediente</span><select value={ingredient.ingredientId ?? ''} onChange={(event) => { const selected = ingredients.find((item) => item.id === event.target.value); updateIngredient(componentIndex, ingredientIndex, { ingredientId: event.target.value, name: selected?.canonicalName ?? ingredient.name, aliases: selected?.aliases ?? ingredient.aliases }) }}><option value="">Selecciona ingrediente</option>{ingredients.filter((item) => item.active).map((item) => <option key={item.id} value={item.id}>{item.canonicalName}</option>)}</select></label><label><span>Cantidad</span><input value={ingredient.amount ?? ''} onChange={(event) => updateIngredient(componentIndex, ingredientIndex, { amount: event.target.value ? Number(event.target.value) : null })} placeholder="—" type="number" /></label><label><span>Unidad</span><input value={ingredient.unit ?? ''} onChange={(event) => updateIngredient(componentIndex, ingredientIndex, { unit: event.target.value || null })} placeholder="g, ml…" /></label><label><span>Medida casera</span><input value={ingredient.householdMeasure ?? ''} onChange={(event) => updateIngredient(componentIndex, ingredientIndex, { householdMeasure: event.target.value })} placeholder="1 taza" /></label><label><span>Importancia</span><select value={ingredient.importance ?? 'normal'} onChange={(event) => updateIngredient(componentIndex, ingredientIndex, { importance: event.target.value })}><option value="primary">Principal</option><option value="normal">Normal</option><option value="minor">Menor</option><option value="optional">Opcional</option></select></label><label className="check-control ingredient-optional"><input checked={!!ingredient.optional} onChange={(event) => updateIngredient(componentIndex, ingredientIndex, { optional: event.target.checked })} type="checkbox" /> Opcional</label><button className="text-button text-button--muted ingredient-remove" onClick={() => updateComponent(componentIndex, { ingredients: component.ingredients.filter((_, index) => index !== ingredientIndex) })} type="button">Quitar</button></div>)}</div><button className="text-button component-add-ingredient" onClick={() => updateComponent(componentIndex, { ingredients: [...component.ingredients, blankIngredient()] })} type="button">+ Añadir ingrediente</button></article>)}
+        </section>
+        <div className="editor-save"><button className="button button--primary" disabled={saving} onClick={() => { void save() }} type="button">{saving ? 'Guardando…' : 'Guardar cambios'}</button></div>
+      </> : <EmptyState title="Selecciona una opción" message="Elige una comida o crea una nueva para editarla." action={{ label: 'Nueva comida', onClick: newMeal }} />}</section>
+    </div>
+  </div>
+}

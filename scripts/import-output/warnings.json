@@ -1,0 +1,29 @@
+[
+  {
+    "code": "approximate-quantity",
+    "severity": "warning",
+    "message": "La cantidad está marcada como aproximada.",
+    "sourceIndex": 1619,
+    "rawText": "Granola — 2 cucharadas (aproximadamente)",
+    "planIndex": 42,
+    "slot": "midday"
+  },
+  {
+    "code": "approximate-quantity",
+    "severity": "warning",
+    "message": "La cantidad está marcada como aproximada.",
+    "sourceIndex": 1627,
+    "rawText": "Ejotes cocidos — 63 g (aproximadamente ¾ taza)",
+    "planIndex": 42,
+    "slot": "lunch"
+  },
+  {
+    "code": "unspecified-quantity",
+    "severity": "warning",
+    "message": "La fuente declara una cantidad no especificada; no se asumió un valor.",
+    "sourceIndex": 1982,
+    "rawText": "Pera — cantidad no especificada (se asume 1 pieza)",
+    "planIndex": 51,
+    "slot": "afternoon"
+  }
+]

@@ -1,0 +1,1706 @@
+DIET REPAIR DRY RUN — READ ONLY
+Data source: Supabase catalog read-only
+Generated source: dieta.docx
+
+MEALOPTION_COUNT_RECONCILIATION
+{
+  "currentSupabase": 276,
+  "preliminaryNewSource": 272,
+  "correctedNewSource": 276,
+  "preliminaryUnderCountRecovered": 4,
+  "currentMinusCorrected": 0,
+  "classification": {
+    "presentInSupabaseNotNewSource": [],
+    "presentInNewSourceNotSupabase": [],
+    "likelyParsingLoss": [
+      {
+        "kind": "fused-line",
+        "sourceIndex": 52,
+        "rawText": "Crema de cacahuate sin azúcar — 30 ml (2 cucharadas soperas) Manzana con piel — 106 g (1 pieza) ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 74,
+        "rawText": "Pimiento verde — 45 g (½ taza) • Cebolla blanca — 25 g Quinoa — 120 g (½ taza) ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 102,
+        "rawText": "Queso cottage muy bajo en grasa — 48 g (3 cucharadas) Almendras — 15 g (15 piezas) Cena ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 155,
+        "rawText": "Pechuga de pollo empanizada — 30 g (1 unidad) Vinagreta miel mostaza (opcional) ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 252,
+        "rawText": "Jugo de limón — 20 ml (2 piezas) • Chía — 5 g (1 cucharadita) Stevia (endulzante) — 1 g (1 pieza) Calabacita rellena de atún ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 263,
+        "rawText": "Yogur natural bajo en grasa — 180 g (1 taza) Nota: El yogur puede ser endulzado sin calorías. ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 342,
+        "rawText": "Plan de Alimentación Diario Desayuno ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 372,
+        "rawText": "Zanahoria — 40 g (½ taza) Acompañamientos de la cena ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 375,
+        "rawText": "Ensalada adicional: Lechuga — 45 g (1 taza), Tomate Cherry — 50 g (5 piezas) ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 376,
+        "rawText": "Agua de limón con chía: Agua — 300 ml, Jugo de limón — 20 ml (2 piezas), Chía — 5 g (1 cucharadita) ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 556,
+        "rawText": "Pimienta negra (especia) — 1 g (⅕ cucharadita) Comida ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 646,
+        "rawText": "Cubitos de caldo de pollo seco — 4.8 g (1 pieza) Nota: El caldo de pollo puede ser natural o en cubos. ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 665,
+        "rawText": "Frijoles cocidos — 86 g (½ taza) Nota: Puedes agregar salsa casera. ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 826,
+        "rawText": "Yogur natural light — 90 g (½ taza) Nota: Hervir el betabel. ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 1003,
+        "rawText": "Arándano rojo (pasa) — 20 g Hot cakes de avena y plátano ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 1276,
+        "rawText": "Jugo de limón natural — 10 ml (0.1 taza) Acompañamientos ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 1429,
+        "rawText": "Pan integral — 70 g (2 piezas) Pechuga de pavo — 40 g (2 rebanadas) ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 1585,
+        "rawText": "Pimienta negra — 1 g (½ cucharadita) Milanesa de res con salsa ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 1843,
+        "rawText": "Nota: Calienta la leche, licua con los ingredientes y puedes volver a calentar si es necesario. Medio día ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 1940,
+        "rawText": "Tortilla de maíz — 90 g (3 piezas) Nota: Pimiento rojo y verde. ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 1968,
+        "rawText": "Pan integral — 35 g (1 pieza) Espinaca cruda — 60 g (1 taza) ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      },
+      {
+        "kind": "fused-line",
+        "sourceIndex": 2077,
+        "rawText": "Aceite de oliva — 10 ml (2 cucharaditas) Nota: Dorar por 2 a 3 minutos. ",
+        "interpretation": "Separar líneas o entidades fusionadas."
+      }
+    ],
+    "duplicatesOrVariants": [
+      {
+        "planIndex": 6,
+        "slot": "wake_up",
+        "title": "Al despertar",
+        "sourceIndex": 236,
+        "sourceKey": "dieta.docx:plan:6:slot:wake_up:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Agua",
+                "amount": 240,
+                "unit": "ml",
+                "householdText": null,
+                "originalText": "Agua — 240 ml"
+              },
+              {
+                "name": "Vinagre",
+                "amount": 10,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Vinagre — 10 g"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Agua",
+            "amount": 240,
+            "unit": "ml",
+            "householdText": null,
+            "originalText": "Agua — 240 ml",
+            "componentLabel": null
+          },
+          {
+            "name": "Vinagre",
+            "amount": 10,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Vinagre — 10 g",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 13,
+        "slot": "breakfast",
+        "title": "Sándwich de huevo y jamón",
+        "sourceIndex": 502,
+        "sourceKey": "dieta.docx:plan:13:slot:breakfast:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Huevo entero frito",
+                "amount": 46,
+                "unit": "g",
+                "householdText": "1 pieza",
+                "originalText": "Huevo entero frito — 46 g (1 pieza)"
+              },
+              {
+                "name": "Thins Bimbo",
+                "amount": 71.67,
+                "unit": "g",
+                "householdText": "2 piezas",
+                "originalText": "Thins Bimbo — 71.67 g (2 piezas)"
+              },
+              {
+                "name": "Jamón de pavo",
+                "amount": 42,
+                "unit": "g",
+                "householdText": "2 rebanadas",
+                "originalText": "Jamón de pavo — 42 g (2 rebanadas)"
+              },
+              {
+                "name": "Cebolla morada",
+                "amount": 5,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Cebolla morada — 5 g"
+              },
+              {
+                "name": "Aceite de oliva",
+                "amount": 10,
+                "unit": "ml",
+                "householdText": "2 cucharaditas",
+                "originalText": "Aceite de oliva — 10 ml (2 cucharaditas)"
+              },
+              {
+                "name": "Queso panela",
+                "amount": 40,
+                "unit": "g",
+                "householdText": "1 rebanada",
+                "originalText": "Queso panela — 40 g (1 rebanada)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Huevo entero frito",
+            "amount": 46,
+            "unit": "g",
+            "householdText": "1 pieza",
+            "originalText": "Huevo entero frito — 46 g (1 pieza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Thins Bimbo",
+            "amount": 71.67,
+            "unit": "g",
+            "householdText": "2 piezas",
+            "originalText": "Thins Bimbo — 71.67 g (2 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Jamón de pavo",
+            "amount": 42,
+            "unit": "g",
+            "householdText": "2 rebanadas",
+            "originalText": "Jamón de pavo — 42 g (2 rebanadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Cebolla morada",
+            "amount": 5,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Cebolla morada — 5 g",
+            "componentLabel": null
+          },
+          {
+            "name": "Aceite de oliva",
+            "amount": 10,
+            "unit": "ml",
+            "householdText": "2 cucharaditas",
+            "originalText": "Aceite de oliva — 10 ml (2 cucharaditas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Queso panela",
+            "amount": 40,
+            "unit": "g",
+            "householdText": "1 rebanada",
+            "originalText": "Queso panela — 40 g (1 rebanada)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 13,
+        "slot": "midday",
+        "title": "Pan con frutos secos",
+        "sourceIndex": 510,
+        "sourceKey": "dieta.docx:plan:13:slot:midday:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Pan de caja",
+                "amount": 30,
+                "unit": "g",
+                "householdText": "1 pieza",
+                "originalText": "Pan de caja — 30 g (1 pieza)"
+              },
+              {
+                "name": "Frutos secos",
+                "amount": 21,
+                "unit": "g",
+                "householdText": "3 cucharadas",
+                "originalText": "Frutos secos — 21 g (3 cucharadas)"
+              },
+              {
+                "name": "Crema de cacahuate natural",
+                "amount": 15,
+                "unit": "ml",
+                "householdText": "1 cucharón",
+                "originalText": "Crema de cacahuate natural — 15 ml (1 cucharón)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Pan de caja",
+            "amount": 30,
+            "unit": "g",
+            "householdText": "1 pieza",
+            "originalText": "Pan de caja — 30 g (1 pieza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Frutos secos",
+            "amount": 21,
+            "unit": "g",
+            "householdText": "3 cucharadas",
+            "originalText": "Frutos secos — 21 g (3 cucharadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Crema de cacahuate natural",
+            "amount": 15,
+            "unit": "ml",
+            "householdText": "1 cucharón",
+            "originalText": "Crema de cacahuate natural — 15 ml (1 cucharón)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 24,
+        "slot": "lunch",
+        "title": "Bowl de pollo",
+        "sourceIndex": 933,
+        "sourceKey": "dieta.docx:plan:24:slot:lunch:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Arroz blanco cocido",
+                "amount": 100,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Arroz blanco cocido — 100 g (½ taza)"
+              },
+              {
+                "name": "Aguacate",
+                "amount": 30,
+                "unit": "g",
+                "householdText": "⅓ pieza",
+                "originalText": "Aguacate — 30 g (⅓ pieza)"
+              },
+              {
+                "name": "Pechuga de pollo a la plancha sin piel",
+                "amount": 90,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Pechuga de pollo a la plancha sin piel — 90 g"
+              },
+              {
+                "name": "Tomate",
+                "amount": 55,
+                "unit": "g",
+                "householdText": "¾ pieza",
+                "originalText": "Tomate — 55 g (¾ pieza)"
+              },
+              {
+                "name": "Brócoli cocido",
+                "amount": 35,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Brócoli cocido — 35 g (½ taza)"
+              },
+              {
+                "name": "Salsa de soja y trigo baja en sodio",
+                "amount": 10,
+                "unit": "g",
+                "householdText": "2 cucharaditas",
+                "originalText": "Salsa de soja y trigo baja en sodio — 10 g (2 cucharaditas)"
+              },
+              {
+                "name": "Aceite de oliva",
+                "amount": 5,
+                "unit": "ml",
+                "householdText": "1 cucharadita",
+                "originalText": "Aceite de oliva — 5 ml (1 cucharadita)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Arroz blanco cocido",
+            "amount": 100,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Arroz blanco cocido — 100 g (½ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Aguacate",
+            "amount": 30,
+            "unit": "g",
+            "householdText": "⅓ pieza",
+            "originalText": "Aguacate — 30 g (⅓ pieza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pechuga de pollo a la plancha sin piel",
+            "amount": 90,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Pechuga de pollo a la plancha sin piel — 90 g",
+            "componentLabel": null
+          },
+          {
+            "name": "Tomate",
+            "amount": 55,
+            "unit": "g",
+            "householdText": "¾ pieza",
+            "originalText": "Tomate — 55 g (¾ pieza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Brócoli cocido",
+            "amount": 35,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Brócoli cocido — 35 g (½ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Salsa de soja y trigo baja en sodio",
+            "amount": 10,
+            "unit": "g",
+            "householdText": "2 cucharaditas",
+            "originalText": "Salsa de soja y trigo baja en sodio — 10 g (2 cucharaditas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Aceite de oliva",
+            "amount": 5,
+            "unit": "ml",
+            "householdText": "1 cucharadita",
+            "originalText": "Aceite de oliva — 5 ml (1 cucharadita)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 25,
+        "slot": "midday",
+        "title": "Sándwich de pavo",
+        "sourceIndex": 962,
+        "sourceKey": "dieta.docx:plan:25:slot:midday:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Thins Bimbo",
+                "amount": 70,
+                "unit": "g",
+                "householdText": "2 piezas",
+                "originalText": "Thins Bimbo — 70 g (2 piezas)"
+              },
+              {
+                "name": "Pepino con cáscara",
+                "amount": 30,
+                "unit": "g",
+                "householdText": "⅓ taza",
+                "originalText": "Pepino con cáscara — 30 g (⅓ taza)"
+              },
+              {
+                "name": "Tomate rojo",
+                "amount": 30,
+                "unit": "g",
+                "householdText": "3 rebanadas",
+                "originalText": "Tomate rojo — 30 g (3 rebanadas)"
+              },
+              {
+                "name": "Cebolla picada",
+                "amount": 10,
+                "unit": "g",
+                "householdText": "2 cucharadas",
+                "originalText": "Cebolla picada — 10 g (2 cucharadas)"
+              },
+              {
+                "name": "Germen de alfalfa",
+                "amount": 10,
+                "unit": "g",
+                "householdText": "⅓ taza",
+                "originalText": "Germen de alfalfa — 10 g (⅓ taza)"
+              },
+              {
+                "name": "Pechuga de pavo",
+                "amount": 42,
+                "unit": "g",
+                "householdText": "2 rebanadas",
+                "originalText": "Pechuga de pavo — 42 g (2 rebanadas)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Thins Bimbo",
+            "amount": 70,
+            "unit": "g",
+            "householdText": "2 piezas",
+            "originalText": "Thins Bimbo — 70 g (2 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pepino con cáscara",
+            "amount": 30,
+            "unit": "g",
+            "householdText": "⅓ taza",
+            "originalText": "Pepino con cáscara — 30 g (⅓ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Tomate rojo",
+            "amount": 30,
+            "unit": "g",
+            "householdText": "3 rebanadas",
+            "originalText": "Tomate rojo — 30 g (3 rebanadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Cebolla picada",
+            "amount": 10,
+            "unit": "g",
+            "householdText": "2 cucharadas",
+            "originalText": "Cebolla picada — 10 g (2 cucharadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Germen de alfalfa",
+            "amount": 10,
+            "unit": "g",
+            "householdText": "⅓ taza",
+            "originalText": "Germen de alfalfa — 10 g (⅓ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pechuga de pavo",
+            "amount": 42,
+            "unit": "g",
+            "householdText": "2 rebanadas",
+            "originalText": "Pechuga de pavo — 42 g (2 rebanadas)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 26,
+        "slot": "lunch",
+        "title": "Tacos de pescado",
+        "sourceIndex": 1015,
+        "sourceKey": "dieta.docx:plan:26:slot:lunch:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Filete de pescado",
+                "amount": 90,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Filete de pescado — 90 g"
+              },
+              {
+                "name": "Tortilla de maíz",
+                "amount": 90,
+                "unit": "g",
+                "householdText": "3 piezas",
+                "originalText": "Tortilla de maíz — 90 g (3 piezas)"
+              },
+              {
+                "name": "Pico de gallo",
+                "amount": 50,
+                "unit": "g",
+                "householdText": "5 cucharadas",
+                "originalText": "Pico de gallo — 50 g (5 cucharadas)"
+              }
+            ]
+          },
+          {
+            "label": "Ensalada de garbanzo",
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Garbanzos cocidos",
+                "amount": 90,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Garbanzos cocidos — 90 g (½ taza)"
+              },
+              {
+                "name": "Tomate guaje o guajito",
+                "amount": 60,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Tomate guaje o guajito — 60 g"
+              },
+              {
+                "name": "Cebolla blanca",
+                "amount": 27,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Cebolla blanca — 27 g"
+              },
+              {
+                "name": "Cilantro",
+                "amount": 15,
+                "unit": "g",
+                "householdText": "¼ taza",
+                "originalText": "Cilantro — 15 g (¼ taza)"
+              },
+              {
+                "name": "Aceite de oliva extra virgen",
+                "amount": 10,
+                "unit": "ml",
+                "householdText": "2 cucharaditas",
+                "originalText": "Aceite de oliva extra virgen — 10 ml (2 cucharaditas)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Filete de pescado",
+            "amount": 90,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Filete de pescado — 90 g",
+            "componentLabel": null
+          },
+          {
+            "name": "Tortilla de maíz",
+            "amount": 90,
+            "unit": "g",
+            "householdText": "3 piezas",
+            "originalText": "Tortilla de maíz — 90 g (3 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pico de gallo",
+            "amount": 50,
+            "unit": "g",
+            "householdText": "5 cucharadas",
+            "originalText": "Pico de gallo — 50 g (5 cucharadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Garbanzos cocidos",
+            "amount": 90,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Garbanzos cocidos — 90 g (½ taza)",
+            "componentLabel": "Ensalada de garbanzo"
+          },
+          {
+            "name": "Tomate guaje o guajito",
+            "amount": 60,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Tomate guaje o guajito — 60 g",
+            "componentLabel": "Ensalada de garbanzo"
+          },
+          {
+            "name": "Cebolla blanca",
+            "amount": 27,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Cebolla blanca — 27 g",
+            "componentLabel": "Ensalada de garbanzo"
+          },
+          {
+            "name": "Cilantro",
+            "amount": 15,
+            "unit": "g",
+            "householdText": "¼ taza",
+            "originalText": "Cilantro — 15 g (¼ taza)",
+            "componentLabel": "Ensalada de garbanzo"
+          },
+          {
+            "name": "Aceite de oliva extra virgen",
+            "amount": 10,
+            "unit": "ml",
+            "householdText": "2 cucharaditas",
+            "originalText": "Aceite de oliva extra virgen — 10 ml (2 cucharaditas)",
+            "componentLabel": "Ensalada de garbanzo"
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 26,
+        "slot": "dinner",
+        "title": "Tacos de lechuga",
+        "sourceIndex": 1031,
+        "sourceKey": "dieta.docx:plan:26:slot:dinner:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Lechuga (cos o romana)",
+                "amount": 20.5,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Lechuga (cos o romana) — 20.5 g (½ taza)"
+              },
+              {
+                "name": "Carne molida de res",
+                "amount": 75,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Carne molida de res — 75 g"
+              },
+              {
+                "name": "Tomate bola",
+                "amount": 60,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Tomate bola — 60 g"
+              },
+              {
+                "name": "Cebolla blanca",
+                "amount": 20,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Cebolla blanca — 20 g"
+              },
+              {
+                "name": "Frijoles cocidos sin grasa",
+                "amount": 45,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Frijoles cocidos sin grasa — 45 g (½ taza)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Lechuga (cos o romana)",
+            "amount": 20.5,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Lechuga (cos o romana) — 20.5 g (½ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Carne molida de res",
+            "amount": 75,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Carne molida de res — 75 g",
+            "componentLabel": null
+          },
+          {
+            "name": "Tomate bola",
+            "amount": 60,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Tomate bola — 60 g",
+            "componentLabel": null
+          },
+          {
+            "name": "Cebolla blanca",
+            "amount": 20,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Cebolla blanca — 20 g",
+            "componentLabel": null
+          },
+          {
+            "name": "Frijoles cocidos sin grasa",
+            "amount": 45,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Frijoles cocidos sin grasa — 45 g (½ taza)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 28,
+        "slot": "midday",
+        "title": "Sándwich de pavo",
+        "sourceIndex": 1086,
+        "sourceKey": "dieta.docx:plan:28:slot:midday:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Pan de caja integral",
+                "amount": 60,
+                "unit": "g",
+                "householdText": "2 piezas",
+                "originalText": "Pan de caja integral — 60 g (2 piezas)"
+              },
+              {
+                "name": "Pechuga de pavo",
+                "amount": 42,
+                "unit": "g",
+                "householdText": "2 rebanadas",
+                "originalText": "Pechuga de pavo — 42 g (2 rebanadas)"
+              },
+              {
+                "name": "Jitomate guaje o guajito",
+                "amount": 30,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Jitomate guaje o guajito — 30 g"
+              },
+              {
+                "name": "Lechuga",
+                "amount": 34,
+                "unit": "g",
+                "householdText": "¾ taza",
+                "originalText": "Lechuga — 34 g (¾ taza)"
+              },
+              {
+                "name": "Pera",
+                "amount": 135.8,
+                "unit": "g",
+                "householdText": "⅔ pieza",
+                "originalText": "Pera — 135.8 g (⅔ pieza)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Pan de caja integral",
+            "amount": 60,
+            "unit": "g",
+            "householdText": "2 piezas",
+            "originalText": "Pan de caja integral — 60 g (2 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pechuga de pavo",
+            "amount": 42,
+            "unit": "g",
+            "householdText": "2 rebanadas",
+            "originalText": "Pechuga de pavo — 42 g (2 rebanadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Jitomate guaje o guajito",
+            "amount": 30,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Jitomate guaje o guajito — 30 g",
+            "componentLabel": null
+          },
+          {
+            "name": "Lechuga",
+            "amount": 34,
+            "unit": "g",
+            "householdText": "¾ taza",
+            "originalText": "Lechuga — 34 g (¾ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pera",
+            "amount": 135.8,
+            "unit": "g",
+            "householdText": "⅔ pieza",
+            "originalText": "Pera — 135.8 g (⅔ pieza)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 28,
+        "slot": "dinner",
+        "title": "Tostada de atún",
+        "sourceIndex": 1117,
+        "sourceKey": "dieta.docx:plan:28:slot:dinner:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Atún en agua drenado",
+                "amount": 45,
+                "unit": "ml",
+                "householdText": "½ lata",
+                "originalText": "Atún en agua drenado — 45 ml (½ lata)"
+              },
+              {
+                "name": "Aguacate",
+                "amount": 46.5,
+                "unit": "g",
+                "householdText": "½ pieza",
+                "originalText": "Aguacate — 46.5 g (½ pieza)"
+              },
+              {
+                "name": "Tomate cherry",
+                "amount": 100,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Tomate cherry — 100 g"
+              },
+              {
+                "name": "Cilantro",
+                "amount": 20,
+                "unit": "g",
+                "householdText": "⅓ taza",
+                "originalText": "Cilantro — 20 g (⅓ taza)"
+              },
+              {
+                "name": "Tostada deshidratada",
+                "amount": 60,
+                "unit": "g",
+                "householdText": "2 piezas",
+                "originalText": "Tostada deshidratada — 60 g (2 piezas)"
+              },
+              {
+                "name": "Manzana",
+                "amount": 53,
+                "unit": "g",
+                "householdText": "½ pieza",
+                "originalText": "Manzana — 53 g (½ pieza)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Atún en agua drenado",
+            "amount": 45,
+            "unit": "ml",
+            "householdText": "½ lata",
+            "originalText": "Atún en agua drenado — 45 ml (½ lata)",
+            "componentLabel": null
+          },
+          {
+            "name": "Aguacate",
+            "amount": 46.5,
+            "unit": "g",
+            "householdText": "½ pieza",
+            "originalText": "Aguacate — 46.5 g (½ pieza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Tomate cherry",
+            "amount": 100,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Tomate cherry — 100 g",
+            "componentLabel": null
+          },
+          {
+            "name": "Cilantro",
+            "amount": 20,
+            "unit": "g",
+            "householdText": "⅓ taza",
+            "originalText": "Cilantro — 20 g (⅓ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Tostada deshidratada",
+            "amount": 60,
+            "unit": "g",
+            "householdText": "2 piezas",
+            "originalText": "Tostada deshidratada — 60 g (2 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Manzana",
+            "amount": 53,
+            "unit": "g",
+            "householdText": "½ pieza",
+            "originalText": "Manzana — 53 g (½ pieza)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 29,
+        "slot": "dinner",
+        "title": "Quesadillas de champiñones",
+        "sourceIndex": 1151,
+        "sourceKey": "dieta.docx:plan:29:slot:dinner:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Tortilla de maíz",
+                "amount": 90,
+                "unit": "g",
+                "householdText": "3 piezas",
+                "originalText": "Tortilla de maíz — 90 g (3 piezas)"
+              },
+              {
+                "name": "Queso Oaxaca",
+                "amount": 45,
+                "unit": "g",
+                "householdText": "1½ rebanadas",
+                "originalText": "Queso Oaxaca — 45 g (1½ rebanadas)"
+              },
+              {
+                "name": "Queso panela",
+                "amount": 80,
+                "unit": "g",
+                "householdText": "2 rebanadas",
+                "originalText": "Queso panela — 80 g (2 rebanadas)"
+              },
+              {
+                "name": "Champiñones blancos crudos",
+                "amount": 183,
+                "unit": "g",
+                "householdText": "1½ tazas",
+                "originalText": "Champiñones blancos crudos — 183 g (1½ tazas)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Tortilla de maíz",
+            "amount": 90,
+            "unit": "g",
+            "householdText": "3 piezas",
+            "originalText": "Tortilla de maíz — 90 g (3 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Queso Oaxaca",
+            "amount": 45,
+            "unit": "g",
+            "householdText": "1½ rebanadas",
+            "originalText": "Queso Oaxaca — 45 g (1½ rebanadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Queso panela",
+            "amount": 80,
+            "unit": "g",
+            "householdText": "2 rebanadas",
+            "originalText": "Queso panela — 80 g (2 rebanadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Champiñones blancos crudos",
+            "amount": 183,
+            "unit": "g",
+            "householdText": "1½ tazas",
+            "originalText": "Champiñones blancos crudos — 183 g (1½ tazas)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 30,
+        "slot": "midday",
+        "title": "Vegetales con almendras",
+        "sourceIndex": 1166,
+        "sourceKey": "dieta.docx:plan:30:slot:midday:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Almendras",
+                "amount": 15,
+                "unit": "g",
+                "householdText": "15 piezas",
+                "originalText": "Almendras — 15 g (15 piezas)"
+              },
+              {
+                "name": "Jícama",
+                "amount": 100,
+                "unit": "g",
+                "householdText": "1 taza",
+                "originalText": "Jícama — 100 g (1 taza)"
+              },
+              {
+                "name": "Pepino con cáscara",
+                "amount": 100,
+                "unit": "g",
+                "householdText": "1 taza",
+                "originalText": "Pepino con cáscara — 100 g (1 taza)"
+              },
+              {
+                "name": "Zanahoria",
+                "amount": 120,
+                "unit": "g",
+                "householdText": "1½ tazas",
+                "originalText": "Zanahoria — 120 g (1½ tazas)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Almendras",
+            "amount": 15,
+            "unit": "g",
+            "householdText": "15 piezas",
+            "originalText": "Almendras — 15 g (15 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Jícama",
+            "amount": 100,
+            "unit": "g",
+            "householdText": "1 taza",
+            "originalText": "Jícama — 100 g (1 taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pepino con cáscara",
+            "amount": 100,
+            "unit": "g",
+            "householdText": "1 taza",
+            "originalText": "Pepino con cáscara — 100 g (1 taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Zanahoria",
+            "amount": 120,
+            "unit": "g",
+            "householdText": "1½ tazas",
+            "originalText": "Zanahoria — 120 g (1½ tazas)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 32,
+        "slot": "midday",
+        "title": "Tacos de queso",
+        "sourceIndex": 1233,
+        "sourceKey": "dieta.docx:plan:32:slot:midday:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Tortilla de maíz",
+                "amount": 60,
+                "unit": "g",
+                "householdText": "2 piezas",
+                "originalText": "Tortilla de maíz — 60 g (2 piezas)"
+              },
+              {
+                "name": "Queso panela",
+                "amount": 80,
+                "unit": "g",
+                "householdText": "2 rebanadas",
+                "originalText": "Queso panela — 80 g (2 rebanadas)"
+              }
+            ]
+          },
+          {
+            "label": "Nopales con ejotes",
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Nopales cocidos",
+                "amount": 74.5,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Nopales cocidos — 74.5 g (½ taza)"
+              },
+              {
+                "name": "Ejotes cocidos",
+                "amount": 63,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Ejotes cocidos — 63 g (½ taza)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Tortilla de maíz",
+            "amount": 60,
+            "unit": "g",
+            "householdText": "2 piezas",
+            "originalText": "Tortilla de maíz — 60 g (2 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Queso panela",
+            "amount": 80,
+            "unit": "g",
+            "householdText": "2 rebanadas",
+            "originalText": "Queso panela — 80 g (2 rebanadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Nopales cocidos",
+            "amount": 74.5,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Nopales cocidos — 74.5 g (½ taza)",
+            "componentLabel": "Nopales con ejotes"
+          },
+          {
+            "name": "Ejotes cocidos",
+            "amount": 63,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Ejotes cocidos — 63 g (½ taza)",
+            "componentLabel": "Nopales con ejotes"
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 36,
+        "slot": "dinner",
+        "title": "Mollete light",
+        "sourceIndex": 1415,
+        "sourceKey": "dieta.docx:plan:36:slot:dinner:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Pan tostado",
+                "amount": 36,
+                "unit": "g",
+                "householdText": "2 piezas",
+                "originalText": "Pan tostado — 36 g (2 piezas)"
+              },
+              {
+                "name": "Frijoles cocidos sin grasa",
+                "amount": 86,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Frijoles cocidos sin grasa — 86 g (½ taza)"
+              },
+              {
+                "name": "Pico de gallo",
+                "amount": 50,
+                "unit": "g",
+                "householdText": "5 cucharadas",
+                "originalText": "Pico de gallo — 50 g (5 cucharadas)"
+              },
+              {
+                "name": "Aguacate",
+                "amount": 46.5,
+                "unit": "g",
+                "householdText": "½ pieza",
+                "originalText": "Aguacate — 46.5 g (½ pieza)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Pan tostado",
+            "amount": 36,
+            "unit": "g",
+            "householdText": "2 piezas",
+            "originalText": "Pan tostado — 36 g (2 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Frijoles cocidos sin grasa",
+            "amount": 86,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Frijoles cocidos sin grasa — 86 g (½ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pico de gallo",
+            "amount": 50,
+            "unit": "g",
+            "householdText": "5 cucharadas",
+            "originalText": "Pico de gallo — 50 g (5 cucharadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Aguacate",
+            "amount": 46.5,
+            "unit": "g",
+            "householdText": "½ pieza",
+            "originalText": "Aguacate — 46.5 g (½ pieza)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 37,
+        "slot": "dinner",
+        "title": "Pasta con atún",
+        "sourceIndex": 1446,
+        "sourceKey": "dieta.docx:plan:37:slot:dinner:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Atún en agua, drenado",
+                "amount": 45,
+                "unit": "ml",
+                "householdText": "½ lata",
+                "originalText": "Atún en agua, drenado — 45 ml (½ lata)"
+              },
+              {
+                "name": "Pasta cocida",
+                "amount": 60,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Pasta cocida — 60 g (½ taza)"
+              },
+              {
+                "name": "Aceitunas",
+                "amount": 24,
+                "unit": "g",
+                "householdText": "4 piezas",
+                "originalText": "Aceitunas — 24 g (4 piezas)"
+              },
+              {
+                "name": "Aceite de oliva",
+                "amount": 10,
+                "unit": "ml",
+                "householdText": "2 cucharaditas",
+                "originalText": "Aceite de oliva — 10 ml (2 cucharaditas)"
+              },
+              {
+                "name": "Pico de gallo",
+                "amount": 40,
+                "unit": "g",
+                "householdText": "4 cucharadas",
+                "originalText": "Pico de gallo — 40 g (4 cucharadas)"
+              },
+              {
+                "name": "Elote",
+                "amount": 48,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Elote — 48 g (½ taza)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Atún en agua, drenado",
+            "amount": 45,
+            "unit": "ml",
+            "householdText": "½ lata",
+            "originalText": "Atún en agua, drenado — 45 ml (½ lata)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pasta cocida",
+            "amount": 60,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Pasta cocida — 60 g (½ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Aceitunas",
+            "amount": 24,
+            "unit": "g",
+            "householdText": "4 piezas",
+            "originalText": "Aceitunas — 24 g (4 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Aceite de oliva",
+            "amount": 10,
+            "unit": "ml",
+            "householdText": "2 cucharaditas",
+            "originalText": "Aceite de oliva — 10 ml (2 cucharaditas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pico de gallo",
+            "amount": 40,
+            "unit": "g",
+            "householdText": "4 cucharadas",
+            "originalText": "Pico de gallo — 40 g (4 cucharadas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Elote",
+            "amount": 48,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Elote — 48 g (½ taza)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 54,
+        "slot": "lunch",
+        "title": "Bowl de pollo",
+        "sourceIndex": 2104,
+        "sourceKey": "dieta.docx:plan:54:slot:lunch:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Fajita de pollo",
+                "amount": 100,
+                "unit": "g",
+                "householdText": null,
+                "originalText": "Fajita de pollo — 100 g"
+              },
+              {
+                "name": "Brócoli cocido",
+                "amount": 92,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Brócoli cocido — 92 g (½ taza)"
+              },
+              {
+                "name": "Aceite de oliva",
+                "amount": 10,
+                "unit": "ml",
+                "householdText": "2 cucharaditas",
+                "originalText": "Aceite de oliva — 10 ml (2 cucharaditas)"
+              },
+              {
+                "name": "Pepino pelado",
+                "amount": 180,
+                "unit": "g",
+                "householdText": "1 taza",
+                "originalText": "Pepino pelado — 180 g (1 taza)"
+              },
+              {
+                "name": "Arroz integral cocido",
+                "amount": 100,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Arroz integral cocido — 100 g (½ taza)"
+              },
+              {
+                "name": "Zanahoria",
+                "amount": 40,
+                "unit": "g",
+                "householdText": "½ taza",
+                "originalText": "Zanahoria — 40 g (½ taza)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Fajita de pollo",
+            "amount": 100,
+            "unit": "g",
+            "householdText": null,
+            "originalText": "Fajita de pollo — 100 g",
+            "componentLabel": null
+          },
+          {
+            "name": "Brócoli cocido",
+            "amount": 92,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Brócoli cocido — 92 g (½ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Aceite de oliva",
+            "amount": 10,
+            "unit": "ml",
+            "householdText": "2 cucharaditas",
+            "originalText": "Aceite de oliva — 10 ml (2 cucharaditas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Pepino pelado",
+            "amount": 180,
+            "unit": "g",
+            "householdText": "1 taza",
+            "originalText": "Pepino pelado — 180 g (1 taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Arroz integral cocido",
+            "amount": 100,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Arroz integral cocido — 100 g (½ taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Zanahoria",
+            "amount": 40,
+            "unit": "g",
+            "householdText": "½ taza",
+            "originalText": "Zanahoria — 40 g (½ taza)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      },
+      {
+        "planIndex": 54,
+        "slot": "afternoon",
+        "title": "Jícama preparada",
+        "sourceIndex": 2112,
+        "sourceKey": "dieta.docx:plan:54:slot:afternoon:option:0",
+        "components": [
+          {
+            "label": null,
+            "note": "",
+            "ingredients": [
+              {
+                "name": "Jícama",
+                "amount": 100,
+                "unit": "g",
+                "householdText": "1 taza",
+                "originalText": "Jícama — 100 g (1 taza)"
+              },
+              {
+                "name": "Zumo de limón",
+                "amount": 4,
+                "unit": "ml",
+                "householdText": null,
+                "originalText": "Zumo de limón — 4 ml"
+              },
+              {
+                "name": "Cacahuates",
+                "amount": 12,
+                "unit": "g",
+                "householdText": "12 piezas",
+                "originalText": "Cacahuates — 12 g (12 piezas)"
+              },
+              {
+                "name": "Tajín bajo en sodio",
+                "amount": 5,
+                "unit": "g",
+                "householdText": "1 cucharadita",
+                "originalText": "Tajín bajo en sodio — 5 g (1 cucharadita)"
+              },
+              {
+                "name": "Susalitas Flama",
+                "amount": 50,
+                "unit": "g",
+                "householdText": "1 unidad",
+                "originalText": "Susalitas Flama — 50 g (1 unidad)"
+              }
+            ]
+          }
+        ],
+        "ingredients": [
+          {
+            "name": "Jícama",
+            "amount": 100,
+            "unit": "g",
+            "householdText": "1 taza",
+            "originalText": "Jícama — 100 g (1 taza)",
+            "componentLabel": null
+          },
+          {
+            "name": "Zumo de limón",
+            "amount": 4,
+            "unit": "ml",
+            "householdText": null,
+            "originalText": "Zumo de limón — 4 ml",
+            "componentLabel": null
+          },
+          {
+            "name": "Cacahuates",
+            "amount": 12,
+            "unit": "g",
+            "householdText": "12 piezas",
+            "originalText": "Cacahuates — 12 g (12 piezas)",
+            "componentLabel": null
+          },
+          {
+            "name": "Tajín bajo en sodio",
+            "amount": 5,
+            "unit": "g",
+            "householdText": "1 cucharadita",
+            "originalText": "Tajín bajo en sodio — 5 g (1 cucharadita)",
+            "componentLabel": null
+          },
+          {
+            "name": "Susalitas Flama",
+            "amount": 50,
+            "unit": "g",
+            "householdText": "1 unidad",
+            "originalText": "Susalitas Flama — 50 g (1 unidad)",
+            "componentLabel": null
+          }
+        ],
+        "notes": ""
+      }
+    ],
+    "ambiguous": []
+  },
+  "explanation": "La cifra preliminar de 272 subcontaba entidades fusionadas. El parser corregido recupera esas líneas; el dry-run no interpreta la diferencia restante como permiso para borrar registros."
+}
+
+TOP PROBLEMS FOUND
+1. Diferencia de conteo: 276 actuales frente a 276 en la fuente corregida; revisar 0 actuales no encontradas antes de cualquier apply.
+2. Matches ambiguos protegidos: 0.
+3. Warnings del parser: 3; cantidades aproximadas/no especificadas se conservan sin inventar valores.
+4. Relaciones a añadir: 0; a eliminar: 0.
+
+SUMMARY
+{
+  "totalPlans": 55,
+  "mealOptions": 276,
+  "components": 314,
+  "ingredientRelations": 1370,
+  "uniqueIngredients": 321,
+  "notes": 50,
+  "warnings": 3,
+  "mealsWithoutIngredients": 0,
+  "ingredientsWithoutMeal": 0,
+  "mealsWithoutSlot": 0,
+  "unclassifiedLines": 0,
+  "exactMatches": 275,
+  "matchedWithDifferences": 1,
+  "ambiguousMatches": 0,
+  "newMeals": 0,
+  "currentMealsNotFound": 0,
+  "ingredientsToAdd": 0,
+  "ingredientsToRemove": 0,
+  "quantityChanges": 0,
+  "notesToChange": 0,
+  "componentsToChange": 0,
+  "parserDiagnostics": 22,
+  "resolvedFusedLines": 22,
+  "repairedLineBreaks": 0,
+  "currentIngredientsNotReferenced": 2
+}
+
+No se ejecutó ninguna escritura en Supabase.

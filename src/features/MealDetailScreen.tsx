@@ -1,0 +1,16 @@
+import { Icon } from '../components/Icon'
+import type { MealOption } from '../domain/types'
+
+export function MealDetailScreen({ meal, onBack, onCook, onToggleFavorite, onHide, onRate }: { meal: MealOption; onBack: () => void; onCook: () => void; onToggleFavorite: () => void; onHide: () => void; onRate: (rating: number) => void }) {
+  return (
+    <div className="page page--detail">
+      <button className="back-button" onClick={onBack} type="button"><Icon name="chevron-left" size={18} /> Volver</button>
+      <header className="detail-header"><div><p className="page-kicker">{meal.components.length} componentes · {meal.lastEaten}</p><h1>{meal.title}</h1><p className="page-subtitle">{meal.summary}</p></div><button className={`icon-button detail-favorite${meal.favorite ? ' is-favorite' : ''}`} onClick={onToggleFavorite} type="button" aria-label="Cambiar favorito" aria-pressed={meal.favorite}><Icon name="heart" size={22} /></button></header>
+      <div className="detail-actions"><button className="button button--primary" onClick={onCook} type="button"><Icon name="play" size={17} /> Abrir modo cocina</button><span className="availability availability--good"><span className="availability__dot" /> {meal.availability === null ? 'Disponibilidad no configurada' : `${Math.round(meal.availability * 100)}% disponible`}</span></div>
+      <div className="preference-row"><span>¿Qué te pareció?</span><div className="rating-buttons">{[1, 2, 3, 4].map((rating) => <button className={meal.rating === rating ? 'is-selected' : ''} key={rating} onClick={() => onRate(rating)} type="button" aria-label={`Valorar ${rating} de 4`}>{'★'.repeat(rating)}</button>)}</div><button className="text-button text-button--muted" onClick={onHide} type="button">Ocultar opción</button></div>
+      {meal.compatibility && <div className="compatibility-detail"><div><strong>Tienes</strong>{meal.compatibility.available.length ? <span>✓ {meal.compatibility.available.join(' · ')}</span> : <span>Ningún ingrediente marcado</span>}</div><div><strong>Te falta</strong>{meal.compatibility.missing.length ? <span>✗ {meal.compatibility.missing.join(' · ')}</span> : <span>✓ Lo necesario está disponible</span>}</div>{meal.compatibility.optionalMissing.length > 0 && <div><strong>Opcionales</strong><span>{meal.compatibility.optionalMissing.join(' · ')}</span></div>}</div>}
+      <div className="component-list">{meal.components.map((component, index) => <section className="component-section" key={component.id}><div className="component-heading"><span className="component-number">0{index + 1}</span><div><p className="section-kicker">Componente</p><h2>{component.label ?? 'Componente'}</h2></div></div><div className="ingredient-list">{component.ingredients.map((item) => <div className="ingredient-row" key={item.id}><div><strong>{item.name}</strong>{item.note && <small>{item.note}</small>}</div><div className="ingredient-quantity"><strong>{item.quantity}</strong>{item.householdMeasure && <span>{item.householdMeasure}</span>}</div></div>)}</div>{component.note && <p className="detail-note">{component.note}</p>}</section>)}</div>
+      {meal.note && <aside className="note-card"><Icon name="sparkles" size={19} /><span>{meal.note}</span></aside>}
+    </div>
+  )
+}

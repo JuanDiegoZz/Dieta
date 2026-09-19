@@ -1,0 +1,21 @@
+==================================================
+MEAL 1 — Jugo verde
+Plan: 42
+Franja: wake_up
+
+Confianza: alta
+==================================================
+
+RESUMEN
+- 1 MealOptions afectadas
+- 0 relaciones a eliminar
+- 0 relaciones a añadir
+- 0 cantidades a cambiar
+- 0 componentes a cambiar
+- 0 ambiguas
+- 0 nuevas
+- 0 MealOptions no encontradas
+- 0 MealOptions eliminadas
+
+RELACIONES A ELIMINAR — RESUMEN RÁPIDO
+Ninguna
