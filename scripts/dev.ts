@@ -2,8 +2,9 @@ import { readFileSync } from 'node:fs'
 import { createServer as createHttpServer, type IncomingMessage, type ServerResponse } from 'node:http'
 import { join } from 'node:path'
 import { createServer as createViteServer, type ViteDevServer } from 'vite'
+import type { ApiRequest, ApiResponse } from '../api/_lib/http.js'
 
-type Handler = (request: Request) => Response | Promise<Response>
+type Handler = (request: ApiRequest, response: ApiResponse) => void | Promise<void>
 type ApiHandlers = Record<'bootstrap' | 'health' | 'history' | 'historyById' | 'ingredients' | 'meals' | 'mealsById' | 'pantryById' | 'preferencesById' | 'weekly' | 'weeklyEntryById', Handler>
 
 function safeErrorMessage(error: unknown) {
@@ -37,24 +38,11 @@ function route(pathname: string): Handler | null {
   return null
 }
 
-async function requestBody(request: IncomingMessage) {
-  const chunks: Buffer[] = []
-  for await (const chunk of request) chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
-  return Buffer.concat(chunks)
-}
-
 async function handleApi(request: IncomingMessage, response: ServerResponse) {
   const url = new URL(request.url ?? '/', 'http://localhost:5173')
   const handler = route(url.pathname)
   if (!handler) return false
-  const headers = new Headers()
-  for (const [key, value] of Object.entries(request.headers)) if (value) headers.set(key, Array.isArray(value) ? value.join(', ') : value)
-  const body = request.method === 'GET' || request.method === 'HEAD' ? undefined : await requestBody(request)
-  const apiRequest = new Request(url, { method: request.method, headers, body: body?.length ? body : undefined })
-  const apiResponse = await handler(apiRequest)
-  response.statusCode = apiResponse.status
-  apiResponse.headers.forEach((value, key) => response.setHeader(key, value))
-  response.end(Buffer.from(await apiResponse.arrayBuffer()))
+  await handler(request, response)
   return true
 }
 
@@ -63,17 +51,17 @@ process.env.VERCEL_ENV ??= 'development'
 process.env.VERCEL ??= '1'
 
 const [bootstrapModule, healthModule, historyModule, historyByIdModule, ingredientsModule, mealsModule, mealsByIdModule, pantryByIdModule, preferencesByIdModule, weeklyModule, weeklyEntryByIdModule] = await Promise.all([
-  import('../api/bootstrap'),
-  import('../api/health'),
-  import('../api/history'),
-  import('../api/history/[id]'),
-  import('../api/ingredients'),
-  import('../api/meals'),
-  import('../api/meals/[id]'),
-  import('../api/pantry/[id]'),
-  import('../api/preferences/[id]'),
-  import('../api/weekly'),
-  import('../api/weekly/entries/[id]'),
+  import('../api/bootstrap.js'),
+  import('../api/health.js'),
+  import('../api/history.js'),
+  import('../api/history/[id].js'),
+  import('../api/ingredients.js'),
+  import('../api/meals.js'),
+  import('../api/meals/[id].js'),
+  import('../api/pantry/[id].js'),
+  import('../api/preferences/[id].js'),
+  import('../api/weekly.js'),
+  import('../api/weekly/entries/[id].js'),
 ])
 const apiHandlers: ApiHandlers = {
   bootstrap: bootstrapModule.default,

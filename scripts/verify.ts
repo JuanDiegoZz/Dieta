@@ -260,7 +260,7 @@ async function run() {
     await pantryE2E(data.ingredients)
     await historyE2E(data.meals[0].id)
     await weeklyE2E(data.meals.slice(0, 2).map((meal) => meal.id))
-    await request('/api/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{' }, 500)
+    await request('/api/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{' }, 400)
     await bootstrap()
     status('Local server survives handler error', true)
     await providerErrorResilience()

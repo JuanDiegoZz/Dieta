@@ -172,3 +172,8 @@ La estabilización, cache de lectura, auditoría legacy y preparación de produc
 - `GET /api/health`: **PASS**; no expone secretos.
 - Migraciones remotas 001 y 002: aplicadas y sincronizadas; no hay `db push` pendiente.
 - El único paso externo pendiente es probar físicamente el iPad Air con `IPAD_LEGACY_TEST.md` y ejecutar un smoke test posterior al despliegue de Vercel.
+## Corrección de contrato Node/Vercel pendiente de deployment
+
+La causa raíz del bloqueo de producción fue que las Vercel Functions exportaban handlers por defecto con firma Node `(req, res)`, pero el código los trataba como Fetch API: usaba `headers.get()`, `request.json()` y devolvía `Response`. Vercel ignoraba esos retornos y algunas respuestas quedaban abiertas hasta timeout.
+
+Corrección aplicada localmente: todos los handlers usan `ApiRequest`/`ApiResponse`, leen headers y cuerpos con helpers Node, y finalizan cada rama mediante `res.end()`. `scripts/dev.ts` ejecuta los mismos handlers Node sin un adaptador Fetch alternativo. Se conservan timeouts, ETag/304, paginación defensiva e instrumentación de Supabase.

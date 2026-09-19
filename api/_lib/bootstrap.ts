@@ -1,4 +1,5 @@
 import { handleApiError, json, selectAllRows, selectRows } from './supabase.js'
+import { empty, getHeader, type ApiRequest, type ApiResponse } from './http.js'
 
 interface OptionRow { id: string; source_key: string; meal_slot: string; title: string; notes: string | null; active: boolean; edited: boolean; source_index: number; option_position: number; updated_at: string }
 interface ComponentRow { id: string; meal_option_id: string; source_label: string | null; position: number; optional: boolean; notes: string | null }
@@ -109,11 +110,11 @@ function etagFor(version: string | number) {
   return `"${(hash >>> 0).toString(16)}"`
 }
 
-export default async function handler(request?: Request) {
+export default async function handler(request: ApiRequest, response: ApiResponse) {
   try {
     const payload = await getBootstrap()
     const etag = etagFor(payload.version)
-    if (request?.headers.get('if-none-match') === etag) return new Response(null, { status: 304, headers: { ETag: etag, 'Cache-Control': 'no-store' } })
-    return json(payload, 200, { ETag: etag, 'X-Catalog-Version': payload.catalogVersion ?? '' })
-  } catch (error) { return handleApiError(error) }
+    if (getHeader(request, 'if-none-match') === etag) return empty(response, 304, { ETag: etag, 'Cache-Control': 'no-store' })
+    return json(response, payload, 200, { ETag: etag, 'X-Catalog-Version': payload.catalogVersion ?? '' })
+  } catch (error) { return handleApiError(response, error) }
 }

@@ -17,7 +17,7 @@ export function AppShell({ route, onNavigate, children }: { route: AppRoute; onN
   return (
     <div className="app-shell">
       <aside className="desktop-sidebar">
-        <div className="brand-lockup"><span className="brand-mark"><Icon name="sparkles" size={18} /></span><span>mi dieta</span></div>
+        <div className="brand-lockup"><span className="brand-mark"><img src="/icons/dieta-icon.png" alt="" aria-hidden="true" /></span><span>mi dieta</span></div>
         <div className="sidebar-caption">Tu siguiente comida,<br />sin darle más vueltas.</div>
         <nav className="sidebar-nav" aria-label="Navegación principal">
           {navigation.map((item) => (

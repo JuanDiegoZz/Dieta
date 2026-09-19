@@ -1,3 +1,6 @@
+import type { ApiResponse } from './http.js'
+import { InvalidJsonError, json } from './http.js'
+
 export class ApiError extends Error {
   constructor(public status: number, public code: string, message: string) {
     super(message)
@@ -123,15 +126,14 @@ export function deleteRows(table: string, filters: Record<string, string>) {
   return request<undefined>(table, { method: 'DELETE', headers: { Prefer: 'return=minimal' } }, `?${params.toString()}`)
 }
 
-export function json(data: unknown, status = 200, extraHeaders: Record<string, string> = {}) {
-  return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...extraHeaders } })
+export function handleApiError(response: ApiResponse, error: unknown) {
+  if (error instanceof ApiError) return json(response, { error: error.code, message: error.message }, error.status)
+  if (error instanceof InvalidJsonError) return json(response, { error: error.code, message: error.message }, error.status)
+  console.error('api:error unexpected')
+  return json(response, { error: 'INTERNAL_ERROR', message: 'Ocurrio un error inesperado.' }, 500)
 }
 
-export function handleApiError(error: unknown) {
-  if (error instanceof ApiError) return json({ error: error.code, message: error.message }, error.status)
-  console.error('api:error unexpected')
-  return json({ error: 'INTERNAL_ERROR', message: 'Ocurrio un error inesperado.' }, 500)
-}
+export { json } from './http.js'
 
 export function isUuid(value: string) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
