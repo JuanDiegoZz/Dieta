@@ -20,16 +20,31 @@ function latest(values: string[]) {
 }
 
 export async function getBootstrap() {
-  const [options, components, dishIngredients, ingredients, aliases, preferences, history, pantry] = await Promise.all([
+  const startedAt = Date.now()
+  console.info('bootstrap:start')
+  const catalogStartedAt = Date.now()
+  console.info('bootstrap:catalog:start')
+  const catalogPromise = Promise.all([
     selectAllRows<OptionRow>('meal_options', 'id,source_key,meal_slot,title,notes,active,edited,source_index,option_position,updated_at'),
     selectAllRows<ComponentRow>('dish_components', 'id,meal_option_id,source_label,position,optional,notes'),
     selectAllRows<IngredientRow>('dish_ingredients', 'id,component_id,ingredient_id,original_name,original_text,amount,unit,household_amount,household_unit,household_text,optional,importance,position'),
     selectAllRows<CanonicalIngredient>('ingredients', 'id,canonical_name,category,active,updated_at'),
     selectAllRows<AliasRow>('ingredient_aliases', 'ingredient_id,alias'),
+  ]).then((result) => {
+    console.info(`bootstrap:catalog:done ${Date.now() - catalogStartedAt}ms`)
+    return result
+  })
+  const personalStartedAt = Date.now()
+  console.info('bootstrap:personal:start')
+  const personalPromise = Promise.all([
     selectAllRows<PreferenceRow>('meal_preferences', 'meal_option_id,favorite,hidden,rating,updated_at'),
     selectRows<HistoryRow>('meal_history', 'id,meal_option_id,eaten_at,rating,note,created_at', { order: 'eaten_at.desc', limit: '300' }),
     selectAllRows<PantryRow>('pantry_items', 'ingredient_id,available,use_soon,updated_at'),
-  ])
+  ]).then((result) => {
+    console.info(`bootstrap:personal:done ${Date.now() - personalStartedAt}ms`)
+    return result
+  })
+  const [[options, components, dishIngredients, ingredients, aliases], [preferences, history, pantry]] = await Promise.all([catalogPromise, personalPromise])
   const preferenceMap = new Map(preferences.map((preference) => [preference.meal_option_id, preference]))
   const historyMap = new Map<string, HistoryRow>()
   for (const entry of history) if (!historyMap.has(entry.meal_option_id)) historyMap.set(entry.meal_option_id, entry)
@@ -57,7 +72,7 @@ export async function getBootstrap() {
     latest(history.map((row) => row.created_at)),
     latest(pantry.map((row) => row.updated_at)),
   ].join(':')
-  return {
+  const payload = {
     version: `${catalogVersion}|${stateVersion}`,
     catalogVersion,
     ingredients: ingredients.map((ingredient) => ({ id: ingredient.id, canonicalName: ingredient.canonical_name, category: ingredient.category, active: ingredient.active, aliases: aliasMap.get(ingredient.id) ?? [] })),
@@ -84,6 +99,8 @@ export async function getBootstrap() {
     }),
     history,
   }
+  console.info(`bootstrap:complete ${Date.now() - startedAt}ms`)
+  return payload
 }
 
 function etagFor(version: string | number) {

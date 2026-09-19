@@ -20,6 +20,9 @@ interface BootstrapPayload {
 
 const CACHE_KEY = 'mi-dieta:bootstrap:v2'
 const PERSISTENT_CACHE_KEY = 'bootstrap'
+const API_TIMEOUT_MS = 8000
+const FALLBACK_TIMEOUT_MS = 3000
+const CACHE_TIMEOUT_MS = 1500
 let memoryCache: BootstrapPayload | null = null
 let memoryEtag: string | null = null
 
@@ -71,7 +74,7 @@ async function readCache(): Promise<PersistentCacheRecord<BootstrapPayload> | nu
   const session = readSessionCache()
   if (session) return session
   try {
-    const record = await readPersistentCache<BootstrapPayload>(PERSISTENT_CACHE_KEY)
+    const record = await resolveWithin(readPersistentCache<BootstrapPayload>(PERSISTENT_CACHE_KEY), CACHE_TIMEOUT_MS, null)
     if (!record) return null
     return { ...record, payload: normalizePayload(record.payload, 'cache') }
   } catch {
@@ -81,13 +84,35 @@ async function readCache(): Promise<PersistentCacheRecord<BootstrapPayload> | nu
 
 async function writeCache(payload: BootstrapPayload, etag: string | null) {
   writeSessionCache(payload, etag)
-  try {
-    await writePersistentCache({ key: PERSISTENT_CACHE_KEY, payload, etag, savedAt: Date.now() })
-  } catch { /* IndexedDB is an optional enhancement */ }
+  void writePersistentCache({ key: PERSISTENT_CACHE_KEY, payload, etag, savedAt: Date.now() }).catch(() => undefined)
 }
 
-async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, { ...options, headers: { Accept: 'application/json', ...(options?.headers ?? {}) } })
+function resolveWithin<T>(promise: Promise<T>, milliseconds: number, fallback: T): Promise<T> {
+  return new Promise((resolve) => {
+    const timer = window.setTimeout(() => resolve(fallback), milliseconds)
+    promise.then((value) => { window.clearTimeout(timer); resolve(value) }, () => { window.clearTimeout(timer); resolve(fallback) })
+  })
+}
+
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = API_TIMEOUT_MS): Promise<Response> {
+  const controller = typeof AbortController === 'function' ? new AbortController() : null
+  const request = fetch(url, controller ? { ...options, signal: controller.signal } : options)
+  let timer: number | undefined
+  const timeout = new Promise<never>((_, reject) => {
+    timer = window.setTimeout(() => {
+      controller?.abort()
+      reject(new Error('REQUEST_TIMEOUT'))
+    }, timeoutMs)
+  })
+  try {
+    return await Promise.race([request, timeout])
+  } finally {
+    if (timer !== undefined) window.clearTimeout(timer)
+  }
+}
+
+async function fetchJson<T>(url: string, options?: RequestInit, timeoutMs = API_TIMEOUT_MS): Promise<T> {
+  const response = await fetchWithTimeout(url, { ...options, headers: { Accept: 'application/json', ...(options?.headers ?? {}) } }, timeoutMs)
   if (!response.ok) throw new Error(`API ${response.status}`)
   return response.json() as Promise<T>
 }
@@ -96,34 +121,35 @@ export async function loadBootstrap(onCached?: (payload: BootstrapPayload) => vo
   const cached = readSessionCache()
   if (cached) onCached?.(cached.payload)
   const persistent = cached ? Promise.resolve(cached) : readCache()
+  let persistentRecord: PersistentCacheRecord<BootstrapPayload> | null = cached
   let freshLoaded = false
   if (!cached) void persistent.then((record) => {
+    persistentRecord = record
     if (!record || freshLoaded) return
     onCached?.(record.payload)
   })
   try {
-    const record = await persistent
-    const response = await fetch('/api/bootstrap', {
-      headers: { Accept: 'application/json', ...(record?.etag ? { 'If-None-Match': record.etag } : {}) },
+    const response = await fetchWithTimeout('/api/bootstrap', {
+      headers: { Accept: 'application/json', ...(cached?.etag ? { 'If-None-Match': cached.etag } : {}) },
     })
-    if (response.status === 304 && record) {
+    if (response.status === 304 && cached) {
       freshLoaded = true
-      const payload = normalizePayload(record.payload, 'api')
-      await writeCache(payload, record.etag)
+      const payload = normalizePayload(cached.payload, 'api')
+      void writeCache(payload, cached.etag)
       return payload
     }
     if (!response.ok) throw new Error(`API ${response.status}`)
     const payload = normalizePayload(await response.json() as BootstrapPayload, 'api')
     freshLoaded = true
-    await writeCache(payload, response.headers.get('etag'))
+    void writeCache(payload, response.headers.get('etag'))
     return payload
   } catch (apiError) {
     freshLoaded = true
-    const record = await persistent
+    const record = persistentRecord ?? await persistent
     if (record) return normalizePayload(record.payload, 'cache')
     try {
-      const payload = normalizePayload(await fetchJson<BootstrapPayload>('/catalog.json'), 'fallback')
-      writeSessionCache(payload, null)
+      const payload = normalizePayload(await fetchJson<BootstrapPayload>('/catalog.json', undefined, FALLBACK_TIMEOUT_MS), 'fallback')
+      void writeCache(payload, null)
       return payload
     } catch {
       if (cached) return cached.payload

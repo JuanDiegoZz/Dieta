@@ -57,7 +57,8 @@ export default function App() {
       setMeals(cached.meals); setHistory(cached.history); setIngredients(cached.ingredients); setPantry(cached.pantry); setDataSource(cached.source ?? 'cache'); setLoading(false)
     }).then((payload) => {
       if (!mounted) return
-      setMeals(payload.meals); setHistory(payload.history); setIngredients(payload.ingredients); setPantry(payload.pantry); setDataSource(payload.source ?? 'api'); setLoading(false); setError(null)
+      const source = payload.source ?? 'api'
+      setMeals(payload.meals); setHistory(payload.history); setIngredients(payload.ingredients); setPantry(payload.pantry); setDataSource(source); setLoading(false); setError(source === 'api' ? null : 'Estamos teniendo problemas para actualizar los datos. Mostrando la informacion guardada.')
     }).catch(() => {
       if (mounted) { setLoading(false); setError('No pudimos cargar tu dieta. Revisa la conexión e inténtalo de nuevo.') }
     })

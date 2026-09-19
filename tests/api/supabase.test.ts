@@ -41,4 +41,31 @@ describe('Supabase REST headers', () => {
       vi.unstubAllEnvs()
     }
   })
+
+  it('aborts a Supabase request that never responds', async () => {
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>(() => undefined)))
+    vi.stubEnv('SUPABASE_URL', 'https://example.supabase.co')
+    vi.stubEnv('SUPABASE_SECRET_KEY', 'sb_secret_test')
+    try {
+      const request = selectAllRows('meal_options', 'id', {}, { timeoutMs: 25 })
+      await expect(request).rejects.toMatchObject({ code: 'DATA_PROVIDER_TIMEOUT' })
+    } finally {
+      vi.unstubAllGlobals()
+      vi.unstubAllEnvs()
+    }
+  })
+
+  it('stops pagination when the provider returns an error', async () => {
+    const fetchMock = vi.fn(async () => new Response('upstream error', { status: 503 }))
+    vi.stubGlobal('fetch', fetchMock)
+    vi.stubEnv('SUPABASE_URL', 'https://example.supabase.co')
+    vi.stubEnv('SUPABASE_SECRET_KEY', 'sb_secret_test')
+    try {
+      await expect(selectAllRows('meal_options', 'id')).rejects.toMatchObject({ code: 'DATA_PROVIDER_ERROR' })
+      expect(fetchMock).toHaveBeenCalledTimes(1)
+    } finally {
+      vi.unstubAllGlobals()
+      vi.unstubAllEnvs()
+    }
+  })
 })

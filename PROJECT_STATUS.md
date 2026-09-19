@@ -142,6 +142,22 @@ Medición de datos: bootstrap BFF completo con 276 comidas, 312 componentes y 1,
 
 Pendiente únicamente la prueba física en el iPad Air iOS 12.5.8 siguiendo `IPAD_LEGACY_TEST.md`. No se inició otra macrofase.
 
+## Incidencia de produccion posterior al deployment
+
+Detectada en `https://dieta-coral.vercel.app`: `/api/bootstrap`, `/api/weekly` y en ocasiones `/api/health` quedaban en estado `Pending`, dejando la pantalla inicial en skeletons.
+
+Correccion preparada en codigo:
+
+- Timeout central de Supabase de 8 segundos con `AbortController` y carrera explicita contra timeout.
+- Timeout de health de 4 segundos, con respuesta `503 { status: "degraded", database: "timeout" }`.
+- Bootstrap con consultas independientes en paralelo e instrumentacion por etapas.
+- Weekly y health instrumentados con logs sanitizados.
+- Paginacion REST limitada a 100 paginas, con avance por offset y terminacion por pagina corta/vacia/error/timeout.
+- Cliente con timeout de API, cache stale-while-revalidate, fallback `public/catalog.json` y aviso de datos guardados.
+- Tests de timeout, health degradado, bootstrap/weekly colgados, paginacion y fallback.
+
+La correccion fue validada localmente con `pnpm verify`; falta hacer push y redeploy para comprobar los Runtime Logs de Vercel.
+
 ## Cierre final de Macrofase D
 
 La estabilización, cache de lectura, auditoría legacy y preparación de producción están completas. Esta sección supersede los estados históricos anteriores de este documento.
