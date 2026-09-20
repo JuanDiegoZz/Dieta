@@ -32,7 +32,7 @@ export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, on
   const searchIndex = useMemo(() => createMealSearchIndex(meals), [meals])
   const slot = MEAL_SLOTS.find((item) => item.id === selectedSlot) ?? MEAL_SLOTS[0]
   const results = useMemo(() => {
-    if (query.trim()) return searchMealOptions(meals, query, searchIndex).map((result) => result.meal)
+    if (query.trim()) return searchMealOptions(meals, query, searchIndex, selectedSlot).map((result) => result.meal)
     return rankMealOptions(meals.filter((meal) => meal.slot === selectedSlot), pantry, new Date(), avoidRepeatDays)
   }, [avoidRepeatDays, meals, pantry, query, searchIndex, selectedSlot])
 
@@ -74,7 +74,7 @@ export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, on
 
       <section className="section-block section-block--cards">
         <div className="section-heading"><div><p className="section-kicker">{query ? 'Coincidencias' : 'Opciones de tu dieta'}</p><h2>{query ? 'Encuentra algo que te guste' : `Ideas para ${slot.label.toLocaleLowerCase('es')}`}</h2></div>{!query && <span className="result-count">{results.length} opciones</span>}</div>
-        {loading ? <div className="card-grid">{[1, 2, 3].map((item) => <SkeletonCard key={item} />)}</div> : results.length ? <div className="card-grid">{displayedResults.map((meal) => <MealCard key={meal.id} meal={meal} onOpen={onOpen} onToggleFavorite={onToggleFavorite} onCook={onCook} onHide={onHide} />)}</div> : <EmptyState title="No encontramos opciones" message="Prueba otra búsqueda o cambia de franja. Todas las demás siguen disponibles." action={{ label: 'Ver esta franja', onClick: () => setQuery('') }} />}
+        {loading ? <div className="card-grid">{[1, 2, 3].map((item) => <SkeletonCard key={item} />)}</div> : results.length ? <div className="card-grid">{displayedResults.map((meal) => <MealCard key={meal.id} meal={meal} onOpen={onOpen} onToggleFavorite={onToggleFavorite} onCook={onCook} onHide={onHide} />)}</div> : <EmptyState title={query ? `No encontramos ${slot.label.toLocaleLowerCase('es')} con “${query}”.` : 'No encontramos opciones'} message={query ? 'Borra la búsqueda o cambia de franja para seguir explorando.' : 'Prueba otra búsqueda o cambia de franja.'} action={query ? { label: 'Borrar búsqueda', onClick: () => setQuery('') } : undefined} />}
       </section>
     </div>
   )

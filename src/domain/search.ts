@@ -1,4 +1,4 @@
-import type { MealOption } from './types'
+import type { MealOption, MealSlot } from './types'
 
 export interface SearchResult {
   meal: MealOption
@@ -53,10 +53,11 @@ function scoreToken(indexed: IndexedMeal, token: string): number {
   return 0
 }
 
-export function searchMealOptions(meals: MealOption[], query: string, index = createMealSearchIndex(meals)): SearchResult[] {
+export function searchMealOptions(meals: MealOption[], query: string, index = createMealSearchIndex(meals), slot?: MealSlot): SearchResult[] {
   const tokens = normalize(query).split(' ').filter(Boolean)
+  const candidates = slot ? meals.filter((meal) => meal.slot === slot) : meals
 
-  return meals.map((meal) => {
+  return candidates.map((meal) => {
       const indexed = index.byId.get(meal.id) ?? createMealSearchIndex([meal]).byId.get(meal.id)
       if (!indexed) return { meal, score: 0, matches: false }
       const tokenScores = tokens.map((token) => scoreToken(indexed, token))

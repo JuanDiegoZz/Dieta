@@ -8,6 +8,7 @@ export interface MealSlotDefinition {
 }
 
 export const MEAL_SLOTS: MealSlotDefinition[] = [
+  { id: 'wake_up', label: 'Al despertar', shortLabel: 'Al despertar', range: 'Al despertar' },
   { id: 'breakfast', label: 'Desayuno', shortLabel: 'Desayuno', range: '05:00–10:59' },
   { id: 'midday', label: 'Medio día', shortLabel: 'Medio día', range: '11:00–12:59' },
   { id: 'lunch', label: 'Comida', shortLabel: 'Comida', range: '13:00–16:59' },

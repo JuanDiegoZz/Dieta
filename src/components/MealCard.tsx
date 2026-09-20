@@ -1,4 +1,5 @@
 import { Icon } from './Icon'
+import { MEAL_SLOTS } from '../domain/slots'
 import type { MealOption } from '../domain/types'
 
 function availabilityLabel(value: number | null) {
@@ -10,12 +11,14 @@ function availabilityLabel(value: number | null) {
 
 export function MealCard({
   meal,
+  showSlot = false,
   onOpen,
   onToggleFavorite,
   onCook,
   onHide,
 }: {
   meal: MealOption
+  showSlot?: boolean
   onOpen: (meal: MealOption) => void
   onToggleFavorite: (meal: MealOption) => void
   onCook?: (meal: MealOption) => void
@@ -23,11 +26,12 @@ export function MealCard({
 }) {
   const availability = availabilityLabel(meal.availability)
   const componentSummary = meal.components.map((component) => component.label ?? 'Componente').join(' · ')
+  const slotLabel = MEAL_SLOTS.find((slot) => slot.id === meal.slot)?.label ?? meal.slot
 
   return (
     <article className="meal-card">
       <div className="meal-card__topline">
-        <span className="eyebrow">{componentSummary}</span>
+        <span className="eyebrow">{showSlot ? `[${slotLabel}] ${componentSummary}` : componentSummary}</span>
         <button
           className={`icon-button favorite-button${meal.favorite ? ' is-favorite' : ''}`}
           aria-label={meal.favorite ? `Quitar ${meal.title} de favoritos` : `Guardar ${meal.title} en favoritos`}

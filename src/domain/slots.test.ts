@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { MEAL_SLOTS, getSuggestedSlot } from './slots'
 
 describe('meal slots', () => {
-  it('keeps all five main slots available', () => {
-    expect(MEAL_SLOTS).toHaveLength(5)
+  it('keeps every diet slot available in the tab order', () => {
+    expect(MEAL_SLOTS).toHaveLength(6)
     expect(MEAL_SLOTS.map((slot) => slot.id)).toEqual([
+      'wake_up',
       'breakfast',
       'midday',
       'lunch',

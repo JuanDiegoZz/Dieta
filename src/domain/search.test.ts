@@ -40,6 +40,40 @@ const meals: MealOption[] = [
       },
     ],
   },
+  {
+    id: 'breakfast-chicken',
+    slot: 'breakfast',
+    title: 'Pollo con avena',
+    summary: 'Desayuno con pollo.',
+    tags: [],
+    favorite: false,
+    availability: 0.7,
+    lastEaten: 'Nunca',
+    components: [
+      {
+        id: 'breakfast-main',
+        label: 'Plato principal',
+        ingredients: [{ id: 'chicken', name: 'Pollo', quantity: '120 g', aliases: ['ave'] }],
+      },
+    ],
+  },
+  {
+    id: 'dinner-chicken',
+    slot: 'dinner',
+    title: 'Pollo con arroz',
+    summary: 'Cena con pollo.',
+    tags: [],
+    favorite: false,
+    availability: 0.7,
+    lastEaten: 'Nunca',
+    components: [
+      {
+        id: 'dinner-main',
+        label: 'Plato principal',
+        ingredients: [{ id: 'chicken-dinner', name: 'Pollo', quantity: '150 g', aliases: ['ave'] }],
+      },
+    ],
+  },
 ]
 
 describe('searchMealOptions', () => {
@@ -54,6 +88,24 @@ describe('searchMealOptions', () => {
   })
 
   it('returns every meal for an empty query', () => {
-    expect(searchMealOptions(meals, '')).toHaveLength(2)
+    expect(searchMealOptions(meals, '')).toHaveLength(4)
+  })
+
+  it('limits a breakfast query to breakfast meals', () => {
+    expect(searchMealOptions(meals, 'pollo', undefined, 'breakfast').map((result) => result.meal.id)).toEqual(['breakfast-chicken'])
+  })
+
+  it('limits a lunch query without falling back to other slots', () => {
+    expect(searchMealOptions(meals, 'pollo', undefined, 'lunch')).toHaveLength(0)
+  })
+
+  it('recalculates the same query when the selected slot changes', () => {
+    expect(searchMealOptions(meals, 'pollo', undefined, 'breakfast').map((result) => result.meal.id)).toEqual(['breakfast-chicken'])
+    expect(searchMealOptions(meals, 'pollo', undefined, 'dinner').map((result) => result.meal.id)).toEqual(['dinner-chicken'])
+  })
+
+  it('keeps ingredient and alias searches inside the selected slot', () => {
+    expect(searchMealOptions(meals, 'pollo', undefined, 'breakfast').map((result) => result.meal.id)).toEqual(['breakfast-chicken'])
+    expect(searchMealOptions(meals, 'ave', undefined, 'breakfast').map((result) => result.meal.id)).toEqual(['breakfast-chicken'])
   })
 })
