@@ -42,3 +42,10 @@ No hubo desbordamiento horizontal de página en las medidas iniciales; los probl
 - El calendario horizontal pasa de 1122 px de contenido a ajustarse al ancho disponible. Altura de la zona de comidas de 1330 px a aproximadamente 455–499 px con el fixture.
 - Prueba nueva de fechas entre meses (rojo y verde); tres pruebas de dominio semanales y typecheck aprobados. Navegador: siete tamaños, selección, Home/End, bloqueo persistente, limpiar/añadir y rotación sin perder día; todas aprobadas.
 - La medición excluye las pantallas de origen ocultas que React mantiene montadas; no se consideran tarjetas de ancho cero como defectos visibles.
+
+## Fase 5 — Detalle y cocina
+
+- Estructura en dos columnas: contexto/acciones e ingredientes. En horizontal el botón Terminé pasa de y=1487–1535 a y=398–402; las cantidades y notas originales siguen en sus componentes. Vertical/móvil conservan columna única.
+- Contexto con sticky y scroll propio si el texto es largo; componentes usan columnas solo cuando hay ancho real. No se tocaron estados de guardado ni idempotencia.
+- Rojo: acción fuera de viewport. Verde: cinco pruebas de preparación/idempotencia, typecheck y auditoría de siete tamaños aprobados. Capturas revisadas de cocina, detalle y Semana.
+- En la prueba de bloqueo semanal se normalizó el estado sintético entre tamaños: un bloqueo de un caso anterior no debe confundirse con un defecto del producto.

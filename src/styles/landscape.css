@@ -67,3 +67,29 @@
   .day-meals { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .nav-item:not(.is-active):hover { background: transparent; color: var(--muted-dark); }
 }
+
+@media (min-width: 1000px) and (orientation: landscape) {
+  .page--detail { max-width: 1280px; }
+  .detail-layout, .kitchen-layout { display: grid; grid-template-columns: minmax(280px, 340px) minmax(0, 1fr); gap: 28px; align-items: start; }
+  .detail-overview, .kitchen-overview { min-width: 0; position: -webkit-sticky; position: sticky; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; padding: 3px 6px 8px 3px; }
+  .detail-header h1, .kitchen-content h1 { font-size: 32px; line-height: 1.15; overflow-wrap: break-word; }
+  .detail-header > div { min-width: 0; }
+  .detail-actions { margin: 18px 0; }
+  .detail-actions .availability { margin: 12px 0 0; }
+  .preference-row { margin-bottom: 20px; }
+  .component-list { max-width: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; align-items: start; }
+  .component-section { min-width: 0; padding-top: 8px; }
+  .ingredient-row { align-items: flex-start; }
+  .ingredient-row > div:first-child { min-width: 0; overflow-wrap: break-word; }
+  .ingredient-quantity { max-width: 45%; margin-left: 12px; }
+  .ingredient-quantity span { font-size: 13px; line-height: 1.5; }
+  .kitchen-content { max-width: 1280px; padding: 26px 32px 40px; }
+  .kitchen-header { min-height: 60px; padding: 8px 32px; }
+  .kitchen-summary { font-size: 16px; }
+  .kitchen-ingredients { min-width: 0; margin: 0; border: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: start; }
+  .kitchen-component { min-width: 0; margin: 0; border-top: 2px solid var(--line); padding-top: 12px; }
+  .kitchen-ingredient > div { min-width: 0; overflow-wrap: break-word; }
+  .kitchen-quantity { flex-shrink: 0; margin-left: 12px; }
+  .kitchen-done { margin-top: 20px; width: 100%; }
+  .kitchen-actions .kitchen-note { margin-top: 18px; }
+}

@@ -59,6 +59,8 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
           assert(await page.locator('.week-days button').count() === 7, 'all seven dates must remain available')
           assert(await page.locator('.week-entry').count() === 5, 'selected day must contain five slots')
           await page.locator('.week-days button').nth(3).click()
+          const unlock = page.getByRole('button', { name: /^Desbloquear Comida / })
+          if (await unlock.count()) { await unlock.click(); await page.getByRole('button', { name: /^Bloquear Comida / }).waitFor() }
           await page.getByRole('button', { name: /^Bloquear Comida / }).click()
           await page.getByRole('button', { name: /^Desbloquear Comida / }).waitFor()
           await page.locator('.week-days button').first().click()
