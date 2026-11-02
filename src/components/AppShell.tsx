@@ -30,7 +30,7 @@ export function AppShell({ route, onNavigate, children }: { route: AppRoute; onN
             </button>
           ))}
         </nav>
-        <div className="sidebar-footer"><button className="profile-chip" type="button"><span className="profile-avatar">DI</span><span><strong>Mi espacio</strong><small>Solo para ti</small></span><Icon name="more" size={17} /></button></div>
+        <div className="sidebar-footer"><div className="profile-chip"><span className="profile-avatar">DI</span><span><strong>Mi espacio</strong><small>Solo para ti</small></span></div></div>
       </aside>
       <main className="app-main">{children}</main>
       <button className={`mobile-more${secondaryActive ? ' is-active' : ''}`} aria-label="Más secciones" aria-expanded={moreOpen} aria-haspopup="dialog" aria-current={secondaryActive ? 'page' : undefined} onClick={() => setMoreOpen(true)} type="button"><Icon name="more" size={20} /> Más</button>

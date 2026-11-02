@@ -83,6 +83,28 @@ describe('bootstrap request resilience', () => {
 })
 
 describe('catalog recovery', () => {
+  it('does not confirm an incomplete preparation response', async () => {
+    vi.stubGlobal('window', makeWindow())
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 201 })))
+    try {
+      const { createHistory, getWriteStatus } = await import('./api.js')
+      await expect(createHistory({ id: 'event', mealOptionId: 'meal', eatenAt: '2026-11-01T12:00:00.000Z' })).rejects.toThrow('HISTORY_UNCONFIRMED')
+      expect(getWriteStatus().pending).toBe(false)
+    } finally { vi.unstubAllGlobals(); vi.resetModules() }
+  })
+  it('distinguishes a missing weekly plan from a failed request and deduplicates loads', async () => {
+    vi.stubGlobal('window', makeWindow())
+    const fetcher = vi.fn().mockResolvedValueOnce(new Response('{}', { status: 503 })).mockResolvedValueOnce(new Response('null', { status: 200 }))
+    vi.stubGlobal('fetch', fetcher)
+    try {
+      const { loadWeekly } = await import('./api.js')
+      const pending = loadWeekly()
+      expect(loadWeekly()).toBe(pending)
+      await expect(pending).rejects.toThrow('API 503')
+      await expect(loadWeekly()).resolves.toBeNull()
+      expect(fetcher).toHaveBeenCalledTimes(2)
+    } finally { vi.unstubAllGlobals(); vi.resetModules() }
+  })
   it('shares concurrent requests and replaces stale cache', async () => {
     const browser = makeWindow()
     browser.sessionStorage.setItem('mi-dieta:bootstrap:v2', JSON.stringify({ payload: fallbackPayload, etag: 'old' }))

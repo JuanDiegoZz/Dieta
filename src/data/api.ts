@@ -119,11 +119,19 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutM
   }
 }
 
+let pendingWrites = 0
+let writeVersion = 0
+export function getWriteStatus() { return { pending: pendingWrites > 0, version: writeVersion } }
+
 async function fetchJson<T>(url: string, options?: RequestInit, timeoutMs = API_TIMEOUT_MS): Promise<T> {
-  const response = await fetchWithTimeout(url, { ...options, headers: { Accept: 'application/json', ...(options?.headers ?? {}) } }, timeoutMs)
-  if (!response.ok) throw new RequestError(response.status)
-  if (response.status === 204) return undefined as T
-  return response.json() as Promise<T>
+  const mutation = !!options?.method && options.method !== 'GET'
+  if (mutation) { pendingWrites += 1; writeVersion += 1 }
+  try {
+    const response = await fetchWithTimeout(url, { ...options, headers: { Accept: 'application/json', ...(options?.headers ?? {}) } }, timeoutMs)
+    if (!response.ok) throw new RequestError(response.status)
+    if (response.status === 204) return undefined as T
+    return await response.json() as T
+  } finally { if (mutation) pendingWrites -= 1 }
 }
 
 let pendingBootstrap: Promise<BootstrapPayload> | null = null
@@ -204,8 +212,14 @@ export async function updatePantry(ingredientId: string, patch: { available?: bo
   return result
 }
 
-export async function loadWeekly(): Promise<WeeklyPlan | null> {
-  try { return await fetchJson<WeeklyPlan | null>('/api/weekly') } catch { return null }
+let pendingWeekly: Promise<WeeklyPlan | null> | null = null
+export function loadWeekly(): Promise<WeeklyPlan | null> {
+  if (pendingWeekly) return pendingWeekly
+  pendingWeekly = fetchJson<WeeklyPlan | null>('/api/weekly').then((plan) => {
+    if (plan !== null && (!plan || typeof plan.id !== 'string' || typeof plan.startDate !== 'string' || !Array.isArray(plan.entries))) throw new Error('INVALID_WEEKLY_PLAN')
+    return plan
+  }).finally(() => { pendingWeekly = null })
+  return pendingWeekly
 }
 
 export async function saveWeekly(plan: WeeklyPlan) {

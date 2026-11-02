@@ -594,3 +594,14 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
 
 .kitchen-done { background: var(--accent-dark); }
 .button:disabled, .kitchen-done:disabled { cursor: default; }
+
+.kitchen-component { margin: 20px 0 28px; }
+.kitchen-component h2 { margin: 0 0 12px; color: var(--accent-dark); font-size: 21px; }
+.week-scroll-hint { margin: 18px 0 0; color: var(--muted-dark); font-size: 14px; line-height: 1.5; }
+.week-grid:focus { outline: 3px solid #98412c; outline-offset: 3px; }
+.day-column > header { position: sticky; left: 0; z-index: 1; }
+
+@media (max-width: 1099px) {
+  .mobile-more { top: 10px; top: calc(10px + env(safe-area-inset-top)); }
+  .app-main { padding-top: 48px; padding-top: calc(48px + env(safe-area-inset-top)); padding-bottom: 88px; padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+}

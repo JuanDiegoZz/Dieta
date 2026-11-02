@@ -1,11 +1,10 @@
 import { useScreenState } from '../platform/useScreenState'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { Icon } from '../components/Icon'
 import { MealCard } from '../components/MealCard'
 import { MealTabs } from '../components/MealTabs'
 import { SearchField } from '../components/SearchField'
-import { SkeletonCard } from '../components/SkeletonCard'
 import { getSuggestedSlot, MEAL_SLOTS } from '../domain/slots'
 import { createMealSearchIndex, searchMealOptions } from '../domain/search'
 import { rankMealOptions, recommendationReason } from '../domain/recommendations'
@@ -24,10 +23,9 @@ function dateLabel() {
   return new Date().toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
-export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, onToggleFavorite, onHide, onExplore }: { onExplore: (query: string, slot: MealSlot) => void; meals: MealOption[]; pantry: PantryItem[]; avoidRepeatDays: number; onOpen: (meal: MealOption) => void; onCook: (meal: MealOption) => void; onToggleFavorite: (meal: MealOption) => void; onHide: (meal: MealOption) => void }) {
+export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, onToggleFavorite, onHide, onExplore, onSettings }: { onSettings: () => void; onExplore: (query: string, slot: MealSlot) => void; meals: MealOption[]; pantry: PantryItem[]; avoidRepeatDays: number; onOpen: (meal: MealOption) => void; onCook: (meal: MealOption) => void; onToggleFavorite: (meal: MealOption) => void; onHide: (meal: MealOption) => void }) {
   const [selectedSlot, setSelectedSlot] = useScreenState<MealSlot>('today.slot', () => getSuggestedSlot())
   const [query, setQuery] = useScreenState('today.query', '')
-  const [loading, setLoading] = useState(true)
   const [surpriseIndex, setSurpriseIndex] = useState(0)
   const [surpriseOpen, setSurpriseOpen] = useState(false)
   const searchIndex = useMemo(() => createMealSearchIndex(meals), [meals])
@@ -36,11 +34,6 @@ export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, on
     if (query.trim()) return searchMealOptions(meals, query, searchIndex, selectedSlot).map((result) => result.meal)
     return rankMealOptions(meals.filter((meal) => meal.slot === selectedSlot), pantry, new Date(), avoidRepeatDays)
   }, [avoidRepeatDays, meals, pantry, query, searchIndex, selectedSlot])
-
-  useEffect(() => {
-    const timeout = window.setTimeout(() => setLoading(false), 260)
-    return () => window.clearTimeout(timeout)
-  }, [])
 
   const featured = results[0]
   const displayedResults = results.slice(0, 6)
@@ -55,7 +48,7 @@ export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, on
           <h1>{greeting()}, {PERSONAL_NAME} <span className="wave">✦</span></h1>
           <p className="page-subtitle">¿Qué se te antoja preparar hoy?</p>
         </div>
-        <button className="header-action" type="button" aria-label="Abrir ajustes"><Icon name="settings" size={20} /></button>
+        <button className="header-action" onClick={onSettings} type="button" aria-label="Abrir ajustes"><Icon name="settings" size={20} /></button>
       </header>
 
       <section className="today-intro">
@@ -75,7 +68,7 @@ export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, on
 
       <section className="section-block section-block--cards">
         <div className="section-heading"><div><p className="section-kicker">{query ? 'Coincidencias' : 'Opciones de tu dieta'}</p><h2>{query ? 'Encuentra algo que te guste' : `Ideas para ${slot.label.toLocaleLowerCase('es')}`}</h2></div>{!query && <span className="result-count">{results.length} opciones</span>}</div>
-        {loading ? <div className="card-grid">{[1, 2, 3].map((item) => <SkeletonCard key={item} />)}</div> : results.length ? <div className="card-grid">{displayedResults.map((meal) => <MealCard key={meal.id} meal={meal} onOpen={onOpen} onToggleFavorite={onToggleFavorite} onCook={onCook} onHide={onHide} />)}</div> : <EmptyState title={query ? `No encontramos ${slot.label.toLocaleLowerCase('es')} con “${query}”.` : 'No encontramos opciones'} message={query ? 'Borra la búsqueda o cambia de franja para seguir explorando.' : 'Prueba otra búsqueda o cambia de franja.'} action={query ? { label: 'Borrar búsqueda', onClick: () => setQuery('') } : undefined} />}
+        {results.length ? <div className="card-grid">{displayedResults.map((meal) => <MealCard key={meal.id} meal={meal} onOpen={onOpen} onToggleFavorite={onToggleFavorite} onCook={onCook} onHide={onHide} />)}</div> : <EmptyState title={query ? `No encontramos ${slot.label.toLocaleLowerCase('es')} con “${query}”.` : 'No encontramos opciones'} message={query ? 'Borra la búsqueda o cambia de franja para seguir explorando.' : 'Prueba otra búsqueda o cambia de franja.'} action={query ? { label: 'Borrar búsqueda', onClick: () => setQuery('') } : undefined} />}
         {results.length > 6 && <button className="button button--secondary" onClick={() => onExplore(query, selectedSlot)} type="button">Ver más en Explorar</button>}
         <p className="page-subtitle">La búsqueda de Hoy usa la franja seleccionada.</p>
       </section>

@@ -48,3 +48,13 @@
 - Hoy indica visibles/total y continúa en Explorar con consulta y franja conservadas. Explorar comunica alcance global; Hoy y alternativas siguen restringidos por franja.
 - Despensa y alternativas usan normalización por palabra/prefijo; piña no coincide con espinaca. Se mantienen nombres, ingredientes, aliases y consultas múltiples.
 - Rojo: cuatro casos nuevos de Despensa detectaron falsos positivos. Verde: 111 pruebas; lint, typecheck, build y diff --check aprobados. Navegador acumulado en cuatro tamaños verificó continuación 6/14 y búsquedas normalizadas.
+
+## Iteración 7 — Planificación, cocina y recuperación
+
+- Cocina conserva componentes, cantidades y notas. Semana añade indicación horizontal y día visible, con área desplazable enfocable.
+- Eliminada espera artificial de Hoy. Ajustes abre Administración; retirados botones sin acción de cocina y perfil; textos de ingredientes aclarados.
+- Semana distingue cargando/error/ausencia; permite reintento, conserva última versión y bloquea escrituras simultáneas. Revalidación al reconectar/recuperar visibilidad con deduplicación, límite de 15 s y protección frente a borradores/escrituras. Reloj actualizado cada minuto visible y al regresar.
+- Favoritos y despensa se actualizan tras confirmación; historial no revierte otras operaciones al fallar un borrado. Se comunica guardado pendiente. Respuestas antiguas no sustituyen datos durante ediciones.
+- Revisión adicional: el evento de cocina conserva valoración además de UUID/fecha; conflicto de contenido se rechaza sin sobrescritura. Estado de UI se persiste fuera del actualizador de React.
+- 115 pruebas; lint, typecheck, build y diff --check aprobados. Suite acumulada en cuatro tamaños aprobó agrupación, favoritos, despensa, bloqueo semanal, 503 semanal/reintento, reconexión deduplicada y borrador protegido.
+- Pruebas negativas esperadas: 503 y red abortada en mocks; cero excepciones JavaScript no esperadas. Sin escrituras reales.
