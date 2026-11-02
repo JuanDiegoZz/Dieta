@@ -605,3 +605,23 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
   .mobile-more { top: 10px; top: calc(10px + env(safe-area-inset-top)); }
   .app-main { padding-top: 48px; padding-top: calc(48px + env(safe-area-inset-top)); padding-bottom: 88px; padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
 }
+
+/* The editor occupies a narrow column even on desktop; fixed ingredient tracks overflowed iPad landscape. */
+.admin-editor, .component-editor { min-width: 0; }
+.ingredient-editor > span { min-width: 0; }
+.ingredient-editor select { max-width: 100%; }
+@media (min-width: 800px) {
+  .ingredient-editor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ingredient-editor > label:first-child { grid-column: 1 / -1; }
+}
+
+/* Keep a single 44px clear action and show focus on the whole search field. */
+input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; display: none; }
+.search-field:focus-within, .change-dialog__search:focus-within { border-color: #98412c; box-shadow: 0 0 0 2px #98412c; }
+.search-field input:focus, .change-dialog__search input:focus { outline: 0; }
+
+.admin-confirm__card { width: 100%; max-width: 440px; max-height: 86vh; overflow: auto; }
+.admin-confirm__card > div { gap: 0; }
+.admin-confirm__card > div > * + * { margin-left: 8px; }
+.change-dialog__header { gap: 0; }
+.change-dialog__header .icon-button { margin-left: 18px; }

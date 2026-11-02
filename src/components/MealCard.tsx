@@ -58,11 +58,11 @@ export function MealCard({
           {meal.tags.slice(0, 2).map((tag) => <span className="tag" key={tag}>{tag}</span>)}
         </div>
         {onCook && (
-          <button className="text-button" onClick={() => onCook(meal)} type="button">
+          <button className="text-button" aria-label={`Cocinar ${meal.title}`} onClick={() => onCook(meal)} type="button">
             <Icon name="play" size={15} /> Cocinar
           </button>
         )}
-        {onHide && <button className="text-button text-button--muted" onClick={() => onHide(meal)} type="button">Ocultar</button>}
+        {onHide && <button className="text-button text-button--muted" aria-label={`Ocultar ${meal.title}`} onClick={() => onHide(meal)} type="button">Ocultar</button>}
       </div>
     </article>
   )

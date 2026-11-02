@@ -140,6 +140,7 @@ export default function App() {
         return
       }
       currentLocation.current = { hash: window.location.hash, state: window.history.state }
+      if (target !== 'admin') setAdminDirty(false)
       setView(target); setSelectedMealId(mealIdFromHash(window.location.hash)); setOrigin(returnRoute(window.history.state?.dieta?.origin))
     }
     const beforeUnload = (event: BeforeUnloadEvent) => { if (adminDirty) { event.preventDefault(); event.returnValue = '' } }

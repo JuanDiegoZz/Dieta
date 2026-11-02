@@ -58,3 +58,10 @@
 - Revisión adicional: el evento de cocina conserva valoración además de UUID/fecha; conflicto de contenido se rechaza sin sobrescritura. Estado de UI se persiste fuera del actualizador de React.
 - 115 pruebas; lint, typecheck, build y diff --check aprobados. Suite acumulada en cuatro tamaños aprobó agrupación, favoritos, despensa, bloqueo semanal, 503 semanal/reintento, reconexión deduplicada y borrador protegido.
 - Pruebas negativas esperadas: 503 y red abortada en mocks; cero excepciones JavaScript no esperadas. Sin escrituras reales.
+
+## Regresión final independiente
+
+- Se repitieron 115 pruebas en 25 archivos, lint, typecheck, build legacy y diff --check: aprobados.
+- Suite integral repetida en cuatro tamaños con datos sintéticos e interceptación de todas las API. Se generaron siete capturas en docs/evidence/ux-ipad y se inspeccionaron visualmente.
+- Se corrigieron desbordamiento del editor abierto en iPad horizontal, limpieza nativa duplicada, nombres accesibles repetidos y limpieza del estado dirty al aceptar Atrás. Se repitió todo el protocolo después de los cambios.
+- Informe, cobertura de los 14 hallazgos y revisión manual segura: docs/ux-ipad-review.md. Validación física pendiente.

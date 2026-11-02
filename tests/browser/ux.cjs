@@ -1,7 +1,7 @@
 /* global module, URL, sessionStorage, localStorage, document, innerWidth, window, getComputedStyle, Event */
-// Run with the available Playwright tool: require(this file)(page, iteration).
+// Exported Playwright suite. For the browser tool, evaluate the function after removing `module.exports =`.
 // Every API response is synthetic. No request can reach the production BFF.
-module.exports = async (page, iteration = 1) => {
+module.exports = async (page, iteration = 1, captureEvidence = false) => {
   const assert = (condition, message) => { if (!condition) throw new Error(message) }
   const uuid = (n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`
   const sizes = [{ width: 375, height: 812 }, { width: 768, height: 1024 }, { width: 1024, height: 768 }, { width: 1366, height: 900 }]
@@ -86,7 +86,7 @@ module.exports = async (page, iteration = 1) => {
         assert(await page.locator('input[type=search]').inputValue() === 'piña', 'reload/back must restore query')
         assert(await page.locator('.meal-card').count() === 2, 'reload/back must restore page')
       }
-      await page.locator('.meal-card').first().getByRole('button', { name: 'Cocinar', exact: true }).click()
+      await page.locator('.meal-card').first().getByRole('button', { name: /^Cocinar / }).click()
       state.mode = '503'
       await page.getByRole('button', { name: 'Terminé', exact: true }).dblclick()
       await page.getByRole('button', { name: 'Reintentar confirmación', exact: true }).waitFor()
@@ -139,14 +139,14 @@ module.exports = async (page, iteration = 1) => {
       }
       if (iteration >= 4) {
         await page.goto('http://127.0.0.1:5174/#/week')
-        await page.getByRole('button', { name: 'Cambiar', exact: true }).first().click()
+        await page.getByRole('button', { name: /^Cambiar / }).first().click()
         await page.locator('.change-options button').last().focus()
         await page.keyboard.press('Tab')
         assert(await page.evaluate(() => !!document.activeElement.closest('[role=dialog]')), 'Tab must stay in weekly dialog')
         await page.keyboard.press('Shift+Tab')
         assert(await page.evaluate(() => !!document.activeElement.closest('[role=dialog]')), 'Shift+Tab must stay in dialog')
         await page.keyboard.press('Escape')
-        assert(await page.getByRole('button', { name: 'Cambiar', exact: true }).first().evaluate(e => e === document.activeElement), 'weekly dialog must restore focus')
+        assert(await page.getByRole('button', { name: /^Cambiar / }).first().evaluate(e => e === document.activeElement), 'weekly dialog must restore focus')
         await page.goto('http://127.0.0.1:5174/#/explore')
         await page.locator('input[type=search]').waitFor()
         if (size.width < 1100) await page.getByRole('button', { name: 'Más secciones', exact: true }).click()
@@ -169,6 +169,13 @@ module.exports = async (page, iteration = 1) => {
         await page.getByLabel('Nombre', { exact: true }).fill('Agua editada')
         await page.getByRole('button', { name: /Guardar (Ingredient|ingrediente)/i }).click()
         await page.getByRole('button', { name: 'Hoy', exact: true }).click()
+        await page.waitForURL('**/#/today')
+        if (size.width < 1100) await page.getByRole('button', { name: 'Más secciones', exact: true }).click()
+        await page.getByRole('button', { name: 'Administrar', exact: true }).click()
+        await page.getByRole('button', { name: 'Ingredientes', exact: true }).click()
+        await page.locator('.admin-list__item').first().click()
+        await page.getByLabel('Nombre', { exact: true }).fill('Descartar al volver')
+        await page.evaluate(() => { window.confirm = () => true; window.history.back() })
         await page.waitForURL('**/#/today')
       }
       if (iteration >= 5) {
@@ -203,7 +210,7 @@ module.exports = async (page, iteration = 1) => {
         await page.locator('input[type=search]').fill('PIÑA')
         assert(await page.locator('.pantry-row').count() === 1, 'pantry normalization must find pineapple')
         await page.goto('http://127.0.0.1:5174/#/week')
-        await page.getByRole('button', { name: 'Cambiar', exact: true }).first().click()
+        await page.getByRole('button', { name: /^Cambiar / }).first().click()
         await page.getByRole('textbox', { name: 'Buscar alternativa' }).fill('PIÑA')
         assert(await page.locator('.change-option').count() === 14, 'weekly alternatives must use normalized ingredient search in slot')
         await page.keyboard.press('Escape')
@@ -228,7 +235,7 @@ module.exports = async (page, iteration = 1) => {
         await page.waitForFunction(() => document.querySelector('.detail-favorite')?.getAttribute('aria-pressed') === 'true')
         await page.getByRole('button', { name: 'Volver', exact: true }).click()
         await page.waitForURL('**/#/explore')
-        await page.locator('.meal-card').first().getByRole('button', { name: 'Cocinar', exact: true }).click()
+        await page.locator('.meal-card').first().getByRole('button', { name: /^Cocinar / }).click()
         assert(await page.locator('.kitchen-component h2').count() === 2, 'kitchen must preserve components')
         assert(await page.getByText('Sin cambiar cantidades.', { exact: true }).count() === 1, 'kitchen must preserve notes')
         await page.goto('http://127.0.0.1:5174/#/pantry')
@@ -237,10 +244,10 @@ module.exports = async (page, iteration = 1) => {
         await page.getByRole('button', { name: /Usar pronto: Piña/ }).click()
         await page.waitForFunction(() => document.querySelector('.soon-toggle')?.getAttribute('aria-pressed') === 'true')
         await page.goto('http://127.0.0.1:5174/#/week')
-        await page.getByRole('button', { name: 'Bloquear', exact: true }).first().click()
-        await page.getByRole('button', { name: 'Desbloquear', exact: true }).first().waitFor()
-        await page.getByRole('button', { name: 'Desbloquear', exact: true }).first().click()
-        await page.getByRole('button', { name: 'Bloquear', exact: true }).first().waitFor()
+        await page.getByRole('button', { name: /^Bloquear / }).first().click()
+        await page.getByRole('button', { name: /^Desbloquear / }).first().waitFor()
+        await page.getByRole('button', { name: /^Desbloquear / }).first().click()
+        await page.getByRole('button', { name: /^Bloquear / }).first().waitFor()
         state.bootstrapError = true
         await page.goto('http://127.0.0.1:5174/?diagnostics=1#/explore')
         await page.locator('.status-banner').waitFor()
@@ -259,8 +266,25 @@ module.exports = async (page, iteration = 1) => {
         assert(await page.getByLabel('Nombre', { exact: true }).inputValue() === 'Borrador protegido', 'recovery must preserve draft')
         await page.locator('.admin-list__item').nth(1).click()
         await page.getByRole('button', { name: 'Descartar cambios', exact: true }).click()
+        await page.getByRole('button', { name: 'Platillos', exact: true }).click()
+        await page.locator('.admin-list__item').first().click()
+        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'open admin editor must not overflow')
+        if (captureEvidence && size.width === 1024) await page.screenshot({ path: 'C:/Dev/dieta-app/docs/evidence/ux-ipad/admin-1024.png' })
       }
-      reports.push({ size, iteration, checks: 'search, 503, double tap, lost response, idempotent retry, history, overflow' })
+      if (captureEvidence) {
+        await page.goto('http://127.0.0.1:5174/#/explore')
+        await page.locator('input[type=search]').fill('piña')
+        await page.screenshot({ path: `C:/Dev/dieta-app/docs/evidence/ux-ipad/search-${size.width}.png` })
+        if (size.width === 768) {
+          await page.locator('.meal-card').first().getByRole('button', { name: /^Cocinar / }).click()
+          await page.screenshot({ path: 'C:/Dev/dieta-app/docs/evidence/ux-ipad/kitchen-768.png' })
+          await page.goto('http://127.0.0.1:5174/#/week')
+          await page.getByRole('button', { name: /^Cambiar / }).first().click()
+          await page.screenshot({ path: 'C:/Dev/dieta-app/docs/evidence/ux-ipad/dialog-768.png' })
+          await page.keyboard.press('Escape')
+        }
+      }
+      reports.push({ size, iteration, checks: ['search boundaries', '503', 'double tap', 'network interruption', 'lost response', 'idempotent retry', 'history', ...(iteration >= 2 ? ['five navigation origins', 'back/forward', 'reload', 'direct link', 'query/filter/page restoration'] : []), ...(iteration >= 3 ? ['secondary navigation'] : []), ...(iteration >= 4 ? ['modal keyboard focus', 'draft guards', 'browser Back guard', 'confirmed admin save'] : []), ...(iteration >= 5 ? ['44px targets', 'selection semantics', 'reduced motion'] : []), ...(iteration >= 6 ? ['Today continuation', 'normalized contextual search'] : []), ...(iteration >= 7 ? ['weekly error/recovery', 'favorites', 'pantry', 'weekly lock', 'deduplicated recovery', 'protected drafts', 'cooking groups', 'open admin editor'] : [])] })
       await page.unrouteAll({ behavior: 'wait' })
     }
     assert(errors.length === 0, `JavaScript errors: ${errors.join('; ')}`)
