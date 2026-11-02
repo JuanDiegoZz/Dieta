@@ -56,9 +56,14 @@ async function request<T>(table: string, init: RequestInit = {}, query = '', opt
         headers: buildSupabaseHeaders(key, legacyJwt, init.headers),
       })
       if (!response.ok) {
-        console.error(`supabase:error table=${table} status=${response.status} duration=${Date.now() - startedAt}ms`)
         let providerCode = ''
         try { providerCode = String((await response.json() as { code?: unknown }).code ?? '') } catch { /* provider body is optional */ }
+        // Log only known code formats and request IDs; provider messages can contain private data.
+        const diagnosticCode = /^(?:[0-9A-Z]{5}|PGRST\d{3})$/.test(providerCode) ? providerCode : 'unclassified'
+        const rawRequestId = response.headers.get('sb-request-id') ?? ''
+        const requestId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(rawRequestId) ? rawRequestId : 'unavailable'
+        const environment = ['production', 'preview', 'development'].includes(process.env.VERCEL_ENV ?? '') ? process.env.VERCEL_ENV : 'local'
+        console.error(`supabase:error table=${table} operation=${operation} status=${response.status} providerCode=${diagnosticCode} requestId=${requestId} authMode=${legacyJwt ? 'legacy-jwt' : 'secret-apikey'} environment=${environment} duration=${Date.now() - startedAt}ms`)
         if (providerCode === '23503') throw new ApiError(409, 'ADMIN_REFERENCE_CONFLICT', 'La operación tiene referencias; conserva el registro u ocúltalo.')
         if (providerCode === '22023') throw new ApiError(400, 'INVALID_PAYLOAD', 'Los datos enviados no son válidos.')
         throw new ApiError(502, 'DATA_PROVIDER_ERROR', 'No se pudo consultar el catalogo.')

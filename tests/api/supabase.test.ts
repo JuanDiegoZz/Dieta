@@ -2,6 +2,39 @@ import { describe, expect, it, vi } from 'vitest'
 import { buildSupabaseHeaders, isUuid, rpc, selectAllRows } from '../../api/_lib/supabase.js'
 
 describe('Supabase REST headers', () => {
+  it.each(['meal_preferences', 'pantry_items'])('diagnoses a 401 safely and allows a later read of %s', async (table) => {
+    const requestId = '12345678-1234-1234-1234-123456789abc'
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ code: 'PGRST301', message: 'private-provider-message', details: 'private-details' }), { status: 401, headers: { 'sb-request-id': requestId } }))
+      .mockResolvedValueOnce(new Response('[]', { status: 200 }))
+    vi.stubGlobal('fetch', fetchMock)
+    vi.stubEnv('SUPABASE_URL', 'https://example.supabase.co')
+    vi.stubEnv('SUPABASE_SECRET_KEY', 'sb_secret_private')
+    vi.stubEnv('VERCEL_ENV', 'preview')
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    try {
+      await expect(selectAllRows(table, '*')).rejects.toMatchObject({ status: 502, code: 'DATA_PROVIDER_ERROR' })
+      expect(fetchMock).toHaveBeenCalledTimes(1)
+      const output = log.mock.calls.flat().join(' ')
+      expect(output).toContain(`table=${table} operation=select status=401 providerCode=PGRST301 requestId=${requestId} authMode=secret-apikey environment=preview`)
+      expect(output).not.toMatch(/private|https:\/\//)
+      await expect(selectAllRows(table, '*')).resolves.toEqual([])
+    } finally { log.mockRestore(); vi.unstubAllGlobals(); vi.unstubAllEnvs() }
+  })
+
+  it('does not log arbitrary provider codes or request header values', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ code: 'sb_secret_private' }), { status: 401, headers: { 'sb-request-id': 'private-token' } })))
+    vi.stubEnv('SUPABASE_URL', 'https://example.supabase.co')
+    vi.stubEnv('SUPABASE_SECRET_KEY', 'sb_secret_private')
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    try {
+      await expect(selectAllRows('meal_preferences', '*')).rejects.toMatchObject({ code: 'DATA_PROVIDER_ERROR' })
+      const output = log.mock.calls.flat().join(' ')
+      expect(output).toContain('providerCode=unclassified requestId=unavailable')
+      expect(output).not.toContain('private')
+    } finally { log.mockRestore(); vi.unstubAllGlobals(); vi.unstubAllEnvs() }
+  })
+
   it('sends secret keys only as apikey, never as a bearer token', () => {
     const headers = buildSupabaseHeaders('sb_secret_test')
 
