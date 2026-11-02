@@ -1,4 +1,4 @@
-/* global module, URL, document, innerWidth, innerHeight, sessionStorage, localStorage, window, getComputedStyle */
+/* global module, URL, document, innerWidth, innerHeight, sessionStorage, localStorage, window, getComputedStyle, EventTarget, Event */
 // All data and writes are synthetic. Evaluate the exported function with the Playwright browser tool.
 module.exports = async (page, phase = 'before', checksThrough = 7) => {
   const sizes = [[1024, 768], [1112, 834], [1180, 820], [1194, 834], [1366, 1024], [768, 1024], [375, 812]]
@@ -51,6 +51,14 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
             if (metrics.card) assert(metrics.card.width >= 250, `cards compressed at ${width}`)
             if (screen === 'week' && checksThrough >= 4) assert(metrics.week.scroll <= metrics.week.width + 1, 'weekly meals must fit without horizontal calendar scrolling')
             if (screen === 'kitchen' && checksThrough >= 5) assert(metrics.cookingAction.top >= 0 && metrics.cookingAction.bottom <= height, 'preparation action must be initially visible in landscape')
+            if (screen === 'admin' && checksThrough >= 6) {
+              const save = await page.getByRole('button', { name: 'Guardar cambios', exact: true }).boundingBox()
+              assert(save.y >= 0 && save.y + save.height <= height, 'admin save must be reachable at the start')
+              await page.evaluate(() => window.scrollTo(0, 1400))
+              const stickySave = await page.getByRole('button', { name: 'Guardar cambios', exact: true }).boundingBox()
+              assert(stickySave.y >= 0 && stickySave.y + stickySave.height <= height, 'save must remain visible while editing')
+              await page.evaluate(() => window.scrollTo(0, 0))
+            }
           }
         }
         reports.push({ width, height, screen, ...metrics })
@@ -96,6 +104,20 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
     assert(short.y >= 0 && short.y + short.height <= 380, 'dialog must fit reduced height')
     await page.screenshot({ path: `C:/Dev/dieta-app/docs/evidence/landscape/${phase}/dialog-short.png` })
     await page.keyboard.press('Escape')
+    if (phase === 'after' && checksThrough >= 6) {
+      await page.evaluate(() => {
+        const viewport = Object.assign(new EventTarget(), { height: 280, offsetTop: 45 })
+        Object.defineProperty(window, 'visualViewport', { configurable: true, value: viewport })
+      })
+      await page.getByRole('button', { name: /^Cambiar / }).first().click()
+      let dialog = await page.getByRole('dialog').boundingBox()
+      assert(dialog.y >= 45 && dialog.y + dialog.height <= 325, 'dialog must fit a simulated visual viewport')
+      await page.evaluate(() => { window.visualViewport.height = 240; window.visualViewport.offsetTop = 70; window.visualViewport.dispatchEvent(new Event('resize')) })
+      dialog = await page.getByRole('dialog').boundingBox()
+      assert(dialog.y >= 70 && dialog.y + dialog.height <= 310, 'dialog must follow visual viewport resize')
+      await page.keyboard.press('Escape')
+      await page.evaluate(() => { delete window.visualViewport })
+    }
     assert(errors.length === 0, errors.join('; '))
     return reports
   } finally { page.off('pageerror', onError); await page.unrouteAll({ behavior: 'wait' }) }

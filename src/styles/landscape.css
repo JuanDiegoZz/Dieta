@@ -93,3 +93,23 @@
   .kitchen-done { margin-top: 20px; width: 100%; }
   .kitchen-actions .kitchen-note { margin-top: 18px; }
 }
+
+/* Controls stay reachable above the keyboard, including browsers without VisualViewport. */
+.dialog-backdrop { padding: 16px; }
+.change-dialog, .admin-confirm__card { max-height: calc(var(--dialog-height, 100vh) - 32px); }
+.change-dialog__header { position: -webkit-sticky; position: sticky; top: -22px; z-index: 2; background: var(--surface); padding-bottom: 8px; }
+.admin-confirm__card > div:last-child { position: -webkit-sticky; position: sticky; bottom: -1px; padding-top: 12px; background: var(--surface); }
+@media (max-height: 480px) {
+  .dialog-backdrop { padding: 10px; }
+  .change-dialog, .admin-confirm__card { padding: 16px; max-height: calc(var(--dialog-height, 100vh) - 20px); }
+  .change-dialog__header { top: -16px; }
+}
+@media (min-width: 1000px) and (orientation: landscape) {
+  .detail-favorite { margin: 0 0 0 12px; }
+  .week-toolbar { gap: 12px; }
+  .segmented-control { flex-shrink: 0; }
+  .segmented-control button { white-space: nowrap; }
+  .week-actions { gap: 8px; }
+  .week-actions .button { font-size: 14px; padding: 0 12px; white-space: nowrap; }
+  .editor-save { position: -webkit-sticky; position: sticky; top: 12px; z-index: 4; margin: 18px 0; padding: 12px; justify-content: space-between; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-sm); }
+}

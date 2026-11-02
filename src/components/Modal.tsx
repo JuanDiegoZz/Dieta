@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom'
 
 export function Modal({ titleId, onClose, children, className = 'change-dialog' }: { titleId: string; onClose: () => void; children: ReactNode; className?: string }) {
   const panel = useRef<HTMLElement>(null)
+  const backdrop = useRef<HTMLDivElement>(null)
   const close = useRef(onClose)
   close.current = onClose
   useEffect(() => {
@@ -11,6 +12,19 @@ export function Modal({ titleId, onClose, children, className = 'change-dialog' 
     const root = document.getElementById('root')
     const previousHidden = root?.getAttribute('aria-hidden')
     const overflow = document.body.style.overflow
+    const viewport = window.visualViewport
+    function updateViewport() {
+      if (!backdrop.current) return
+      const height = viewport?.height ?? window.innerHeight
+      backdrop.current.style.top = `${viewport?.offsetTop ?? 0}px`
+      backdrop.current.style.height = `${height}px`
+      backdrop.current.style.bottom = 'auto'
+      backdrop.current.style.setProperty('--dialog-height', `${height}px`)
+    }
+    updateViewport()
+    window.addEventListener('resize', updateViewport)
+    viewport?.addEventListener('resize', updateViewport)
+    viewport?.addEventListener('scroll', updateViewport)
     const focusable = () => Array.from(panel.current?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]') ?? []).filter((item) => item.getClientRects().length > 0)
     const focusFirst = () => (focusable()[0] ?? panel.current)?.focus()
     focusFirst()
@@ -28,6 +42,9 @@ export function Modal({ titleId, onClose, children, className = 'change-dialog' 
     document.addEventListener('keydown', keydown, true)
     document.addEventListener('focusin', containFocus)
     return () => {
+      window.removeEventListener('resize', updateViewport)
+      viewport?.removeEventListener('resize', updateViewport)
+      viewport?.removeEventListener('scroll', updateViewport)
       document.removeEventListener('keydown', keydown, true)
       document.removeEventListener('focusin', containFocus)
       document.body.style.overflow = overflow
@@ -35,5 +52,5 @@ export function Modal({ titleId, onClose, children, className = 'change-dialog' 
       if (origin?.isConnected) origin.focus()
     }
   }, [])
-  return createPortal(<div className="dialog-backdrop" onClick={(event) => { if (event.target === event.currentTarget) onClose() }}><section ref={panel} tabIndex={-1} className={className} role="dialog" aria-modal="true" aria-labelledby={titleId}>{children}</section></div>, document.body)
+  return createPortal(<div ref={backdrop} className="dialog-backdrop" onClick={(event) => { if (event.target === event.currentTarget) onClose() }}><section ref={panel} tabIndex={-1} className={className} role="dialog" aria-modal="true" aria-labelledby={titleId}>{children}</section></div>, document.body)
 }

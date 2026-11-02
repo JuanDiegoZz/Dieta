@@ -49,3 +49,10 @@ No hubo desbordamiento horizontal de página en las medidas iniciales; los probl
 - Contexto con sticky y scroll propio si el texto es largo; componentes usan columnas solo cuando hay ancho real. No se tocaron estados de guardado ni idempotencia.
 - Rojo: acción fuera de viewport. Verde: cinco pruebas de preparación/idempotencia, typecheck y auditoría de siete tamaños aprobados. Capturas revisadas de cocina, detalle y Semana.
 - En la prueba de bloqueo semanal se normalizó el estado sintético entre tamaños: un bloqueo de un caso anterior no debe confundirse con un defecto del producto.
+
+## Fase 6 — Formularios y altura disponible
+
+- Acciones de guardado movidas al inicio del editor y sticky en horizontal; catálogo lateral mantiene contexto. Se comprobó guardar visible tanto al inicio como tras 1400 px de scroll.
+- Modal sigue visualViewport (resize/scroll) cuando existe y usa innerHeight/resize como fallback. Encabezado/cierre y confirmación quedan accesibles en altura reducida. Listeners se limpian al cerrar.
+- Se corrigió un margen negativo que producía scroll horizontal interno en el resumen del detalle y un ajuste de pocos píxeles que partía el toolbar semanal.
+- Doce pruebas pertinentes y typecheck aprobados; diff revisado. Navegador aprobó siete tamaños, contención del foco, 1024×380 y visualViewport simulado de 280/240 px con offset. No se afirma teclado físico.
