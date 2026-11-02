@@ -22,3 +22,9 @@
 - Respaldo seguro de enlaces directos: Hoy; ID inválido no abre otro platillo. Páginas y filtros sobreviven recarga/atrás.
 - 101 pruebas; lint, typecheck, build y diff --check aprobados. Suite de navegador acumulada en cuatro tamaños: cinco orígenes, atrás/adelante, recarga de detalle, filtro y página 2.
 - Durante desarrollo se corrigieron referencias e imports obsoletos detectados por typecheck; sin fallos pendientes de esas correcciones.
+
+## Iteración 3 — Navegación completa
+
+- Acceso Más separado de las cinco secciones inferiores. Historial y Administrar accesibles y ruta secundaria activa. Diálogo compartido con foco contenido, Escape y restauración.
+- 101 pruebas; todos los comandos del protocolo aprobados. Suite acumulada en cuatro tamaños aprobada, incluidos apertura/cierre y ambos destinos.
+- Se detectó que el indicador de desarrollo tapaba Más; corregido su posicionamiento e interacción. Sin cambios en permisos o datos.

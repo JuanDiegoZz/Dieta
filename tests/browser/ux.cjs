@@ -96,6 +96,19 @@ module.exports = async (page, iteration = 1) => {
         await page.waitForURL('**/#/today')
       }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'page must not overflow')
+      if (iteration >= 3 && size.width < 1100) {
+        const more = page.getByRole('button', { name: 'Más secciones', exact: true })
+        await more.click()
+        await page.getByRole('dialog', { name: 'Más secciones' }).waitFor()
+        await page.keyboard.press('Escape')
+        assert(await more.evaluate(e => e === document.activeElement), 'More must restore focus')
+        for (const name of ['Historial', 'Administrar']) {
+          await more.click()
+          await page.getByRole('dialog').getByRole('button', { name, exact: true }).click()
+          await page.getByRole('heading', { name, exact: true, level: 1 }).waitFor()
+          assert(await more.getAttribute('aria-current') === 'page', 'More must show secondary active route')
+        }
+      }
       reports.push({ size, iteration, checks: 'search, 503, double tap, lost response, idempotent retry, history, overflow' })
       await page.unrouteAll({ behavior: 'wait' })
     }
