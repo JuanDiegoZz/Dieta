@@ -1,4 +1,4 @@
-/* global module, URL, sessionStorage, localStorage, document, innerWidth */
+/* global module, URL, sessionStorage, localStorage, document, innerWidth, window */
 // Run with the available Playwright tool: require(this file)(page, iteration).
 // Every API response is synthetic. No request can reach the production BFF.
 module.exports = async (page, iteration = 1) => {
@@ -26,6 +26,12 @@ module.exports = async (page, iteration = 1) => {
         const reply = (body, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) })
         if (path === '/api/bootstrap') return reply(payload())
         if (path === '/api/weekly') return reply(state.weekly)
+        if (path.startsWith('/api/ingredients/') && request.method() === 'PATCH') {
+          const item = ingredients.find(i => i.id === path.split('/').pop())
+          const body = request.postDataJSON()
+          Object.assign(item, { canonicalName: body.canonicalName, category: body.category, aliases: body.aliases })
+          return reply({ id: item.id })
+        }
         if (path === '/api/history' && request.method() === 'POST') {
           const body = request.postDataJSON(); state.posts.push(body)
           if (state.mode === 'network') return route.abort('failed')
@@ -108,6 +114,40 @@ module.exports = async (page, iteration = 1) => {
           await page.getByRole('heading', { name, exact: true, level: 1 }).waitFor()
           assert(await more.getAttribute('aria-current') === 'page', 'More must show secondary active route')
         }
+      }
+      if (iteration >= 4) {
+        await page.goto('http://127.0.0.1:5174/#/week')
+        await page.getByRole('button', { name: 'Cambiar', exact: true }).first().click()
+        await page.locator('.change-options button').last().focus()
+        await page.keyboard.press('Tab')
+        assert(await page.evaluate(() => !!document.activeElement.closest('[role=dialog]')), 'Tab must stay in weekly dialog')
+        await page.keyboard.press('Shift+Tab')
+        assert(await page.evaluate(() => !!document.activeElement.closest('[role=dialog]')), 'Shift+Tab must stay in dialog')
+        await page.keyboard.press('Escape')
+        assert(await page.getByRole('button', { name: 'Cambiar', exact: true }).first().evaluate(e => e === document.activeElement), 'weekly dialog must restore focus')
+        await page.goto('http://127.0.0.1:5174/#/explore')
+        await page.locator('input[type=search]').waitFor()
+        if (size.width < 1100) await page.getByRole('button', { name: 'Más secciones', exact: true }).click()
+        await page.getByRole('button', { name: 'Administrar', exact: true }).click()
+        await page.getByRole('button', { name: 'Ingredientes', exact: true }).click()
+        await page.locator('.admin-list__item').first().click()
+        await page.getByLabel('Nombre', { exact: true }).fill('Piña editada')
+        await page.locator('.admin-list__item').nth(1).click()
+        await page.getByRole('dialog', { name: 'Cambios sin guardar' }).waitFor()
+        await page.getByRole('button', { name: 'Cancelar', exact: true }).click()
+        assert(await page.getByLabel('Nombre', { exact: true }).inputValue() === 'Piña editada', 'cancel must keep ingredient draft')
+        await page.evaluate(() => { window.confirm = () => false })
+        await page.evaluate(() => window.history.back())
+        await page.waitForFunction(() => window.location.hash === '#/admin')
+        assert(await page.getByLabel('Nombre', { exact: true }).inputValue() === 'Piña editada', 'browser Back cancellation must preserve draft')
+        await page.getByRole('button', { name: 'Hoy', exact: true }).click()
+        assert(page.url().endsWith('/admin'), 'leaving edited admin must be guarded')
+        await page.locator('.admin-list__item').nth(1).click()
+        await page.getByRole('button', { name: 'Descartar cambios', exact: true }).click()
+        await page.getByLabel('Nombre', { exact: true }).fill('Agua editada')
+        await page.getByRole('button', { name: /Guardar (Ingredient|ingrediente)/i }).click()
+        await page.getByRole('button', { name: 'Hoy', exact: true }).click()
+        await page.waitForURL('**/#/today')
       }
       reports.push({ size, iteration, checks: 'search, 503, double tap, lost response, idempotent retry, history, overflow' })
       await page.unrouteAll({ behavior: 'wait' })

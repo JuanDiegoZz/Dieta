@@ -28,3 +28,10 @@
 - Acceso Más separado de las cinco secciones inferiores. Historial y Administrar accesibles y ruta secundaria activa. Diálogo compartido con foco contenido, Escape y restauración.
 - 101 pruebas; todos los comandos del protocolo aprobados. Suite acumulada en cuatro tamaños aprobada, incluidos apertura/cierre y ambos destinos.
 - Se detectó que el indicador de desarrollo tapaba Más; corregido su posicionamiento e interacción. Sin cambios en permisos o datos.
+
+## Iteración 4 — Formularios y diálogos
+
+- Semana y Administración usan Modal compartido: foco inicial, Tab/Shift+Tab, Escape, bloqueo del fondo y restauración.
+- Ingredientes (nombre, categoría, aliases), creación pendiente y borradores de platillos participan en la protección. Atrás del navegador puede cancelarse sin desmontar el formulario; beforeunload ofrece aviso cuando el navegador lo admite.
+- 101 pruebas; lint, typecheck, build, diff --check y suite acumulada en cuatro tamaños aprobados. Navegador verificó cancelación, descarte y guardado simulado sin avisos posteriores.
+- Limitación de plataforma: iPadOS puede cerrar Safari sin emitir beforeunload; no se promete persistencia local de borradores ante cierre forzado.

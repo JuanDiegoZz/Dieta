@@ -22,7 +22,7 @@ function writeHash(view: View, mealId?: string, origin?: AppRoute) {
   const hash = `#/${view}${mealId ? `?id=${encodeURIComponent(mealId)}` : ''}`
   if (window.location.hash === hash) return
   const state = window.history.state ?? {}
-  window.history.pushState({ ...state, dieta: { ...state.dieta, origin: origin ?? state.dieta?.origin, scroll: 0 } }, '', hash)
+  window.history.pushState({ ...state, dieta: { ...state.dieta, origin: origin ?? state.dieta?.origin, scroll: 0, position: (state.dieta?.position ?? 0) + 1 } }, '', hash)
 }
 
 function storedAvoidRepeatDays() { try { const value = Number(window.localStorage.getItem('mi-dieta:avoid-repeat-days')); return [3, 5, 7, 10, 14].includes(value) ? value : 7 } catch { return 7 } }
@@ -46,6 +46,8 @@ export default function App() {
   const [error, setError] = useState<string | null>(null)
   const [selectedMealId, setSelectedMealId] = useState<string | null>(() => mealIdFromHash(window.location.hash))
   const [origin, setOrigin] = useState<AppRoute>(() => returnRoute(window.history.state?.dieta?.origin))
+  const currentLocation = useRef({ hash: window.location.hash, state: window.history.state })
+  const restoringHistory = useRef(false)
   const originFocus = useRef<HTMLElement | null>(null)
   const [adminDirty, setAdminDirty] = useState(false)
   const enrichedMeals = useMemo(() => enrichMealsWithCompatibility(meals, pantry), [meals, pantry])
@@ -95,12 +97,25 @@ export default function App() {
   useEffect(() => { void loadWeekly().then(setWeeklyPlan) }, [])
 
   useEffect(() => {
+    if (!window.history.state?.dieta) window.history.replaceState({ dieta: { position: 0 } }, '')
+    currentLocation.current = { hash: window.location.hash, state: window.history.state }
     const onHistoryChange = () => {
-      setView(parseView(window.location.hash)); setSelectedMealId(mealIdFromHash(window.location.hash)); setOrigin(returnRoute(window.history.state?.dieta?.origin))
+      if (restoringHistory.current) { restoringHistory.current = false; return }
+      const target = parseView(window.location.hash)
+      if (adminDirty && view === 'admin' && target !== 'admin' && !window.confirm('Tienes cambios sin guardar. ¿Quieres descartarlos y salir?')) {
+        const previous = currentLocation.current
+        const delta = (previous.state?.dieta?.position ?? 0) - (window.history.state?.dieta?.position ?? 0)
+        if (delta) { restoringHistory.current = true; window.history.go(delta) }
+        else window.history.replaceState(previous.state, '', previous.hash)
+        return
+      }
+      currentLocation.current = { hash: window.location.hash, state: window.history.state }
+      setView(target); setSelectedMealId(mealIdFromHash(window.location.hash)); setOrigin(returnRoute(window.history.state?.dieta?.origin))
     }
-    window.addEventListener('popstate', onHistoryChange); window.addEventListener('hashchange', onHistoryChange)
-    return () => { window.removeEventListener('popstate', onHistoryChange); window.removeEventListener('hashchange', onHistoryChange) }
-  }, [])
+    const beforeUnload = (event: BeforeUnloadEvent) => { if (adminDirty) { event.preventDefault(); event.returnValue = '' } }
+    window.addEventListener('popstate', onHistoryChange); window.addEventListener('hashchange', onHistoryChange); window.addEventListener('beforeunload', beforeUnload)
+    return () => { window.removeEventListener('popstate', onHistoryChange); window.removeEventListener('hashchange', onHistoryChange); window.removeEventListener('beforeunload', beforeUnload) }
+  }, [adminDirty, view])
 
   function navigate(route: AppRoute) { if (view === 'admin' && route !== 'admin' && adminDirty && !window.confirm('Tienes cambios sin guardar. Pulsa Cancelar para seguir editando o Aceptar para descartarlos.')) return; setAdminDirty(false); setView(route); setSelectedMealId(null); writeHash(route) }
   function openMealView(meal: MealOption, target: 'detail' | 'kitchen') {
