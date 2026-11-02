@@ -49,3 +49,21 @@
 @media (prefers-reduced-motion: reduce) {
   .desktop-sidebar, .nav-item { transition: none; }
 }
+
+/* One selected day avoids a 35-cell calendar requiring two simultaneous scroll axes. */
+.week-days { display: flex; margin: 16px 0 0; padding: 3px 3px 8px; overflow-x: auto; }
+.week-days button { flex: 1 0 86px; min-height: 48px; margin-right: 6px; padding: 8px; border: 1px solid #89918a; border-radius: 12px; background: var(--surface); color: var(--muted-dark); font-size: 14px; text-transform: capitalize; }
+.week-days button[aria-pressed=true] { color: white; background: var(--ink); border-color: var(--ink); }
+.week-grid { display: block; overflow: visible; margin-top: 12px; }
+.day-column > header { position: static; flex-direction: row; align-items: center; justify-content: space-between; }
+.day-meals { display: grid; grid-template-columns: 1fr; }
+.week-entry { min-width: 0; min-height: 190px; display: flex; flex-direction: column; border-bottom: 1px solid var(--line); }
+.week-entry__title { font-size: 16px; line-height: 1.4; }
+.week-entry__controls { margin-top: auto; display: flex; flex-flow: row wrap; }
+.week-change-button { flex: 1 0 100%; }
+.week-entry__controls .text-button { flex: 1 1 0; justify-content: center; }
+@media (min-width: 640px) { .day-meals { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) and (orientation: landscape) {
+  .day-meals { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nav-item:not(.is-active):hover { background: transparent; color: var(--muted-dark); }
+}

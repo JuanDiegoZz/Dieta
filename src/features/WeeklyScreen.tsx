@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { Icon } from '../components/Icon'
 import { rankMealOptions } from '../domain/recommendations'
-import { buildShoppingList, generateWeeklyPlan, PLANNING_SLOTS } from '../domain/weekly'
+import { buildShoppingList, generateWeeklyPlan, PLANNING_SLOTS, weeklyDate } from '../domain/weekly'
 import { exportWeeklyPlan } from '../domain/weekly-export'
 import type { MealOption, PantryItem, WeeklyPlan, WeeklyPlanEntry } from '../domain/types'
 
@@ -19,7 +19,8 @@ export function WeeklyScreen({ meals, pantry, avoidRepeatDays, plan, onSave, onO
   const [hideAvailable, setHideAvailable] = useState(false)
   const [startDate, setStartDate] = useScreenState('week.startDate', plan?.startDate ?? monday())
   const dateTouched = useRef(window.history.state?.dieta?.ui?.['week.startDate'] !== undefined && window.history.state.dieta.ui['week.startDate'] !== plan?.startDate)
-  const [visibleDay, setVisibleDay] = useState(0)
+  const [selectedDay, setSelectedDay] = useScreenState('week.day', 0)
+  const visibleDay = Number.isInteger(selectedDay) ? Math.max(0, Math.min(6, selectedDay)) : 0
   useEffect(() => { if (plan && !dateTouched.current) setStartDate(plan.startDate) }, [plan?.startDate])
   const [changeEntry, setChangeEntry] = useState<WeeklyPlanEntry | null>(null)
   const [changeQuery, setChangeQuery] = useState('')
@@ -57,10 +58,39 @@ export function WeeklyScreen({ meals, pantry, avoidRepeatDays, plan, onSave, onO
     {loadStatus === 'loading' && <p role="status">Actualizando semana…</p>}
     {loadStatus === 'error' && <div className="inline-notice" role="alert"><span>No pudimos actualizar la semana. {workingPlan ? 'Conservamos la última versión cargada.' : 'No sabemos todavía si tienes un plan guardado.'}</span><button className="button button--secondary" onClick={onRetry} type="button">Reintentar semana</button></div>}
     {saving && <p role="status">Guardando semana…</p>}
-    {workingPlan && tab === 'week' && <p className="week-scroll-hint" role="status">Desliza horizontalmente para recorrer los siete días. Día visible: {labelDate(new Date(new Date(workingPlan.startDate + 'T12:00:00').getTime() + visibleDay * 86400000).toISOString().slice(0, 10))}.</p>}
+    {workingPlan && tab === 'week' && <p className="week-scroll-hint" role="status">Elige un día para consultar sus cinco franjas. Día visible: {labelDate(new Date(new Date(workingPlan.startDate + 'T12:00:00').getTime() + visibleDay * 86400000).toISOString().slice(0, 10))}.</p>}
     {exportNotice && <div className="inline-notice" role="status">{exportNotice}<button className="icon-button" aria-label="Cerrar aviso" onClick={() => setExportNotice(null)} type="button"><Icon name="close" size={16} /></button></div>}
     {tab === 'week' && !workingPlan && loadStatus === 'ready' && <EmptyState title="Aún no tienes una semana" message="Genera una propuesta con tus comidas reales, favoritos y despensa." action={{ label: 'Generar mi semana', onClick: generate }} />}
-    {tab === 'week' && workingPlan && <section className="week-grid" tabIndex={0} onScroll={(event) => { const grid = event.currentTarget; const column = grid.querySelector('.day-column'); if (column) setVisibleDay(Math.max(0, Math.min(6, Math.round(grid.scrollLeft / (column.getBoundingClientRect().width + 12))))) }} aria-label="Plan semanal">{[0, 1, 2, 3, 4, 5, 6].map((offset) => { const date = new Date(`${workingPlan.startDate}T12:00:00`); date.setDate(date.getDate() + offset); const dateKey = date.toISOString().slice(0, 10); return <article className="day-column" key={dateKey}><header><strong>{labelDate(dateKey)}</strong><span>Día {offset + 1}</span></header>{PLANNING_SLOTS.map((slot) => { const entry = workingPlan.entries.find((item) => item.plannedDate === dateKey && item.slot === slot); const meal = entry?.mealOptionId ? byId.get(entry.mealOptionId) : undefined; return <div className={`week-entry${entry?.locked ? ' is-locked' : ''}`} key={slot}><div className="week-entry__label"><span className="section-kicker">{slotLabel(slot)}</span>{entry?.locked && <span className="lock-label">Bloqueada</span>}</div>{entry && meal ? <><button className="week-entry__title" onClick={() => onOpen(meal)} type="button">{meal.title}</button><div className="week-entry__controls"><button aria-label={`Cambiar ${slotLabel(slot)} del ${labelDate(dateKey)}`} className="week-change-button" disabled={saving || loadStatus !== 'ready'} onClick={() => openChange(entry)} type="button"><span>Cambiar</span><Icon name="chevron-right" size={15} /></button><button className="text-button" disabled={saving || loadStatus !== 'ready'} aria-label={`${entry.locked ? 'Desbloquear' : 'Bloquear'} ${slotLabel(slot)} del ${labelDate(dateKey)}`} aria-pressed={entry.locked} onClick={() => updateEntry(entry, { locked: !entry.locked })} type="button">{entry.locked ? 'Desbloquear' : 'Bloquear'}</button><button className="text-button text-button--muted" disabled={saving || loadStatus !== 'ready'} aria-label={`Limpiar ${slotLabel(slot)} del ${labelDate(dateKey)}`} onClick={() => updateEntry(entry, { mealOptionId: null })} type="button">Limpiar</button></div></> : <button className="week-entry__empty" disabled={saving || loadStatus !== 'ready'} onClick={() => entry && updateEntry(entry, { mealOptionId: rankMealOptions(meals.filter((option) => option.slot === entry.slot), pantry, new Date(), avoidRepeatDays)[0]?.id ?? null })} type="button">Sin opción <span>+ Añadir</span></button>}</div> })}</article> })}</section>}
+    {tab === 'week' && workingPlan && <>
+      <div className="week-days" role="group" aria-label="Días de la semana">
+        {[0, 1, 2, 3, 4, 5, 6].map((day) => <button key={day} type="button" aria-pressed={visibleDay === day} onClick={() => setSelectedDay(day)} onKeyDown={(event) => {
+          const next = event.key === 'ArrowRight' ? (day + 1) % 7 : event.key === 'ArrowLeft' ? (day + 6) % 7 : event.key === 'Home' ? 0 : event.key === 'End' ? 6 : null
+          if (next === null) return
+          event.preventDefault(); setSelectedDay(next); event.currentTarget.parentElement?.querySelectorAll('button')[next]?.focus()
+        }}>{labelDate(weeklyDate(workingPlan.startDate, day))}</button>)}
+      </div>
+      <section className="week-grid" aria-label="Plan semanal">
+        <article className="day-column">
+          <header><strong>{labelDate(weeklyDate(workingPlan.startDate, visibleDay))}</strong><span>Día {visibleDay + 1} de 7</span></header>
+          <div className="day-meals">{PLANNING_SLOTS.map((slot) => {
+            const dateKey = weeklyDate(workingPlan.startDate, visibleDay)
+            const entry = workingPlan.entries.find((item) => item.plannedDate === dateKey && item.slot === slot)
+            const meal = entry?.mealOptionId ? byId.get(entry.mealOptionId) : undefined
+            return <div className={`week-entry${entry?.locked ? ' is-locked' : ''}`} key={slot}>
+              <div className="week-entry__label"><span className="section-kicker">{slotLabel(slot)}</span>{entry?.locked && <span className="lock-label">Bloqueada</span>}</div>
+              {entry && meal ? <>
+                <button className="week-entry__title" onClick={() => onOpen(meal)} type="button">{meal.title}</button>
+                <div className="week-entry__controls">
+                  <button aria-label={`Cambiar ${slotLabel(slot)} del ${labelDate(dateKey)}`} className="week-change-button" disabled={saving || loadStatus !== 'ready'} onClick={() => openChange(entry)} type="button"><span>Cambiar</span><Icon name="chevron-right" size={15} /></button>
+                  <button className="text-button" disabled={saving || loadStatus !== 'ready'} aria-label={`${entry.locked ? 'Desbloquear' : 'Bloquear'} ${slotLabel(slot)} del ${labelDate(dateKey)}`} aria-pressed={entry.locked} onClick={() => updateEntry(entry, { locked: !entry.locked })} type="button">{entry.locked ? 'Desbloquear' : 'Bloquear'}</button>
+                  <button className="text-button text-button--muted" disabled={saving || loadStatus !== 'ready'} aria-label={`Limpiar ${slotLabel(slot)} del ${labelDate(dateKey)}`} onClick={() => updateEntry(entry, { mealOptionId: null })} type="button">Limpiar</button>
+                </div>
+              </> : <button className="week-entry__empty" disabled={!entry || saving || loadStatus !== 'ready'} onClick={() => entry && updateEntry(entry, { mealOptionId: rankMealOptions(meals.filter((option) => option.slot === entry.slot), pantry, new Date(), avoidRepeatDays)[0]?.id ?? null })} type="button">Sin opción <span>{entry ? '+ Añadir' : 'Sin entrada en el plan'}</span></button>}
+            </div>
+          })}</div>
+        </article>
+      </section>
+    </>}
     {tab === 'shopping' && <section className="shopping-section"><div className="shopping-toolbar"><label className="check-control"><input checked={hideAvailable} onChange={(event) => setHideAvailable(event.target.checked)} type="checkbox" /> Ocultar lo que ya tengo</label><span>{shopping.length} líneas</span></div>{shopping.length ? Object.entries(groupedShopping).map(([category, items]) => <section className="shopping-group" key={category}><h2>{labelCategory(category)}</h2>{items.map((item) => <article className="shopping-row" key={item.key}><div><strong>{item.name}</strong><small>{item.amount !== null ? `${item.amount} ${item.unit ?? ''}` : 'Cantidad según el plan'}{item.householdMeasures.length ? ` · ${item.householdMeasures.join(' · ')}` : ''}</small></div><button className={`button button--secondary${item.available ? ' is-checked' : ''}`} aria-label={`${item.available ? 'Quitar de comprados' : 'Marcar comprado'}: ${item.name}`} onClick={() => onPantryChange({ ingredientId: item.ingredientId, available: item.available, useSoon: false }, { available: !item.available })} type="button">{item.available ? '✓ Ya lo tienes' : 'Marcar comprado'}</button></article>)}</section>) : <EmptyState title="Tu lista está vacía" message={workingPlan ? 'No hay ingredientes pendientes con los filtros actuales.' : loadStatus === 'error' ? 'No pudimos cargar el plan. Reintenta la actualización.' : 'Genera una semana para calcular los ingredientes necesarios.'} />}</section>}
     {changeEntry && <Modal titleId="change-dialog-title" onClose={closeChange}><div className="change-dialog__header"><div><p className="section-kicker">{slotLabel(changeEntry.slot)}</p><h2 id="change-dialog-title">Cambiar comida</h2>{changingMeal && <p>Actual: {changingMeal.title}</p>}</div><button className="icon-button" aria-label="Cerrar alternativas" onClick={closeChange} type="button"><Icon name="close" size={20} /></button></div><label className="change-dialog__search"><Icon name="search" size={18} /><input autoComplete="off" aria-label="Buscar alternativa" placeholder="Nombre, ingrediente o alias de esta franja" value={changeQuery} onChange={(event) => setChangeQuery(event.target.value)} /></label><div className="change-options">{changeOptions.length ? changeOptions.map((option) => <button className={`change-option${option.id === changeEntry.mealOptionId ? ' is-selected' : ''}`} key={option.id} onClick={() => { updateEntry(changeEntry, { mealOptionId: option.id }); closeChange() }} type="button"><span><strong>{option.title}</strong><small>{option.summary || 'Opción de tu dieta'}</small></span>{option.id === changeEntry.mealOptionId && <Icon name="check" size={18} />}</button>) : <EmptyState title="No encontramos alternativas" message="Prueba con otra búsqueda o limpia el texto." />}</div></Modal>}
   </div>

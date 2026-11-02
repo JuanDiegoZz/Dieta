@@ -3,7 +3,7 @@ import type { MealOption, PantryItem, WeeklyPlan, WeeklyPlanEntry } from './type
 
 export const PLANNING_SLOTS = ['breakfast', 'midday', 'lunch', 'afternoon', 'dinner'] as const
 
-function dateKey(startDate: string, offset: number) {
+export function weeklyDate(startDate: string, offset: number) {
   const date = new Date(`${startDate}T12:00:00`)
   date.setDate(date.getDate() + offset)
   return date.toISOString().slice(0, 10)
@@ -15,7 +15,7 @@ export function generateWeeklyPlan(meals: MealOption[], startDate: string, pantr
   const entries: WeeklyPlanEntry[] = []
   for (let day = 0; day < 7; day += 1) {
     for (const slot of PLANNING_SLOTS) {
-      const date = dateKey(startDate, day)
+      const date = weeklyDate(startDate, day)
       const previous = old.get(`${date}:${slot}`)
       if (previous?.locked) { entries.push(previous); if (previous.mealOptionId) used.add(previous.mealOptionId); continue }
       const candidates = rankMealOptions(meals.filter((meal) => meal.slot === slot && !used.has(meal.id)), pantry, new Date(), avoidRepeatDays)

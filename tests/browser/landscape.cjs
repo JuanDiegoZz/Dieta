@@ -40,14 +40,14 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
         if (screen === 'history') await page.locator('.history-row').waitFor()
         if (screen === 'detail') await page.locator('.component-section').first().waitFor()
         const metrics = await page.evaluate(() => {
-          const box = selector => { const e = document.querySelector(selector); if (!e) return null; const b = e.getBoundingClientRect(); return { width: Math.round(b.width), height: Math.round(b.height), top: Math.round(b.top), bottom: Math.round(b.bottom), scroll: e.scrollWidth } }
+          const box = selector => { const e = document.querySelector(selector); if (!e) return null; const b = e.getBoundingClientRect(); if (!b.width) return null; return { width: Math.round(b.width), height: Math.round(b.height), top: Math.round(b.top), bottom: Math.round(b.bottom), scroll: e.scrollWidth } }
           return { pageWidth: document.documentElement.scrollWidth, sidebar: box('.desktop-sidebar'), main: box('.app-main'), card: box('.meal-card'), filter: box('.filter-row'), week: box('.week-grid'), day: box('.day-column'), cookingAction: box('.kitchen-done'), components: box('.component-list'), kitchen: box('.kitchen-ingredients'), bottomNav: box('.mobile-nav') }
         })
         if (phase === 'after') {
           assert(metrics.pageWidth <= width, `${screen} overflows at ${width}`)
           if (width >= 1000) {
             assert(metrics.sidebar.width <= 120, `navigation consumes too much width at ${width}`)
-            assert(metrics.bottomNav.height === 0, 'landscape must not reserve a bottom navigation')
+            assert(!metrics.bottomNav || metrics.bottomNav.height === 0, 'landscape must not reserve a bottom navigation')
             if (metrics.card) assert(metrics.card.width >= 250, `cards compressed at ${width}`)
             if (screen === 'week' && checksThrough >= 4) assert(metrics.week.scroll <= metrics.week.width + 1, 'weekly meals must fit without horizontal calendar scrolling')
             if (screen === 'kitchen' && checksThrough >= 5) assert(metrics.cookingAction.top >= 0 && metrics.cookingAction.bottom <= height, 'preparation action must be initially visible in landscape')
@@ -55,6 +55,28 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
         }
         reports.push({ width, height, screen, ...metrics })
         if (['explore', 'week', 'detail', 'kitchen', 'admin'].includes(screen)) await page.screenshot({ path: `C:/Dev/dieta-app/docs/evidence/landscape/${phase}/${screen}-${width}.png` })
+        if (phase === 'after' && checksThrough >= 4 && screen === 'week') {
+          assert(await page.locator('.week-days button').count() === 7, 'all seven dates must remain available')
+          assert(await page.locator('.week-entry').count() === 5, 'selected day must contain five slots')
+          await page.locator('.week-days button').nth(3).click()
+          await page.getByRole('button', { name: /^Bloquear Comida / }).click()
+          await page.getByRole('button', { name: /^Desbloquear Comida / }).waitFor()
+          await page.locator('.week-days button').first().click()
+          await page.locator('.week-days button').nth(3).click()
+          assert(await page.getByRole('button', { name: /^Desbloquear Comida / }).getAttribute('aria-pressed') === 'true', 'day navigation must preserve locks')
+          await page.setViewportSize({ width: 768, height: 1024 })
+          assert(await page.locator('.week-days button').nth(3).getAttribute('aria-pressed') === 'true', 'rotation must preserve selected day')
+          await page.setViewportSize({ width, height })
+          await page.locator('.week-days button').nth(3).focus(); await page.keyboard.press('End')
+          assert(await page.locator('.week-days button').nth(6).getAttribute('aria-pressed') === 'true', 'End must select final day')
+          await page.keyboard.press('Home')
+          assert(await page.locator('.week-days button').first().getAttribute('aria-pressed') === 'true', 'Home must select first day')
+          await page.getByRole('button', { name: /^Limpiar Comida / }).click()
+          await page.locator('.week-entry').nth(2).locator('.week-entry__empty').waitFor()
+          await page.locator('.week-entry').nth(2).locator('.week-entry__empty').click()
+          await page.getByRole('button', { name: /^Cambiar Comida / }).waitFor()
+          assert(plan.entries.length === 35, 'editing a selected day must retain the entire week')
+        }
       }
       await page.goto('http://127.0.0.1:5180/#/week')
       await page.getByRole('button', { name: /^Cambiar / }).first().click()

@@ -35,3 +35,10 @@ No hubo desbordamiento horizontal de página en las medidas iniciales; los probl
 - Rail fijo de 104 px con siete destinos desde 1000 px en horizontal; desaparecen barra inferior y Más solo en ese contexto. Vertical/móvil conservan su navegación.
 - Tarjetas auto-fit con mínimo 260 px; márgenes verticales moderados, franjas y filtros que envuelven sin recortar controles. Despensa en dos columnas y catálogo administrativo con contexto persistente. Campos editables a 16 px.
 - 23 pruebas pertinentes y typecheck aprobados; diff revisado. Auditoría de las nueve pantallas y modales en los siete tamaños aprobó navegación, ancho mínimo de tarjetas y ausencia de overflow de página. Las comprobaciones estructurales de Semana/cocina permanecen rojas hasta fases 4–5.
+
+## Fase 4 — Semana por día
+
+- Siete fechas accesibles y cinco franjas del día seleccionado; distribución de tres tarjetas por fila en horizontal, dos en vertical y una en móvil. Se preservan las 35 entradas y operaciones originales.
+- El calendario horizontal pasa de 1122 px de contenido a ajustarse al ancho disponible. Altura de la zona de comidas de 1330 px a aproximadamente 455–499 px con el fixture.
+- Prueba nueva de fechas entre meses (rojo y verde); tres pruebas de dominio semanales y typecheck aprobados. Navegador: siete tamaños, selección, Home/End, bloqueo persistente, limpiar/añadir y rotación sin perder día; todas aprobadas.
+- La medición excluye las pantallas de origen ocultas que React mantiene montadas; no se consideran tarjetas de ancho cero como defectos visibles.
