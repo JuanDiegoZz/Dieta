@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useScreenState } from '../platform/useScreenState'
+import { useEffect } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { Icon } from '../components/Icon'
 import { Pagination } from '../components/Pagination'
@@ -13,7 +14,7 @@ function dateLabel(value: string) {
 export function HistoryScreen({ entries, meals, onOpen, onRepeat, onDelete }: { entries: HistoryEntry[]; meals: MealOption[]; onOpen: (meal: MealOption) => void; onRepeat: (meal: MealOption) => void; onDelete: (entry: HistoryEntry) => void }) {
   const byId = new Map(meals.map((meal) => [meal.id, meal]))
   const sorted = [...entries].filter((entry) => byId.has(entry.mealOptionId)).sort((a, b) => Date.parse(b.eatenAt) - Date.parse(a.eatenAt))
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useScreenState('history.page', 1)
   const pages = pageCount(sorted.length, 12)
   const safePage = clampPage(page, sorted.length, 12)
   useEffect(() => { setPage((current) => clampPage(current, sorted.length, 12)) }, [sorted.length])

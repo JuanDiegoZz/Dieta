@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useScreenState } from '../platform/useScreenState'
+import { useEffect } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { MealCard } from '../components/MealCard'
 import { Pagination } from '../components/Pagination'
@@ -7,7 +8,7 @@ import type { MealOption } from '../domain/types'
 
 export function FavoritesScreen({ meals, onOpen, onCook, onToggleFavorite, onHide }: { meals: MealOption[]; onOpen: (meal: MealOption) => void; onCook: (meal: MealOption) => void; onToggleFavorite: (meal: MealOption) => void; onHide: (meal: MealOption) => void }) {
   const favorites = meals.filter((meal) => meal.favorite)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useScreenState('favorites.page', 1)
   const pages = pageCount(favorites.length, 12)
   const safePage = clampPage(page, favorites.length, 12)
   useEffect(() => { setPage((current) => clampPage(current, favorites.length, 12)) }, [favorites.length])

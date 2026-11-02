@@ -19,7 +19,7 @@ module.exports = async (page, iteration = 1) => {
         components: [{ id: uuid(index + 50), label: 'Principal', note: 'Conservar la medida original.', ingredients: [{ id: uuid(index + 80), ingredientId: uuid(100), name: index < 14 ? 'Piña' : index === 14 ? 'Espinaca' : 'Café', quantity: '100 g', aliases: [] }] }, { id: uuid(index + 200), label: 'Bebida', note: 'Sin cambiar cantidades.', ingredients: [{ id: uuid(index + 230), ingredientId: uuid(101), name: 'Agua', quantity: '200 ml', aliases: [] }] }],
       }))
       const ingredients = [{ id: uuid(100), canonicalName: 'Piña', category: 'fruta', active: true, aliases: ['ananás'] }, { id: uuid(101), canonicalName: 'Agua', category: 'bebida', active: true, aliases: [] }]
-      const state = { mode: 'success', posts: [], saved: new Map(), pantry: [], weekly: null }
+      const state = { mode: 'success', posts: [], saved: new Map(), pantry: [], weekly: { id: uuid(500), startDate: '2026-11-02', name: 'Semana de prueba', entries: [{ id: uuid(501), plannedDate: '2026-11-02', slot: 'breakfast', mealOptionId: uuid(1), locked: false }] } }
       const payload = () => ({ version: 'synthetic-v1', meals, ingredients, pantry: state.pantry, history: [...state.saved.values()].map(r => ({ id: r.id, mealOptionId: r.meal_option_id, eatenAt: r.eaten_at, rating: r.rating, note: null })) })
       await page.route('**/api/**', async route => {
         const request = route.request(), path = new URL(request.url()).pathname
@@ -43,6 +43,25 @@ module.exports = async (page, iteration = 1) => {
       await page.locator('input[type=search]').fill('piña')
       await page.locator('.meal-card').first().waitFor()
       assert(await page.locator('.result-count').innerText() === '14', 'piña must exclude spinach')
+      if (iteration >= 2) {
+        await page.locator('.filter-chip').first().click()
+        await page.getByRole('button', { name: 'Siguiente' }).click()
+        await page.locator('.meal-card__body').first().click()
+        const detailURL = page.url()
+        assert(detailURL.includes('?id='), 'detail must encode meal ID')
+        await page.getByRole('button', { name: 'Volver', exact: true }).click()
+        await page.waitForURL('**/#/explore')
+        assert(await page.locator('input[type=search]').inputValue() === 'piña', 'return must preserve query')
+        assert(await page.locator('.meal-card').count() === 2, 'return must preserve page 2')
+        assert(await page.locator('.filter-chip').first().getAttribute('class').then(c => c.includes('is-selected')), 'return must preserve filters')
+        await page.goForward()
+        await page.waitForURL(detailURL)
+        await page.reload()
+        await page.getByRole('button', { name: 'Volver', exact: true }).click()
+        await page.waitForURL('**/#/explore')
+        assert(await page.locator('input[type=search]').inputValue() === 'piña', 'reload/back must restore query')
+        assert(await page.locator('.meal-card').count() === 2, 'reload/back must restore page')
+      }
       await page.locator('.meal-card').first().getByRole('button', { name: 'Cocinar', exact: true }).click()
       state.mode = '503'
       await page.getByRole('button', { name: 'Terminé', exact: true }).dblclick()
@@ -60,6 +79,22 @@ module.exports = async (page, iteration = 1) => {
       await page.goto('http://127.0.0.1:5174/#/history')
       await page.locator('.history-row').waitFor()
       assert(await page.locator('.history-row').count() === 1, 'confirmed preparation must appear once in history')
+      if (iteration >= 2) {
+        for (const route of ['today', 'favorites', 'week', 'history']) {
+          await page.goto(`http://127.0.0.1:5174/#/${route}`)
+          if (route === 'today') await page.getByRole('tab', { name: 'Desayuno', exact: true }).click()
+          const opener = route === 'history' ? page.locator('.history-row__main').first() : route === 'week' ? page.locator('.week-entry__title').first() : page.locator('.meal-card__body').first()
+          await opener.click()
+          await page.getByRole('button', { name: 'Volver', exact: true }).click()
+          await page.waitForURL(`**/#/${route}`)
+        }
+        await page.goto(`http://127.0.0.1:5174/#/detail?id=${uuid(1)}`)
+        await page.locator('.detail-header').waitFor()
+        await page.reload()
+        await page.locator('.detail-header').waitFor()
+        await page.getByRole('button', { name: 'Volver', exact: true }).click()
+        await page.waitForURL('**/#/today')
+      }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'page must not overflow')
       reports.push({ size, iteration, checks: 'search, 503, double tap, lost response, idempotent retry, history, overflow' })
       await page.unrouteAll({ behavior: 'wait' })

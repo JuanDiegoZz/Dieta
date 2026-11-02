@@ -1,3 +1,4 @@
+import { useScreenState } from '../platform/useScreenState'
 import { useEffect, useMemo, useState } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { Icon } from '../components/Icon'
@@ -24,8 +25,8 @@ function dateLabel() {
 }
 
 export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, onToggleFavorite, onHide }: { meals: MealOption[]; pantry: PantryItem[]; avoidRepeatDays: number; onOpen: (meal: MealOption) => void; onCook: (meal: MealOption) => void; onToggleFavorite: (meal: MealOption) => void; onHide: (meal: MealOption) => void }) {
-  const [selectedSlot, setSelectedSlot] = useState<MealSlot>(() => getSuggestedSlot())
-  const [query, setQuery] = useState('')
+  const [selectedSlot, setSelectedSlot] = useScreenState<MealSlot>('today.slot', () => getSuggestedSlot())
+  const [query, setQuery] = useScreenState('today.query', '')
   const [loading, setLoading] = useState(true)
   const [surpriseIndex, setSurpriseIndex] = useState(0)
   const [surpriseOpen, setSurpriseOpen] = useState(false)

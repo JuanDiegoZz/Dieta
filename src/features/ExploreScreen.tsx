@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useScreenState } from '../platform/useScreenState'
+import { useEffect, useMemo, useRef } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { MealCard } from '../components/MealCard'
 import { MealTabs } from '../components/MealTabs'
@@ -14,10 +15,10 @@ type Filter = 'favorite' | 'available' | 'recent' | 'notRecent' | 'useSoon'
 const PAGE_SIZE = 12
 
 export function ExploreScreen({ meals, pantry, avoidRepeatDays, onAvoidRepeatDaysChange, onOpen, onCook, onToggleFavorite, onHide, diagnostics = false }: { diagnostics?: boolean; meals: MealOption[]; pantry: PantryItem[]; avoidRepeatDays: number; onAvoidRepeatDaysChange: (days: number) => void; onOpen: (meal: MealOption) => void; onCook: (meal: MealOption) => void; onToggleFavorite: (meal: MealOption) => void; onHide: (meal: MealOption) => void }) {
-  const [selectedSlot, setSelectedSlot] = useState<MealSlot>('lunch')
-  const [query, setQuery] = useState('')
-  const [filters, setFilters] = useState<Filter[]>([])
-  const [page, setPage] = useState(1)
+  const [selectedSlot, setSelectedSlot] = useScreenState<MealSlot>('explore.slot', 'lunch')
+  const [query, setQuery] = useScreenState('explore.query', '')
+  const [filters, setFilters] = useScreenState<Filter[]>('explore.filters', [])
+  const [page, setPage] = useScreenState('explore.page', 1)
   const resultsRef = useRef<HTMLElement>(null)
   const searchIndex = useMemo(() => createMealSearchIndex(meals), [meals])
   const matches = useMemo(() => searchMealOptions(meals, query, searchIndex), [meals, query, searchIndex])
@@ -39,7 +40,9 @@ export function ExploreScreen({ meals, pantry, avoidRepeatDays, onAvoidRepeatDay
   const safePage = clampPage(page, results.length, PAGE_SIZE)
   const visibleResults = paginate(results, safePage, PAGE_SIZE)
 
-  useEffect(() => { setPage(1) }, [query, selectedSlot, filters])
+  const resetKey = JSON.stringify([query, selectedSlot, filters])
+  const previousResetKey = useRef(resetKey)
+  useEffect(() => { if (previousResetKey.current !== resetKey) { previousResetKey.current = resetKey; setPage(1) } }, [resetKey])
   useEffect(() => { setPage((current) => clampPage(current, results.length, PAGE_SIZE)) }, [results.length])
 
   function toggleFilter(filter: Filter) { setFilters((current) => current.includes(filter) ? current.filter((item) => item !== filter) : [...current, filter]) }

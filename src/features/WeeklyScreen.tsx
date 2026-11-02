@@ -1,3 +1,4 @@
+import { useScreenState } from '../platform/useScreenState'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { Icon } from '../components/Icon'
@@ -12,7 +13,7 @@ function labelCategory(category: string) { return ({ protein: 'Proteínas', prot
 function slotLabel(slot: WeeklyPlanEntry['slot']) { return ({ breakfast: 'Desayuno', midday: 'Medio día', lunch: 'Comida', afternoon: 'Media tarde', dinner: 'Cena' } as Record<string, string>)[slot] ?? slot }
 
 export function WeeklyScreen({ meals, pantry, avoidRepeatDays, plan, onSave, onOpen, onPantryChange }: { meals: MealOption[]; pantry: PantryItem[]; avoidRepeatDays: number; plan: WeeklyPlan | null; onSave: (plan: WeeklyPlan) => void; onOpen: (meal: MealOption) => void; onPantryChange: (item: PantryItem, patch: Partial<Pick<PantryItem, 'available' | 'useSoon'>>) => void }) {
-  const [tab, setTab] = useState<'week' | 'shopping'>('week')
+  const [tab, setTab] = useScreenState<'week' | 'shopping'>('week.tab', 'week')
   const [hideAvailable, setHideAvailable] = useState(false)
   const [startDate, setStartDate] = useState(plan?.startDate ?? monday())
   const [changeEntry, setChangeEntry] = useState<WeeklyPlanEntry | null>(null)
