@@ -98,7 +98,7 @@ export async function getBootstrap() {
         lastEatenAt: last?.eaten_at ?? null, components: mealComponents, note: option.notes ?? '',
       }
     }),
-    history,
+    history: history.map((row) => ({ id: row.id, mealOptionId: row.meal_option_id, eatenAt: row.eaten_at, rating: row.rating, note: row.note })),
   }
   console.info(`bootstrap:complete ${Date.now() - startedAt}ms`)
   return payload

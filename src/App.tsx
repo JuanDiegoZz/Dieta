@@ -14,7 +14,7 @@ import { PantryScreen } from './features/PantryScreen'
 const WeeklyScreen = lazy(() => import('./features/WeeklyScreen').then((module) => ({ default: module.WeeklyScreen })))
 import type { HistoryEntry, MealOption } from './domain/types'
 import type { Ingredient, PantryItem, WeeklyPlan } from './domain/types'
-import { appendHistory, applyPreference, removeHistory as removeHistoryEntry } from './domain/personalization'
+import { applyPreference, removeHistory as removeHistoryEntry } from './domain/personalization'
 import { enrichMealsWithCompatibility } from './domain/pantry'
 
 type View = AppRoute | 'detail' | 'kitchen'
@@ -28,7 +28,6 @@ function writeHash(view: View) {
   if (window.location.hash !== `#/${view}`) window.history.pushState({}, '', `#/${view}`)
 }
 
-function localId() { return `local-${Date.now()}-${Math.random().toString(36).slice(2)}` }
 function storedAvoidRepeatDays() { try { const value = Number(window.localStorage.getItem('mi-dieta:avoid-repeat-days')); return [3, 5, 7, 10, 14].includes(value) ? value : 7 } catch { return 7 } }
 function sourceLabel(source: DataSource | null) { return source === 'api' ? 'API' : source === 'cache' ? 'Cache' : source === 'fallback' ? 'Fallback local' : 'Cargando' }
 
@@ -177,14 +176,11 @@ export default function App() {
     await refreshCatalog()
   }
 
-  async function recordHistory(meal: MealOption) {
-    if (!canWrite()) return
-    const eatenAt = new Date().toISOString()
-    const entry = appendHistory([], meal, eatenAt, localId())[0]
-    const previousMeals = meals; const previousHistory = history
-    setHistory((current) => appendHistory(current, meal, eatenAt, entry.id))
-    setMeals((current) => current.map((item) => item.id === meal.id ? { ...item, lastEatenAt: eatenAt, lastEaten: 'Hoy' } : item))
-    try { await createHistory({ mealOptionId: meal.id, eatenAt, rating: entry.rating }) } catch { setHistory(previousHistory); setMeals(previousMeals); setError(`No se pudo guardar en el historial. ${dataSource === 'api' ? 'Inténtalo de nuevo.' : 'La API no está disponible; no se guardó.'}`) }
+  async function recordHistory(meal: MealOption, event: { id: string; eatenAt: string }) {
+    if (!canWrite()) throw new Error('Necesitas conexión para confirmar la preparación.')
+    const entry = await createHistory({ ...event, mealOptionId: meal.id, rating: meal.rating ?? null })
+    setHistory((current) => [entry, ...current.filter((item) => item.id !== entry.id)])
+    setMeals((current) => current.map((item) => item.id === meal.id ? { ...item, lastEatenAt: entry.eatenAt, lastEaten: 'Hoy' } : item))
   }
 
   async function removeHistory(entry: HistoryEntry) {
@@ -204,7 +200,7 @@ export default function App() {
   } else if (view === 'detail' && selectedMeal) {
     content = <MealDetailScreen meal={selectedMeal} onBack={backToCatalog} onCook={() => openKitchen(selectedMeal)} onToggleFavorite={() => toggleFavorite(selectedMeal)} onHide={() => { hideMeal(selectedMeal); backToCatalog() }} onRate={(rating) => rateMeal(selectedMeal, rating)} />
   } else if (view === 'kitchen' && selectedMeal) {
-    content = <KitchenModeScreen meal={selectedMeal} onBack={() => { setView('detail'); writeHash('detail') }} onComplete={() => { void recordHistory(selectedMeal) }} />
+    content = <KitchenModeScreen meal={selectedMeal} onBack={() => { setView('detail'); writeHash('detail') }} onComplete={(event) => recordHistory(selectedMeal, event)} />
   } else if (view === 'today') {
     content = <TodayScreen meals={visibleMeals} pantry={pantry} avoidRepeatDays={avoidRepeatDays} onOpen={openMeal} onCook={openKitchen} onToggleFavorite={toggleFavorite} onHide={hideMeal} />
   } else if (view === 'explore') {

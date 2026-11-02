@@ -104,10 +104,10 @@ export async function selectAllRows<T>(table: string, select: string, filters: R
   throw new ApiError(502, 'DATA_PROVIDER_PAGINATION_LIMIT', 'La respuesta del proveedor de datos no termino correctamente.')
 }
 
-export function insertRows<T>(table: string, rows: Record<string, unknown>[], returning = true) {
+export function insertRows<T>(table: string, rows: Record<string, unknown>[], returning = true, ignoreDuplicates = false) {
   return request<T[]>(table, {
     method: 'POST',
-    headers: { Prefer: returning ? 'return=representation' : 'return=minimal' },
+    headers: { Prefer: `${ignoreDuplicates ? 'resolution=ignore-duplicates,' : ''}${returning ? 'return=representation' : 'return=minimal'}` },
     body: JSON.stringify(rows),
   })
 }

@@ -121,7 +121,7 @@ async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutM
 
 async function fetchJson<T>(url: string, options?: RequestInit, timeoutMs = API_TIMEOUT_MS): Promise<T> {
   const response = await fetchWithTimeout(url, { ...options, headers: { Accept: 'application/json', ...(options?.headers ?? {}) } }, timeoutMs)
-  if (!response.ok) throw new Error(`API ${response.status}`)
+  if (!response.ok) throw new RequestError(response.status)
   if (response.status === 204) return undefined as T
   return response.json() as Promise<T>
 }
@@ -181,10 +181,15 @@ export async function updateMealPreference(mealOptionId: string, patch: { favori
   return result
 }
 
-export async function createHistory(entry: { mealOptionId: string; eatenAt?: string; rating?: number | null; note?: string | null }) {
-  const result = await fetchJson('/api/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entry) })
+export class RequestError extends Error {
+  constructor(public status: number) { super(`API ${status}`) }
+}
+
+export async function createHistory(entry: { id: string; mealOptionId: string; eatenAt: string; rating?: number | null; note?: string | null }): Promise<HistoryEntry> {
+  const result = await fetchJson<{ id: string; meal_option_id: string; eaten_at: string; rating: number | null; note: string | null }>('/api/history', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entry) })
+  if (result?.id !== entry.id || result.meal_option_id !== entry.mealOptionId || Date.parse(result.eaten_at) !== Date.parse(entry.eatenAt)) throw new Error('HISTORY_UNCONFIRMED')
   await invalidateBootstrapCache()
-  return result
+  return { id: result.id, mealOptionId: result.meal_option_id, eatenAt: result.eaten_at, rating: result.rating, note: result.note }
 }
 
 export async function deleteHistory(id: string) {
