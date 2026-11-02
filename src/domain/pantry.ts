@@ -1,4 +1,5 @@
 import type { DishIngredient, Ingredient, MealCompatibility, MealOption, PantryItem } from './types'
+import { matchesSearchText } from './search'
 
 export const IMPORTANCE_WEIGHTS: Record<string, number> = { primary: 5, normal: 3, minor: 1, optional: 0.25 }
 
@@ -32,7 +33,5 @@ export function enrichMealsWithCompatibility(meals: MealOption[], pantry: Pantry
 }
 
 export function filterIngredients(ingredients: Ingredient[], query: string): Ingredient[] {
-  const normalized = query.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim()
-  if (!normalized) return ingredients
-  return ingredients.filter((ingredient) => [ingredient.canonicalName, ...ingredient.aliases].some((value) => value.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalized)))
+  return ingredients.filter((ingredient) => matchesSearchText([ingredient.canonicalName, ...ingredient.aliases].join(' '), query))
 }

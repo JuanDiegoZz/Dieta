@@ -42,3 +42,9 @@
 - Controles frecuentes con área de 44 px, búsquedas de 16 px y estados aria-pressed. Franjas usan grupo de botones nativos en vez de un patrón tab incompleto. Nombres de despensa incluyen ingrediente.
 - Rojo: cuatro contrastes originales fallaron. Verde: 105 pruebas; lint, typecheck, build y diff --check aprobados. Navegador acumulado en cuatro tamaños aprobó tamaños, selección y prefers-reduced-motion.
 - No sustituye auditoría completa con VoiceOver ni certificación WCAG.
+
+## Iteración 6 — Descubrimiento
+
+- Hoy indica visibles/total y continúa en Explorar con consulta y franja conservadas. Explorar comunica alcance global; Hoy y alternativas siguen restringidos por franja.
+- Despensa y alternativas usan normalización por palabra/prefijo; piña no coincide con espinaca. Se mantienen nombres, ingredientes, aliases y consultas múltiples.
+- Rojo: cuatro casos nuevos de Despensa detectaron falsos positivos. Verde: 111 pruebas; lint, typecheck, build y diff --check aprobados. Navegador acumulado en cuatro tamaños verificó continuación 6/14 y búsquedas normalizadas.

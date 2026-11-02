@@ -42,6 +42,11 @@ export function createMealSearchIndex(meals: MealOption[]): MealSearchIndex {
 
 function wordMatch(value: string, token: string) { return value.split(/[^a-z0-9\u00c0-\u024f]+/).some((word) => word.startsWith(token)) }
 
+export function matchesSearchText(value: string, query: string) {
+  const normalized = normalize(value)
+  return normalize(query).split(/[^a-z0-9\u00c0-\u024f]+/).filter(Boolean).every((token) => wordMatch(normalized, token))
+}
+
 function scoreToken(indexed: IndexedMeal, token: string): number {
   const { title, components, ingredients, aliases, tags, summary } = indexed
 

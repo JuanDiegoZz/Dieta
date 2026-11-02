@@ -167,6 +167,25 @@ module.exports = async (page, iteration = 1) => {
         assert(await page.locator('.button--primary').first().evaluate(e => parseFloat(getComputedStyle(e).transitionDuration) < 0.01), 'reduced motion must disable transitions')
         await page.emulateMedia({ reducedMotion: 'no-preference' })
       }
+      if (iteration >= 6) {
+        await page.goto('http://127.0.0.1:5174/#/today')
+        await page.getByRole('button', { name: 'Desayuno', exact: true }).click()
+        await page.locator('input[type=search]').fill('pina')
+        await page.getByRole('button', { name: 'Ver más en Explorar', exact: true }).waitFor()
+        assert(await page.locator('.result-count').innerText() === '6 de 14 opciones', 'Today must explain truncated results')
+        await page.getByRole('button', { name: 'Ver más en Explorar', exact: true }).click()
+        await page.waitForURL('**/#/explore')
+        assert(await page.locator('input[type=search]').inputValue() === 'pina', 'continuation must keep query')
+        assert(await page.locator('.result-count').innerText() === '14', 'Explore must expose complete results')
+        await page.goto('http://127.0.0.1:5174/#/pantry')
+        await page.locator('input[type=search]').fill('PIÑA')
+        assert(await page.locator('.pantry-row').count() === 1, 'pantry normalization must find pineapple')
+        await page.goto('http://127.0.0.1:5174/#/week')
+        await page.getByRole('button', { name: 'Cambiar', exact: true }).first().click()
+        await page.getByRole('textbox', { name: 'Buscar alternativa' }).fill('PIÑA')
+        assert(await page.locator('.change-option').count() === 14, 'weekly alternatives must use normalized ingredient search in slot')
+        await page.keyboard.press('Escape')
+      }
       reports.push({ size, iteration, checks: 'search, 503, double tap, lost response, idempotent retry, history, overflow' })
       await page.unrouteAll({ behavior: 'wait' })
     }

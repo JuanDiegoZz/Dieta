@@ -238,7 +238,7 @@ export default function App() {
   } else if (error && meals.length === 0) {
     content = <div className="page error-state"><p className="page-kicker">Algo salió mal</p><h1>No pudimos abrir tu plan</h1><p className="page-subtitle">{error}</p><button className="button button--primary" onClick={() => window.location.reload()} type="button">Reintentar</button></div>
   } else if (baseRoute === 'today') {
-    content = <TodayScreen meals={visibleMeals} pantry={pantry} avoidRepeatDays={avoidRepeatDays} onOpen={openMeal} onCook={openKitchen} onToggleFavorite={toggleFavorite} onHide={hideMeal} />
+    content = <TodayScreen onExplore={(query, slot) => { navigate('explore'); const state = window.history.state; window.history.replaceState({ ...state, dieta: { ...state?.dieta, ui: { ...state?.dieta?.ui, 'explore.query': query, 'explore.slot': slot, 'explore.filters': [], 'explore.page': 1 } } }, '') }} meals={visibleMeals} pantry={pantry} avoidRepeatDays={avoidRepeatDays} onOpen={openMeal} onCook={openKitchen} onToggleFavorite={toggleFavorite} onHide={hideMeal} />
   } else if (baseRoute === 'explore') {
     content = <ExploreScreen diagnostics={diagnostics} meals={visibleMeals} pantry={pantry} avoidRepeatDays={avoidRepeatDays} onAvoidRepeatDaysChange={changeAvoidRepeatDays} onOpen={openMeal} onCook={openKitchen} onToggleFavorite={toggleFavorite} onHide={hideMeal} />
   } else if (baseRoute === 'pantry') {

@@ -24,7 +24,7 @@ function dateLabel() {
   return new Date().toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
-export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, onToggleFavorite, onHide }: { meals: MealOption[]; pantry: PantryItem[]; avoidRepeatDays: number; onOpen: (meal: MealOption) => void; onCook: (meal: MealOption) => void; onToggleFavorite: (meal: MealOption) => void; onHide: (meal: MealOption) => void }) {
+export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, onToggleFavorite, onHide, onExplore }: { onExplore: (query: string, slot: MealSlot) => void; meals: MealOption[]; pantry: PantryItem[]; avoidRepeatDays: number; onOpen: (meal: MealOption) => void; onCook: (meal: MealOption) => void; onToggleFavorite: (meal: MealOption) => void; onHide: (meal: MealOption) => void }) {
   const [selectedSlot, setSelectedSlot] = useScreenState<MealSlot>('today.slot', () => getSuggestedSlot())
   const [query, setQuery] = useScreenState('today.query', '')
   const [loading, setLoading] = useState(true)
@@ -68,7 +68,7 @@ export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, on
       <div className="toolbar-row"><MealTabs selected={selectedSlot} onSelect={setSelectedSlot} /><SearchField value={query} onChange={setQuery} /></div>
 
       {query ? (
-        <section className="section-block"><div className="section-heading"><div><p className="section-kicker">Búsqueda local</p><h2>Resultados para “{query}”</h2></div><span className="result-count">{results.length} opciones</span></div></section>
+        <section className="section-block"><div className="section-heading"><div><p className="section-kicker">Búsqueda local</p><h2>Resultados para “{query}”</h2></div><span className="result-count">{displayedResults.length} de {results.length} opciones</span></div></section>
       ) : (
         <section className="recommendation-banner"><div className="recommendation-banner__icon"><Icon name="sparkles" size={22} /></div><div><span className="section-kicker">Una buena idea para ahora</span><strong>{featured?.title ?? 'Explora tu plan'}</strong><span>{featured ? featured.summary : 'Elige una franja para empezar.'}</span></div>{featured && <button className="round-button" onClick={() => onOpen(featured)} type="button" aria-label={`Ver ${featured.title}`}><Icon name="chevron-right" size={19} /></button>}</section>
       )}
@@ -76,6 +76,8 @@ export function TodayScreen({ meals, pantry, avoidRepeatDays, onOpen, onCook, on
       <section className="section-block section-block--cards">
         <div className="section-heading"><div><p className="section-kicker">{query ? 'Coincidencias' : 'Opciones de tu dieta'}</p><h2>{query ? 'Encuentra algo que te guste' : `Ideas para ${slot.label.toLocaleLowerCase('es')}`}</h2></div>{!query && <span className="result-count">{results.length} opciones</span>}</div>
         {loading ? <div className="card-grid">{[1, 2, 3].map((item) => <SkeletonCard key={item} />)}</div> : results.length ? <div className="card-grid">{displayedResults.map((meal) => <MealCard key={meal.id} meal={meal} onOpen={onOpen} onToggleFavorite={onToggleFavorite} onCook={onCook} onHide={onHide} />)}</div> : <EmptyState title={query ? `No encontramos ${slot.label.toLocaleLowerCase('es')} con “${query}”.` : 'No encontramos opciones'} message={query ? 'Borra la búsqueda o cambia de franja para seguir explorando.' : 'Prueba otra búsqueda o cambia de franja.'} action={query ? { label: 'Borrar búsqueda', onClick: () => setQuery('') } : undefined} />}
+        {results.length > 6 && <button className="button button--secondary" onClick={() => onExplore(query, selectedSlot)} type="button">Ver más en Explorar</button>}
+        <p className="page-subtitle">La búsqueda de Hoy usa la franja seleccionada.</p>
       </section>
     </div>
   )
