@@ -27,6 +27,7 @@ let memoryCache: BootstrapPayload | null = null
 let memoryEtag: string | null = null
 
 function normalizePayload(payload: BootstrapPayload, source: DataSource = payload.source ?? 'api'): BootstrapPayload {
+  if (!Array.isArray(payload.meals) || !Array.isArray(payload.ingredients) || !Array.isArray(payload.history) || !Array.isArray(payload.pantry) || payload.version == null) throw new Error('INVALID_BOOTSTRAP')
   return {
     version: payload.version,
     catalogVersion: payload.catalogVersion,
@@ -125,7 +126,15 @@ async function fetchJson<T>(url: string, options?: RequestInit, timeoutMs = API_
   return response.json() as Promise<T>
 }
 
-export async function loadBootstrap(onCached?: (payload: BootstrapPayload) => void): Promise<BootstrapPayload> {
+let pendingBootstrap: Promise<BootstrapPayload> | null = null
+
+export function loadBootstrap(onCached?: (payload: BootstrapPayload) => void): Promise<BootstrapPayload> {
+  if (pendingBootstrap) return pendingBootstrap
+  pendingBootstrap = performBootstrapLoad(onCached).finally(() => { pendingBootstrap = null })
+  return pendingBootstrap
+}
+
+async function performBootstrapLoad(onCached?: (payload: BootstrapPayload) => void): Promise<BootstrapPayload> {
   const cached = readSessionCache()
   if (cached) onCached?.(cached.payload)
   const persistent = cached ? Promise.resolve(cached) : readCache()

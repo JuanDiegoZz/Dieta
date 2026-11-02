@@ -13,22 +13,27 @@ import type { MealOption, MealSlot, PantryItem } from '../domain/types'
 type Filter = 'favorite' | 'available' | 'recent' | 'notRecent' | 'useSoon'
 const PAGE_SIZE = 12
 
-export function ExploreScreen({ meals, pantry, avoidRepeatDays, onAvoidRepeatDaysChange, onOpen, onCook, onToggleFavorite, onHide }: { meals: MealOption[]; pantry: PantryItem[]; avoidRepeatDays: number; onAvoidRepeatDaysChange: (days: number) => void; onOpen: (meal: MealOption) => void; onCook: (meal: MealOption) => void; onToggleFavorite: (meal: MealOption) => void; onHide: (meal: MealOption) => void }) {
+export function ExploreScreen({ meals, pantry, avoidRepeatDays, onAvoidRepeatDaysChange, onOpen, onCook, onToggleFavorite, onHide, diagnostics = false }: { diagnostics?: boolean; meals: MealOption[]; pantry: PantryItem[]; avoidRepeatDays: number; onAvoidRepeatDaysChange: (days: number) => void; onOpen: (meal: MealOption) => void; onCook: (meal: MealOption) => void; onToggleFavorite: (meal: MealOption) => void; onHide: (meal: MealOption) => void }) {
   const [selectedSlot, setSelectedSlot] = useState<MealSlot>('lunch')
   const [query, setQuery] = useState('')
   const [filters, setFilters] = useState<Filter[]>([])
   const [page, setPage] = useState(1)
   const resultsRef = useRef<HTMLElement>(null)
   const searchIndex = useMemo(() => createMealSearchIndex(meals), [meals])
+  const matches = useMemo(() => searchMealOptions(meals, query, searchIndex), [meals, query, searchIndex])
   const results = useMemo(() => {
-    let base = query.trim() ? searchMealOptions(meals, query, searchIndex).map((result) => result.meal) : meals.filter((meal) => meal.slot === selectedSlot)
+    let base = query.trim() ? matches.map((result) => result.meal) : meals.filter((meal) => meal.slot === selectedSlot)
     if (filters.includes('favorite')) base = base.filter((meal) => meal.favorite)
     if (filters.includes('available')) base = base.filter((meal) => (meal.availability ?? 0) >= 0.8)
     if (filters.includes('recent')) base = base.filter((meal) => meal.lastEatenAt ? Date.now() - Date.parse(meal.lastEatenAt) >= avoidRepeatDays * 86_400_000 : true)
     if (filters.includes('notRecent')) base = base.filter((meal) => !meal.lastEatenAt || Date.now() - Date.parse(meal.lastEatenAt) >= 3 * 86_400_000)
     if (filters.includes('useSoon')) { const soon = new Set(pantry.filter((item) => item.available && item.useSoon).map((item) => item.ingredientId)); base = base.filter((meal) => meal.components.some((component) => component.ingredients.some((ingredient) => ingredient.ingredientId && soon.has(ingredient.ingredientId)))) }
-    return rankMealOptions(base, pantry, new Date(), avoidRepeatDays)
-  }, [avoidRepeatDays, filters, meals, pantry, query, searchIndex, selectedSlot])
+    const ranked = rankMealOptions(base, pantry, new Date(), avoidRepeatDays)
+    if (!query.trim()) return ranked
+    const scores = new Map(matches.map((result) => [result.meal.id, result.score]))
+    const secondary = new Map(ranked.map((meal, position) => [meal.id, position]))
+    return ranked.sort((a, b) => (scores.get(b.id) ?? 0) - (scores.get(a.id) ?? 0) || secondary.get(a.id)! - secondary.get(b.id)!)
+  }, [avoidRepeatDays, filters, matches, meals, pantry, query, selectedSlot])
 
   const pages = pageCount(results.length, PAGE_SIZE)
   const safePage = clampPage(page, results.length, PAGE_SIZE)
@@ -52,6 +57,7 @@ export function ExploreScreen({ meals, pantry, avoidRepeatDays, onAvoidRepeatDay
   return (
     <div className="page">
       <header className="page-header"><div><p className="page-kicker">Tu plan, a tu manera</p><h1>Explorar</h1><p className="page-subtitle">Busca, descubre y elige sin complicarte.</p></div></header>
+      {diagnostics && <p role="status">Coincidencias: {matches.length} · Tras filtros: {results.length} · Página: {visibleResults.length}</p>}
       <div className="explore-search"><SearchField value={query} onChange={setQuery} placeholder="Busca platos, ingredientes o aliases" /></div>
       <MealTabs selected={selectedSlot} onSelect={setSelectedSlot} />
       <div className="filter-row" aria-label="Filtros visuales">

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { AppShell, type AppRoute } from './components/AppShell'
 import { SkeletonCard } from './components/SkeletonCard'
 import { createHistory, createIngredient as createIngredientRequest, deleteHistory, isOffline, loadBootstrap, loadWeekly, mergeIngredients, permanentlyDeleteMeal, saveMeal, saveWeekly, updateIngredient, updateMealPreference, updatePantry, type DataSource } from './data/api'
@@ -33,6 +33,10 @@ function storedAvoidRepeatDays() { try { const value = Number(window.localStorag
 function sourceLabel(source: DataSource | null) { return source === 'api' ? 'API' : source === 'cache' ? 'Cache' : source === 'fallback' ? 'Fallback local' : 'Cargando' }
 
 export default function App() {
+  const diagnostics = new URLSearchParams(window.location.search).get('diagnostics') === '1'
+  const [catalogVersion, setCatalogVersion] = useState<string | number>('—')
+  const [loadStatus, setLoadStatus] = useState('Cargando')
+  const recoveryPending = useRef(false)
   const [view, setView] = useState<View>(() => routeFromHash())
   const [meals, setMeals] = useState<MealOption[]>([])
   const [history, setHistory] = useState<HistoryEntry[]>([])
@@ -55,13 +59,13 @@ export default function App() {
     let mounted = true
     void loadBootstrap((cached) => {
       if (!mounted) return
-      setMeals(cached.meals); setHistory(cached.history); setIngredients(cached.ingredients); setPantry(cached.pantry); setDataSource(cached.source ?? 'cache'); setLoading(false)
+      setCatalogVersion(cached.catalogVersion ?? cached.version); setLoadStatus('Revalidando'); setMeals(cached.meals); setHistory(cached.history); setIngredients(cached.ingredients); setPantry(cached.pantry); setDataSource(cached.source ?? 'cache'); setLoading(false)
     }).then((payload) => {
       if (!mounted) return
       const source = payload.source ?? 'api'
-      setMeals(payload.meals); setHistory(payload.history); setIngredients(payload.ingredients); setPantry(payload.pantry); setDataSource(source); setLoading(false); setError(source === 'api' ? null : 'Estamos teniendo problemas para actualizar los datos. Mostrando la informacion guardada.')
+      setCatalogVersion(payload.catalogVersion ?? payload.version); setLoadStatus(payload.source === 'api' ? 'Actualizado' : 'Sin actualizar'); setMeals(payload.meals); setHistory(payload.history); setIngredients(payload.ingredients); setPantry(payload.pantry); setDataSource(source); setLoading(false); setError(source === 'api' ? null : 'Estamos teniendo problemas para actualizar los datos. Mostrando la informacion guardada.')
     }).catch(() => {
-      if (mounted) { setLoading(false); setError('No pudimos cargar tu dieta. Revisa la conexión e inténtalo de nuevo.') }
+      if (mounted) { setLoadStatus('Error de carga'); setLoading(false); setError('No pudimos cargar tu dieta. Revisa la conexión e inténtalo de nuevo.') }
     })
     return () => { mounted = false }
   }, [])
@@ -72,6 +76,23 @@ export default function App() {
     window.addEventListener('offline', updateConnection)
     return () => { window.removeEventListener('online', updateConnection); window.removeEventListener('offline', updateConnection) }
   }, [])
+
+  useEffect(() => {
+    const recover = () => {
+      if (loading || recoveryPending.current || dataSource === 'api' || isOffline() || document.visibilityState === 'hidden') return
+      recoveryPending.current = true
+      setLoadStatus('Actualizando')
+      void loadBootstrap().then((payload) => {
+        setLoadStatus(payload.source === 'api' ? 'Actualizado' : 'Sin actualizar')
+        if (payload.source !== 'api') return
+        setMeals(payload.meals); setHistory(payload.history); setIngredients(payload.ingredients); setPantry(payload.pantry)
+        setDataSource('api'); setCatalogVersion(payload.catalogVersion ?? payload.version); setError(null)
+      }).catch(() => setLoadStatus('Error de carga')).finally(() => { recoveryPending.current = false })
+    }
+    window.addEventListener('online', recover)
+    document.addEventListener('visibilitychange', recover)
+    return () => { window.removeEventListener('online', recover); document.removeEventListener('visibilitychange', recover) }
+  }, [dataSource, loading])
 
   useEffect(() => { void loadWeekly().then(setWeeklyPlan) }, [])
 
@@ -116,7 +137,7 @@ export default function App() {
 
   async function refreshCatalog() {
     const payload = await loadBootstrap()
-    setMeals(payload.meals); setHistory(payload.history); setIngredients(payload.ingredients); setPantry(payload.pantry); setDataSource(payload.source ?? 'api')
+    setCatalogVersion(payload.catalogVersion ?? payload.version); setLoadStatus(payload.source === 'api' ? 'Actualizado' : 'Sin actualizar'); setMeals(payload.meals); setHistory(payload.history); setIngredients(payload.ingredients); setPantry(payload.pantry); setDataSource(payload.source ?? 'api')
     return payload
   }
 
@@ -187,7 +208,7 @@ export default function App() {
   } else if (view === 'today') {
     content = <TodayScreen meals={visibleMeals} pantry={pantry} avoidRepeatDays={avoidRepeatDays} onOpen={openMeal} onCook={openKitchen} onToggleFavorite={toggleFavorite} onHide={hideMeal} />
   } else if (view === 'explore') {
-    content = <ExploreScreen meals={visibleMeals} pantry={pantry} avoidRepeatDays={avoidRepeatDays} onAvoidRepeatDaysChange={changeAvoidRepeatDays} onOpen={openMeal} onCook={openKitchen} onToggleFavorite={toggleFavorite} onHide={hideMeal} />
+    content = <ExploreScreen diagnostics={diagnostics} meals={visibleMeals} pantry={pantry} avoidRepeatDays={avoidRepeatDays} onAvoidRepeatDaysChange={changeAvoidRepeatDays} onOpen={openMeal} onCook={openKitchen} onToggleFavorite={toggleFavorite} onHide={hideMeal} />
   } else if (view === 'pantry') {
     content = <PantryScreen ingredients={ingredients} pantry={pantry} onChange={patchPantry} />
   } else if (view === 'favorites') {
@@ -202,5 +223,5 @@ export default function App() {
     content = <PlaceholderScreen eyebrow="Mantén tu plan al día" title="Administrar" icon="settings" description="La edición del plan y sus componentes llegará en la siguiente macrofase." />
   }
 
-  return <AppShell route={baseRoute} onNavigate={navigate}>{import.meta.env.DEV && dataSource && <div className="data-source-indicator" role="status">Data source: <strong>{sourceLabel(dataSource)}</strong></div>}{offline && <div className="offline-banner" role="status">Sin conexión · {dataSource === 'cache' || dataSource === 'fallback' ? 'Mostrando datos guardados' : 'Los cambios no se guardarán'}</div>}{error && meals.length > 0 && <div className="status-banner" role="alert">{error}<button onClick={() => setError(null)} type="button" aria-label="Cerrar aviso">×</button></div>}<Suspense fallback={<div className="page"><p className="page-kicker">Cargando sección</p><h1>Un momento</h1></div>}>{content}</Suspense></AppShell>
+  return <AppShell route={baseRoute} onNavigate={navigate}>{diagnostics && <p role="status">Fuente: {dataSource ?? "ninguna"} · Carga: {loadStatus} · Versión: {catalogVersion} · Platillos: {meals.length}</p>}{import.meta.env.DEV && dataSource && <div className="data-source-indicator" role="status">Data source: <strong>{sourceLabel(dataSource)}</strong></div>}{offline && <div className="offline-banner" role="status">Sin conexión · {dataSource === 'cache' || dataSource === 'fallback' ? 'Mostrando datos guardados' : 'Los cambios no se guardarán'}</div>}{error && meals.length > 0 && <div className="status-banner" role="alert">{error}<button onClick={() => setError(null)} type="button" aria-label="Cerrar aviso">×</button></div>}<Suspense fallback={<div className="page"><p className="page-kicker">Cargando sección</p><h1>Un momento</h1></div>}>{content}</Suspense></AppShell>
 }

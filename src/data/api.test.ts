@@ -81,3 +81,30 @@ describe('bootstrap request resilience', () => {
     }
   })
 })
+
+describe('catalog recovery', () => {
+  it('shares concurrent requests and replaces stale cache', async () => {
+    const browser = makeWindow()
+    browser.sessionStorage.setItem('mi-dieta:bootstrap:v2', JSON.stringify({ payload: fallbackPayload, etag: 'old' }))
+    vi.stubGlobal('window', browser)
+    const fetcher = vi.fn(async () => new Response(JSON.stringify({ ...fallbackPayload, version: 'fresh' }), { status: 200 }))
+    vi.stubGlobal('fetch', fetcher)
+    try {
+      const { loadBootstrap } = await import('./api.js')
+      const first = loadBootstrap()
+      expect(loadBootstrap()).toBe(first)
+      await expect(first).resolves.toMatchObject({ source: 'api', version: 'fresh' })
+      expect(fetcher).toHaveBeenCalledTimes(1)
+    } finally { vi.unstubAllGlobals(); vi.resetModules() }
+  })
+  it('retains cache when API data is incomplete', async () => {
+    const browser = makeWindow()
+    browser.sessionStorage.setItem('mi-dieta:bootstrap:v2', JSON.stringify({ payload: fallbackPayload, etag: 'old' }))
+    vi.stubGlobal('window', browser)
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 200 })))
+    try {
+      const { loadBootstrap } = await import('./api.js')
+      await expect(loadBootstrap()).resolves.toMatchObject({ source: 'cache', version: 'fallback' })
+    } finally { vi.unstubAllGlobals(); vi.resetModules() }
+  })
+})

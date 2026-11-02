@@ -109,3 +109,14 @@ describe('searchMealOptions', () => {
     expect(searchMealOptions(meals, 'ave', undefined, 'breakfast').map((result) => result.meal.id)).toEqual(['breakfast-chicken'])
   })
 })
+
+describe('ingredient word boundaries', () => {
+  const pineapple = { ...meals[0], id: 'pineapple', title: 'Batido', summary: '', tags: [], components: [{ id: 'c', label: null, ingredients: [{ id: 'i', name: 'Piña (cualquier variedad)', quantity: '', aliases: ['ananás'] }] }] }
+  const spinach = { ...pineapple, id: 'spinach', components: [{ ...pineapple.components[0], ingredients: [{ ...pineapple.components[0].ingredients[0], name: 'Espinaca', aliases: [] }] }] }
+  it.each(['piña', 'pina', 'Piña', 'PIÑA', 'piñ', 'pin\u0303a', 'pina cualquier variedad', 'ananás'])('matches pineapple only: %s', (query) => {
+    expect(searchMealOptions([spinach, pineapple], query).map(r => r.meal.id)).toEqual(['pineapple'])
+  })
+  it('retains spinach searches', () => {
+    expect(searchMealOptions([spinach, pineapple], 'espinaca').map(r => r.meal.id)).toEqual(['spinach'])
+  })
+})

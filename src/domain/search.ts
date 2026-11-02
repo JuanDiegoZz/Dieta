@@ -40,21 +40,24 @@ export function createMealSearchIndex(meals: MealOption[]): MealSearchIndex {
   }])) }
 }
 
+function wordMatch(value: string, token: string) { return value.split(/[^a-z0-9\u00c0-\u024f]+/).some((word) => word.startsWith(token)) }
+
 function scoreToken(indexed: IndexedMeal, token: string): number {
   const { title, components, ingredients, aliases, tags, summary } = indexed
 
-  if (title === token) return 100
-  if (title.includes(token)) return 70
-  if (components.some((value) => value.includes(token))) return 60
-  if (ingredients.some((value) => value.includes(token))) return 50
-  if (aliases.some((value) => value.includes(token))) return 45
-  if (tags.some((value) => value.includes(token))) return 30
-  if (summary.includes(token)) return 20
+  const direct = [title, ...ingredients, ...aliases].some((value) => value.split(/[^a-z0-9\u00c0-\u024f]+/).includes(token)) ? 100 : 0
+  if (title === token) return 200
+  if (wordMatch(title, token)) return 70 + direct
+  if (components.some((value) => wordMatch(value, token))) return 60 + direct
+  if (ingredients.some((value) => wordMatch(value, token))) return 50 + direct
+  if (aliases.some((value) => wordMatch(value, token))) return 45 + direct
+  if (tags.some((value) => wordMatch(value, token))) return 30
+  if (wordMatch(summary, token)) return 20
   return 0
 }
 
 export function searchMealOptions(meals: MealOption[], query: string, index = createMealSearchIndex(meals), slot?: MealSlot): SearchResult[] {
-  const tokens = normalize(query).split(' ').filter(Boolean)
+  const tokens = normalize(query).split(/[^a-z0-9\u00c0-\u024f]+/).filter(Boolean)
   const candidates = slot ? meals.filter((meal) => meal.slot === slot) : meals
 
   return candidates.map((meal) => {
@@ -62,7 +65,7 @@ export function searchMealOptions(meals: MealOption[], query: string, index = cr
       if (!indexed) return { meal, score: 0, matches: false }
       const tokenScores = tokens.map((token) => scoreToken(indexed, token))
       const matches = tokens.length === 0 || tokenScores.every((score) => score > 0)
-      const score = tokenScores.reduce((total, value) => total + value, 0) + (meal.favorite ? 10 : 0)
+      const score = tokenScores.reduce((total, value) => total + value, 0)
 
       return { meal, score, matches }
     })
