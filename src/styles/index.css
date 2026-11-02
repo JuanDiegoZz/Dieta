@@ -3,11 +3,11 @@
   --surface: #ffffff;
   --surface-soft: #f0f3ed;
   --ink: #202521;
-  --muted: #767d76;
+  --muted: #626a63;
   --muted-dark: #59615b;
   --line: #e6e8e2;
   --accent: #e87858;
-  --accent-dark: #c65e40;
+  --accent-dark: #ad472f;
   --accent-soft: #fff0e9;
   --mint: #dfeee5;
   --mint-strong: #7ea58d;
@@ -84,7 +84,7 @@ a { color: inherit; }
 .button { min-height: 44px; padding: 0 17px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 12px; font-weight: 700; transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease; }
 .button svg { margin-right: 8px; }
 .button:active { transform: translateY(1px) scale(.98); }
-.button--primary { background: var(--accent); color: #fff; box-shadow: 0 6px 14px rgba(232, 120, 88, .2); }
+.button--primary { background: var(--accent-dark); color: #fff; box-shadow: 0 6px 14px rgba(232, 120, 88, .2); }
 .button--primary:hover { background: var(--accent-dark); }
 .button--secondary { border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
 .button--surprise { white-space: nowrap; font-size: 12px; }
@@ -99,7 +99,7 @@ a { color: inherit; }
 .search-field { width: 100%; min-height: 48px; margin-top: 13px; padding: 0 13px; display: flex; align-items: center; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); color: var(--muted); box-shadow: var(--shadow-sm); }
 .search-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232, 120, 88, .12); }
 .search-field input { width: 100%; min-width: 0; margin-left: 9px; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 14px; }
-.search-field input::placeholder { color: #9da29d; }
+.search-field input::placeholder { color: var(--muted); }
 .search-field__clear { width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--muted); }
 
 .recommendation-banner { margin-bottom: 34px; padding: 17px; display: flex; align-items: center; border: 1px solid #f3e1d6; border-radius: var(--radius-md); background: #fff9f4; }
@@ -131,8 +131,8 @@ a { color: inherit; }
 .meal-card__meta { align-items: flex-start; flex-wrap: wrap; }
 .availability, .last-eaten { display: inline-flex; align-items: center; color: var(--muted); font-size: 11px; }
 .availability__dot { width: 6px; height: 6px; margin-right: 6px; display: inline-block; border-radius: 50%; background: currentColor; }
-.availability--good { color: #568064; }
-.availability--warm { color: #ac7d32; }
+.availability--good { color: #456e50; }
+.availability--warm { color: #805915; }
 .availability--muted { color: var(--muted); }
 .last-eaten svg { margin-right: 4px; }
 .meal-card__footer { min-height: 36px; margin-top: 13px; padding-top: 12px; border-top: 1px solid var(--line); }
@@ -573,3 +573,24 @@ body { min-height: 100vh; min-height: -webkit-fill-available; }
 [hidden] { display: none !important; }
 
 @media (max-width: 1099px) { .data-source-indicator { right: auto; left: 12px; pointer-events: none; } }
+
+/* Accessible controls preserve the warm palette and provide a visible keyboard fallback. */
+button:focus, input:focus, select:focus, textarea:focus, a:focus { outline: 3px solid #98412c; outline-offset: 3px; }
+.search-field input, .change-dialog__search input { min-height: 44px; font-size: 16px; }
+.search-field__clear { flex: 0 0 44px; width: 44px; height: 44px; }
+.rating-buttons button { min-width: 44px; min-height: 44px; color: var(--muted-dark); }
+.rating-buttons button.is-selected, .rating-buttons button:hover { color: var(--accent-dark); }
+.week-change-button, .week-entry__title, .segmented-control button, .component-editor__actions .icon-button, .inline-notice .icon-button, .admin-list__toggle { min-height: 44px; }
+.component-editor__actions .icon-button, .inline-notice .icon-button { width: 44px; height: 44px; }
+.week-entry__title { width: 100%; }
+.status-banner > button { min-width: 44px; min-height: 44px; }
+.icon-button { flex-shrink: 0; color: var(--muted-dark); }
+.favorite-button.is-favorite, .detail-favorite.is-favorite { color: var(--accent-dark); }
+.header-action { flex-shrink: 0; }
+.check-control { min-height: 44px; }
+.form-field input, .form-field textarea, .form-field select, .ingredient-editor input, .ingredient-editor select, .admin-slot-filter { min-height: 44px; }
+.form-field input, .form-field textarea, .form-field select, .ingredient-editor input, .ingredient-editor select, .search-field, .change-dialog__search { border-color: #89918a; }
+input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
+
+.kitchen-done { background: var(--accent-dark); }
+.button:disabled, .kitchen-done:disabled { cursor: default; }

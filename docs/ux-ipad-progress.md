@@ -35,3 +35,10 @@
 - Ingredientes (nombre, categoría, aliases), creación pendiente y borradores de platillos participan en la protección. Atrás del navegador puede cancelarse sin desmontar el formulario; beforeunload ofrece aviso cuando el navegador lo admite.
 - 101 pruebas; lint, typecheck, build, diff --check y suite acumulada en cuatro tamaños aprobados. Navegador verificó cancelación, descarte y guardado simulado sin avisos posteriores.
 - Limitación de plataforma: iPadOS puede cerrar Safari sin emitir beforeunload; no se promete persistencia local de borradores ante cierre forzado.
+
+## Iteración 5 — Accesibilidad y tacto
+
+- Coral funcional más oscuro, texto secundario y placeholder con contraste AA; paleta decorativa cálida conservada. Foco visible sin depender de focus-visible.
+- Controles frecuentes con área de 44 px, búsquedas de 16 px y estados aria-pressed. Franjas usan grupo de botones nativos en vez de un patrón tab incompleto. Nombres de despensa incluyen ingrediente.
+- Rojo: cuatro contrastes originales fallaron. Verde: 105 pruebas; lint, typecheck, build y diff --check aprobados. Navegador acumulado en cuatro tamaños aprobó tamaños, selección y prefers-reduced-motion.
+- No sustituye auditoría completa con VoiceOver ni certificación WCAG.

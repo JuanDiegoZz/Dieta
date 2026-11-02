@@ -1,4 +1,4 @@
-/* global module, URL, sessionStorage, localStorage, document, innerWidth, window */
+/* global module, URL, sessionStorage, localStorage, document, innerWidth, window, getComputedStyle */
 // Run with the available Playwright tool: require(this file)(page, iteration).
 // Every API response is synthetic. No request can reach the production BFF.
 module.exports = async (page, iteration = 1) => {
@@ -88,7 +88,7 @@ module.exports = async (page, iteration = 1) => {
       if (iteration >= 2) {
         for (const route of ['today', 'favorites', 'week', 'history']) {
           await page.goto(`http://127.0.0.1:5174/#/${route}`)
-          if (route === 'today') await page.getByRole('tab', { name: 'Desayuno', exact: true }).click()
+          if (route === 'today') await page.getByRole('button', { name: 'Desayuno', exact: true }).click()
           const opener = route === 'history' ? page.locator('.history-row__main').first() : route === 'week' ? page.locator('.week-entry__title').first() : page.locator('.meal-card__body').first()
           await opener.click()
           await page.getByRole('button', { name: 'Volver', exact: true }).click()
@@ -148,6 +148,24 @@ module.exports = async (page, iteration = 1) => {
         await page.getByRole('button', { name: /Guardar (Ingredient|ingrediente)/i }).click()
         await page.getByRole('button', { name: 'Hoy', exact: true }).click()
         await page.waitForURL('**/#/today')
+      }
+      if (iteration >= 5) {
+        await page.goto('http://127.0.0.1:5174/#/explore')
+        await page.locator('input[type=search]').fill('piña')
+        const clear = await page.getByRole('button', { name: 'Limpiar búsqueda' }).boundingBox()
+        assert(clear.width >= 44 && clear.height >= 44, 'clear search must have a 44px target')
+        const filter = page.getByRole('button', { name: 'Favoritas', exact: true })
+        await filter.click()
+        assert(await filter.getAttribute('aria-pressed') === 'true', 'filter must announce selection')
+        await page.locator('.meal-card__body').first().click()
+        for (const button of await page.locator('.rating-buttons button').all()) {
+          const box = await button.boundingBox()
+          assert(box.width >= 44 && box.height >= 44, 'rating must have 44px target')
+          assert(await button.getAttribute('aria-pressed') !== null, 'rating must announce selection')
+        }
+        await page.emulateMedia({ reducedMotion: 'reduce' })
+        assert(await page.locator('.button--primary').first().evaluate(e => parseFloat(getComputedStyle(e).transitionDuration) < 0.01), 'reduced motion must disable transitions')
+        await page.emulateMedia({ reducedMotion: 'no-preference' })
       }
       reports.push({ size, iteration, checks: 'search, 503, double tap, lost response, idempotent retry, history, overflow' })
       await page.unrouteAll({ behavior: 'wait' })
