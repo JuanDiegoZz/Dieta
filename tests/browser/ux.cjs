@@ -4,7 +4,7 @@
 module.exports = async (page, iteration = 1, captureEvidence = false) => {
   const assert = (condition, message) => { if (!condition) throw new Error(message) }
   const uuid = (n) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`
-  const sizes = [{ width: 375, height: 812 }, { width: 768, height: 1024 }, { width: 1024, height: 768 }, { width: 1366, height: 900 }]
+  const sizes = [{ width: 375, height: 812 }, { width: 768, height: 1024 }, { width: 1024, height: 768 }, { width: 1112, height: 834 }, { width: 1180, height: 820 }, { width: 1194, height: 834 }, { width: 1366, height: 1024 }, { width: 1366, height: 900 }]
   const reports = []
   await page.unrouteAll({ behavior: 'wait' })
   const errors = []
@@ -61,7 +61,7 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         }
         return reply({ error: 'UNEXPECTED_TEST_REQUEST' }, 400)
       })
-      await page.goto('http://127.0.0.1:5174/#/explore')
+      await page.goto('http://127.0.0.1:5180/#/explore')
       await page.evaluate(() => { sessionStorage.clear(); localStorage.clear() })
       await page.reload()
       await page.locator('input[type=search]').fill('piña')
@@ -104,19 +104,19 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
       await page.getByRole('button', { name: 'Preparado', exact: true }).waitFor()
       assert(await page.getByRole('button', { name: 'Preparado', exact: true }).isDisabled(), 'confirmed preparation must be disabled')
       assert(state.posts.every(event => event.id === eventId) && state.saved.size === 1, 'retry must reuse event ID')
-      await page.goto('http://127.0.0.1:5174/#/history')
+      await page.goto('http://127.0.0.1:5180/#/history')
       await page.locator('.history-row').waitFor()
       assert(await page.locator('.history-row').count() === 1, 'confirmed preparation must appear once in history')
       if (iteration >= 2) {
         for (const route of ['today', 'favorites', 'week', 'history']) {
-          await page.goto(`http://127.0.0.1:5174/#/${route}`)
+          await page.goto(`http://127.0.0.1:5180/#/${route}`)
           if (route === 'today') await page.getByRole('button', { name: 'Desayuno', exact: true }).click()
           const opener = route === 'history' ? page.locator('.history-row__main').first() : route === 'week' ? page.locator('.week-entry__title').first() : page.locator('.meal-card__body').first()
           await opener.click()
           await page.getByRole('button', { name: 'Volver', exact: true }).click()
           await page.waitForURL(`**/#/${route}`)
         }
-        await page.goto(`http://127.0.0.1:5174/#/detail?id=${uuid(1)}`)
+        await page.goto(`http://127.0.0.1:5180/#/detail?id=${uuid(1)}`)
         await page.locator('.detail-header').waitFor()
         await page.reload()
         await page.locator('.detail-header').waitFor()
@@ -124,7 +124,7 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         await page.waitForURL('**/#/today')
       }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'page must not overflow')
-      if (iteration >= 3 && size.width < 1100) {
+      if (iteration >= 3 && await page.getByRole('button', { name: 'Más secciones', exact: true }).isVisible()) {
         const more = page.getByRole('button', { name: 'Más secciones', exact: true })
         await more.click()
         await page.getByRole('dialog', { name: 'Más secciones' }).waitFor()
@@ -138,7 +138,7 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         }
       }
       if (iteration >= 4) {
-        await page.goto('http://127.0.0.1:5174/#/week')
+        await page.goto('http://127.0.0.1:5180/#/week')
         await page.getByRole('button', { name: /^Cambiar / }).first().click()
         await page.locator('.change-options button').last().focus()
         await page.keyboard.press('Tab')
@@ -147,9 +147,9 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         assert(await page.evaluate(() => !!document.activeElement.closest('[role=dialog]')), 'Shift+Tab must stay in dialog')
         await page.keyboard.press('Escape')
         assert(await page.getByRole('button', { name: /^Cambiar / }).first().evaluate(e => e === document.activeElement), 'weekly dialog must restore focus')
-        await page.goto('http://127.0.0.1:5174/#/explore')
+        await page.goto('http://127.0.0.1:5180/#/explore')
         await page.locator('input[type=search]').waitFor()
-        if (size.width < 1100) await page.getByRole('button', { name: 'Más secciones', exact: true }).click()
+        if (await page.getByRole('button', { name: 'Más secciones', exact: true }).isVisible()) await page.getByRole('button', { name: 'Más secciones', exact: true }).click()
         await page.getByRole('button', { name: 'Administrar', exact: true }).click()
         await page.getByRole('button', { name: 'Ingredientes', exact: true }).click()
         await page.locator('.admin-list__item').first().click()
@@ -170,7 +170,7 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         await page.getByRole('button', { name: /Guardar (Ingredient|ingrediente)/i }).click()
         await page.getByRole('button', { name: 'Hoy', exact: true }).click()
         await page.waitForURL('**/#/today')
-        if (size.width < 1100) await page.getByRole('button', { name: 'Más secciones', exact: true }).click()
+        if (await page.getByRole('button', { name: 'Más secciones', exact: true }).isVisible()) await page.getByRole('button', { name: 'Más secciones', exact: true }).click()
         await page.getByRole('button', { name: 'Administrar', exact: true }).click()
         await page.getByRole('button', { name: 'Ingredientes', exact: true }).click()
         await page.locator('.admin-list__item').first().click()
@@ -179,7 +179,7 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         await page.waitForURL('**/#/today')
       }
       if (iteration >= 5) {
-        await page.goto('http://127.0.0.1:5174/#/explore')
+        await page.goto('http://127.0.0.1:5180/#/explore')
         await page.locator('input[type=search]').fill('piña')
         const clear = await page.getByRole('button', { name: 'Limpiar búsqueda' }).boundingBox()
         assert(clear.width >= 44 && clear.height >= 44, 'clear search must have a 44px target')
@@ -197,7 +197,7 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         await page.emulateMedia({ reducedMotion: 'no-preference' })
       }
       if (iteration >= 6) {
-        await page.goto('http://127.0.0.1:5174/#/today')
+        await page.goto('http://127.0.0.1:5180/#/today')
         await page.getByRole('button', { name: 'Desayuno', exact: true }).click()
         await page.locator('input[type=search]').fill('pina')
         await page.getByRole('button', { name: 'Ver más en Explorar', exact: true }).waitFor()
@@ -206,10 +206,10 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         await page.waitForURL('**/#/explore')
         assert(await page.locator('input[type=search]').inputValue() === 'pina', 'continuation must keep query')
         assert(await page.locator('.result-count').innerText() === '14', 'Explore must expose complete results')
-        await page.goto('http://127.0.0.1:5174/#/pantry')
+        await page.goto('http://127.0.0.1:5180/#/pantry')
         await page.locator('input[type=search]').fill('PIÑA')
         assert(await page.locator('.pantry-row').count() === 1, 'pantry normalization must find pineapple')
-        await page.goto('http://127.0.0.1:5174/#/week')
+        await page.goto('http://127.0.0.1:5180/#/week')
         await page.getByRole('button', { name: /^Cambiar / }).first().click()
         await page.getByRole('textbox', { name: 'Buscar alternativa' }).fill('PIÑA')
         assert(await page.locator('.change-option').count() === 14, 'weekly alternatives must use normalized ingredient search in slot')
@@ -217,7 +217,7 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
       }
       if (iteration >= 7) {
         state.weeklyError = true
-        await page.goto('http://127.0.0.1:5174/#/week')
+        await page.goto('http://127.0.0.1:5180/#/week')
         await page.reload()
         await page.getByRole('button', { name: 'Reintentar semana', exact: true }).waitFor()
         assert(await page.getByText('Aún no tienes una semana', { exact: true }).count() === 0, 'weekly error must not claim no plan')
@@ -225,7 +225,7 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         await page.getByRole('button', { name: 'Reintentar semana', exact: true }).click()
         await page.locator('.week-grid').waitFor()
         assert(await page.locator('.week-scroll-hint').innerText().then(t => t.includes('Día visible')), 'weekly view must explain scroll context')
-        await page.goto('http://127.0.0.1:5174/#/explore')
+        await page.goto('http://127.0.0.1:5180/#/explore')
         await page.locator('input[type=search]').fill('piña')
         await page.locator('.meal-card__body').first().click()
         const favorite = page.locator('.detail-favorite')
@@ -238,25 +238,25 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         await page.locator('.meal-card').first().getByRole('button', { name: /^Cocinar / }).click()
         assert(await page.locator('.kitchen-component h2').count() === 2, 'kitchen must preserve components')
         assert(await page.getByText('Sin cambiar cantidades.', { exact: true }).count() === 1, 'kitchen must preserve notes')
-        await page.goto('http://127.0.0.1:5174/#/pantry')
+        await page.goto('http://127.0.0.1:5180/#/pantry')
         await page.getByRole('button', { name: /Marcar Piña de disponibles/ }).click()
         await page.getByRole('button', { name: /Quitar Piña de disponibles/ }).waitFor()
         await page.getByRole('button', { name: /Usar pronto: Piña/ }).click()
         await page.waitForFunction(() => document.querySelector('.soon-toggle')?.getAttribute('aria-pressed') === 'true')
-        await page.goto('http://127.0.0.1:5174/#/week')
+        await page.goto('http://127.0.0.1:5180/#/week')
         await page.getByRole('button', { name: /^Bloquear / }).first().click()
         await page.getByRole('button', { name: /^Desbloquear / }).first().waitFor()
         await page.getByRole('button', { name: /^Desbloquear / }).first().click()
         await page.getByRole('button', { name: /^Bloquear / }).first().waitFor()
         state.bootstrapError = true
-        await page.goto('http://127.0.0.1:5174/?diagnostics=1#/explore')
+        await page.goto('http://127.0.0.1:5180/?diagnostics=1#/explore')
         await page.locator('.status-banner').waitFor()
         state.bootstrapError = false; state.version = 'synthetic-v2'
         const reads = state.bootstrapReads
         await page.evaluate(() => { window.dispatchEvent(new Event('online')); document.dispatchEvent(new Event('visibilitychange')); window.dispatchEvent(new Event('online')) })
         await page.getByText(/Fuente: api.*synthetic-v2/).waitFor()
         assert(state.bootstrapReads === reads + 1, 'recovery events must share one request')
-        await page.goto('http://127.0.0.1:5174/#/admin')
+        await page.goto('http://127.0.0.1:5180/#/admin')
         await page.getByRole('button', { name: 'Ingredientes', exact: true }).click()
         await page.locator('.admin-list__item').first().click()
         await page.getByLabel('Nombre', { exact: true }).fill('Borrador protegido')
@@ -272,13 +272,13 @@ module.exports = async (page, iteration = 1, captureEvidence = false) => {
         if (captureEvidence && size.width === 1024) await page.screenshot({ path: 'C:/Dev/dieta-app/docs/evidence/ux-ipad/admin-1024.png' })
       }
       if (captureEvidence) {
-        await page.goto('http://127.0.0.1:5174/#/explore')
+        await page.goto('http://127.0.0.1:5180/#/explore')
         await page.locator('input[type=search]').fill('piña')
         await page.screenshot({ path: `C:/Dev/dieta-app/docs/evidence/ux-ipad/search-${size.width}.png` })
         if (size.width === 768) {
           await page.locator('.meal-card').first().getByRole('button', { name: /^Cocinar / }).click()
           await page.screenshot({ path: 'C:/Dev/dieta-app/docs/evidence/ux-ipad/kitchen-768.png' })
-          await page.goto('http://127.0.0.1:5174/#/week')
+          await page.goto('http://127.0.0.1:5180/#/week')
           await page.getByRole('button', { name: /^Cambiar / }).first().click()
           await page.screenshot({ path: 'C:/Dev/dieta-app/docs/evidence/ux-ipad/dialog-768.png' })
           await page.keyboard.press('Escape')

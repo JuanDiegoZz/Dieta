@@ -52,7 +52,8 @@ export function ExploreScreen({ meals, pantry, avoidRepeatDays, onAvoidRepeatDay
     window.setTimeout(() => {
       const target = resultsRef.current
       if (!target) return
-      if ('scrollBehavior' in document.documentElement.style) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      const reducedMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if ('scrollBehavior' in document.documentElement.style && !reducedMotion) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
       else target.scrollIntoView()
     }, 0)
   }

@@ -1,0 +1,2144 @@
+[
+  {
+    "width": 1024,
+    "height": 768,
+    "screen": "today",
+    "pageWidth": 1009,
+    "sidebar": {
+      "width": 104,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 103
+    },
+    "main": {
+      "width": 905,
+      "height": 1180,
+      "top": 0,
+      "bottom": 1180,
+      "scroll": 905
+    },
+    "card": {
+      "width": 270,
+      "height": 248,
+      "top": 560,
+      "bottom": 808,
+      "scroll": 268
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "screen": "explore",
+    "pageWidth": 1009,
+    "sidebar": {
+      "width": 104,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 103
+    },
+    "main": {
+      "width": 905,
+      "height": 1570,
+      "top": 0,
+      "bottom": 1570,
+      "scroll": 905
+    },
+    "card": {
+      "width": 270,
+      "height": 248,
+      "top": 418,
+      "bottom": 666,
+      "scroll": 268
+    },
+    "filter": {
+      "width": 841,
+      "height": 55,
+      "top": 282,
+      "bottom": 337,
+      "scroll": 841
+    },
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "screen": "pantry",
+    "pageWidth": 1024,
+    "sidebar": {
+      "width": 104,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 103
+    },
+    "main": {
+      "width": 920,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 920
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "screen": "favorites",
+    "pageWidth": 1009,
+    "sidebar": {
+      "width": 104,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 103
+    },
+    "main": {
+      "width": 905,
+      "height": 1480,
+      "top": 0,
+      "bottom": 1480,
+      "scroll": 905
+    },
+    "card": {
+      "width": 270,
+      "height": 292,
+      "top": 196,
+      "bottom": 488,
+      "scroll": 268
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "screen": "history",
+    "pageWidth": 1024,
+    "sidebar": {
+      "width": 104,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 103
+    },
+    "main": {
+      "width": 920,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 920
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "screen": "week",
+    "pageWidth": 1009,
+    "sidebar": {
+      "width": 104,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 103
+    },
+    "main": {
+      "width": 905,
+      "height": 875,
+      "top": 0,
+      "bottom": 875,
+      "scroll": 905
+    },
+    "card": null,
+    "filter": null,
+    "week": {
+      "width": 841,
+      "height": 499,
+      "top": 335,
+      "bottom": 835,
+      "scroll": 841
+    },
+    "day": {
+      "width": 841,
+      "height": 499,
+      "top": 335,
+      "bottom": 835,
+      "scroll": 839
+    },
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "screen": "admin",
+    "pageWidth": 1009,
+    "sidebar": {
+      "width": 104,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 103
+    },
+    "main": {
+      "width": 905,
+      "height": 5225,
+      "top": 0,
+      "bottom": 5225,
+      "scroll": 905
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "screen": "detail",
+    "pageWidth": 1009,
+    "sidebar": {
+      "width": 104,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 103
+    },
+    "main": {
+      "width": 905,
+      "height": 1137,
+      "top": 0,
+      "bottom": 1137,
+      "scroll": 905
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": {
+      "width": 473,
+      "height": 1011,
+      "top": 86,
+      "bottom": 1097,
+      "scroll": 473
+    },
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "screen": "kitchen",
+    "pageWidth": 1009,
+    "sidebar": {
+      "width": 104,
+      "height": 768,
+      "top": 0,
+      "bottom": 768,
+      "scroll": 103
+    },
+    "main": {
+      "width": 905,
+      "height": 1278,
+      "top": 0,
+      "bottom": 1278,
+      "scroll": 905
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": {
+      "width": 331,
+      "height": 58,
+      "top": 402,
+      "bottom": 460,
+      "scroll": 331
+    },
+    "components": null,
+    "kitchen": {
+      "width": 473,
+      "height": 1151,
+      "top": 87,
+      "bottom": 1238,
+      "scroll": 473
+    },
+    "bottomNav": null
+  },
+  {
+    "width": 1112,
+    "height": 834,
+    "screen": "today",
+    "pageWidth": 1097,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 993,
+      "height": 1158,
+      "top": 0,
+      "bottom": 1158,
+      "scroll": 993
+    },
+    "card": {
+      "width": 299,
+      "height": 248,
+      "top": 560,
+      "bottom": 808,
+      "scroll": 297
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1112,
+    "height": 834,
+    "screen": "explore",
+    "pageWidth": 1097,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 993,
+      "height": 1570,
+      "top": 0,
+      "bottom": 1570,
+      "scroll": 993
+    },
+    "card": {
+      "width": 299,
+      "height": 248,
+      "top": 418,
+      "bottom": 666,
+      "scroll": 297
+    },
+    "filter": {
+      "width": 929,
+      "height": 55,
+      "top": 282,
+      "bottom": 337,
+      "scroll": 929
+    },
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1112,
+    "height": 834,
+    "screen": "pantry",
+    "pageWidth": 1112,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1008,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 1008
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1112,
+    "height": 834,
+    "screen": "favorites",
+    "pageWidth": 1097,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 993,
+      "height": 1414,
+      "top": 0,
+      "bottom": 1414,
+      "scroll": 993
+    },
+    "card": {
+      "width": 299,
+      "height": 270,
+      "top": 196,
+      "bottom": 466,
+      "scroll": 297
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1112,
+    "height": 834,
+    "screen": "history",
+    "pageWidth": 1112,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1008,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 1008
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1112,
+    "height": 834,
+    "screen": "week",
+    "pageWidth": 1112,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1008,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 1008
+    },
+    "card": null,
+    "filter": null,
+    "week": {
+      "width": 944,
+      "height": 455,
+      "top": 335,
+      "bottom": 790,
+      "scroll": 944
+    },
+    "day": {
+      "width": 944,
+      "height": 455,
+      "top": 335,
+      "bottom": 790,
+      "scroll": 942
+    },
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1112,
+    "height": 834,
+    "screen": "admin",
+    "pageWidth": 1097,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 993,
+      "height": 5202,
+      "top": 0,
+      "bottom": 5202,
+      "scroll": 993
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1112,
+    "height": 834,
+    "screen": "detail",
+    "pageWidth": 1097,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 993,
+      "height": 1137,
+      "top": 0,
+      "bottom": 1137,
+      "scroll": 993
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": {
+      "width": 561,
+      "height": 1011,
+      "top": 86,
+      "bottom": 1097,
+      "scroll": 561
+    },
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1112,
+    "height": 834,
+    "screen": "kitchen",
+    "pageWidth": 1097,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 993,
+      "height": 1278,
+      "top": 0,
+      "bottom": 1278,
+      "scroll": 993
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": {
+      "width": 331,
+      "height": 58,
+      "top": 402,
+      "bottom": 460,
+      "scroll": 331
+    },
+    "components": null,
+    "kitchen": {
+      "width": 561,
+      "height": 1151,
+      "top": 87,
+      "bottom": 1238,
+      "scroll": 561
+    },
+    "bottomNav": null
+  },
+  {
+    "width": 1180,
+    "height": 820,
+    "screen": "today",
+    "pageWidth": 1165,
+    "sidebar": {
+      "width": 104,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1061,
+      "height": 1158,
+      "top": 0,
+      "bottom": 1158,
+      "scroll": 1061
+    },
+    "card": {
+      "width": 322,
+      "height": 248,
+      "top": 560,
+      "bottom": 808,
+      "scroll": 320
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1180,
+    "height": 820,
+    "screen": "explore",
+    "pageWidth": 1165,
+    "sidebar": {
+      "width": 104,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1061,
+      "height": 1570,
+      "top": 0,
+      "bottom": 1570,
+      "scroll": 1061
+    },
+    "card": {
+      "width": 322,
+      "height": 248,
+      "top": 418,
+      "bottom": 666,
+      "scroll": 320
+    },
+    "filter": {
+      "width": 997,
+      "height": 55,
+      "top": 282,
+      "bottom": 337,
+      "scroll": 997
+    },
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1180,
+    "height": 820,
+    "screen": "pantry",
+    "pageWidth": 1180,
+    "sidebar": {
+      "width": 104,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1076,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 1076
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1180,
+    "height": 820,
+    "screen": "favorites",
+    "pageWidth": 1165,
+    "sidebar": {
+      "width": 104,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1061,
+      "height": 1414,
+      "top": 0,
+      "bottom": 1414,
+      "scroll": 1061
+    },
+    "card": {
+      "width": 322,
+      "height": 270,
+      "top": 196,
+      "bottom": 466,
+      "scroll": 320
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1180,
+    "height": 820,
+    "screen": "history",
+    "pageWidth": 1180,
+    "sidebar": {
+      "width": 104,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1076,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 1076
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1180,
+    "height": 820,
+    "screen": "week",
+    "pageWidth": 1165,
+    "sidebar": {
+      "width": 104,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1061,
+      "height": 830,
+      "top": 0,
+      "bottom": 830,
+      "scroll": 1061
+    },
+    "card": null,
+    "filter": null,
+    "week": {
+      "width": 997,
+      "height": 455,
+      "top": 335,
+      "bottom": 790,
+      "scroll": 997
+    },
+    "day": {
+      "width": 997,
+      "height": 455,
+      "top": 335,
+      "bottom": 790,
+      "scroll": 995
+    },
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1180,
+    "height": 820,
+    "screen": "admin",
+    "pageWidth": 1165,
+    "sidebar": {
+      "width": 104,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1061,
+      "height": 5202,
+      "top": 0,
+      "bottom": 5202,
+      "scroll": 1061
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1180,
+    "height": 820,
+    "screen": "detail",
+    "pageWidth": 1165,
+    "sidebar": {
+      "width": 104,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1061,
+      "height": 824,
+      "top": 0,
+      "bottom": 824,
+      "scroll": 1061
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": {
+      "width": 629,
+      "height": 698,
+      "top": 86,
+      "bottom": 784,
+      "scroll": 629
+    },
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1180,
+    "height": 820,
+    "screen": "kitchen",
+    "pageWidth": 1180,
+    "sidebar": {
+      "width": 104,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1076,
+      "height": 820,
+      "top": 0,
+      "bottom": 820,
+      "scroll": 1076
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": {
+      "width": 331,
+      "height": 58,
+      "top": 402,
+      "bottom": 460,
+      "scroll": 331
+    },
+    "components": null,
+    "kitchen": {
+      "width": 644,
+      "height": 675,
+      "top": 87,
+      "bottom": 762,
+      "scroll": 644
+    },
+    "bottomNav": null
+  },
+  {
+    "width": 1194,
+    "height": 834,
+    "screen": "today",
+    "pageWidth": 1179,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1075,
+      "height": 1158,
+      "top": 0,
+      "bottom": 1158,
+      "scroll": 1075
+    },
+    "card": {
+      "width": 326,
+      "height": 248,
+      "top": 560,
+      "bottom": 808,
+      "scroll": 324
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1194,
+    "height": 834,
+    "screen": "explore",
+    "pageWidth": 1179,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1075,
+      "height": 1570,
+      "top": 0,
+      "bottom": 1570,
+      "scroll": 1075
+    },
+    "card": {
+      "width": 326,
+      "height": 248,
+      "top": 418,
+      "bottom": 666,
+      "scroll": 324
+    },
+    "filter": {
+      "width": 1011,
+      "height": 55,
+      "top": 282,
+      "bottom": 337,
+      "scroll": 1011
+    },
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1194,
+    "height": 834,
+    "screen": "pantry",
+    "pageWidth": 1194,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1090,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 1090
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1194,
+    "height": 834,
+    "screen": "favorites",
+    "pageWidth": 1179,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1075,
+      "height": 1414,
+      "top": 0,
+      "bottom": 1414,
+      "scroll": 1075
+    },
+    "card": {
+      "width": 326,
+      "height": 270,
+      "top": 196,
+      "bottom": 466,
+      "scroll": 324
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1194,
+    "height": 834,
+    "screen": "history",
+    "pageWidth": 1194,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1090,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 1090
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1194,
+    "height": 834,
+    "screen": "week",
+    "pageWidth": 1194,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1090,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 1090
+    },
+    "card": null,
+    "filter": null,
+    "week": {
+      "width": 1026,
+      "height": 455,
+      "top": 335,
+      "bottom": 790,
+      "scroll": 1026
+    },
+    "day": {
+      "width": 1026,
+      "height": 455,
+      "top": 335,
+      "bottom": 790,
+      "scroll": 1024
+    },
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1194,
+    "height": 834,
+    "screen": "admin",
+    "pageWidth": 1179,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1075,
+      "height": 5202,
+      "top": 0,
+      "bottom": 5202,
+      "scroll": 1075
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1194,
+    "height": 834,
+    "screen": "detail",
+    "pageWidth": 1194,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1090,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 1090
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": {
+      "width": 658,
+      "height": 698,
+      "top": 86,
+      "bottom": 784,
+      "scroll": 658
+    },
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1194,
+    "height": 834,
+    "screen": "kitchen",
+    "pageWidth": 1194,
+    "sidebar": {
+      "width": 104,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1090,
+      "height": 834,
+      "top": 0,
+      "bottom": 834,
+      "scroll": 1090
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": {
+      "width": 331,
+      "height": 58,
+      "top": 402,
+      "bottom": 460,
+      "scroll": 331
+    },
+    "components": null,
+    "kitchen": {
+      "width": 658,
+      "height": 675,
+      "top": 87,
+      "bottom": 762,
+      "scroll": 658
+    },
+    "bottomNav": null
+  },
+  {
+    "width": 1366,
+    "height": 1024,
+    "screen": "today",
+    "pageWidth": 1366,
+    "sidebar": {
+      "width": 104,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1262,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 1262
+    },
+    "card": {
+      "width": 288,
+      "height": 292,
+      "top": 560,
+      "bottom": 852,
+      "scroll": 286
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1366,
+    "height": 1024,
+    "screen": "explore",
+    "pageWidth": 1351,
+    "sidebar": {
+      "width": 104,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1247,
+      "height": 1306,
+      "top": 0,
+      "bottom": 1306,
+      "scroll": 1247
+    },
+    "card": {
+      "width": 284,
+      "height": 248,
+      "top": 418,
+      "bottom": 666,
+      "scroll": 282
+    },
+    "filter": {
+      "width": 1183,
+      "height": 55,
+      "top": 282,
+      "bottom": 337,
+      "scroll": 1183
+    },
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1366,
+    "height": 1024,
+    "screen": "pantry",
+    "pageWidth": 1366,
+    "sidebar": {
+      "width": 104,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1262,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 1262
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1366,
+    "height": 1024,
+    "screen": "favorites",
+    "pageWidth": 1351,
+    "sidebar": {
+      "width": 104,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1247,
+      "height": 1216,
+      "top": 0,
+      "bottom": 1216,
+      "scroll": 1247
+    },
+    "card": {
+      "width": 284,
+      "height": 292,
+      "top": 196,
+      "bottom": 488,
+      "scroll": 282
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1366,
+    "height": 1024,
+    "screen": "history",
+    "pageWidth": 1366,
+    "sidebar": {
+      "width": 104,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1262,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 1262
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1366,
+    "height": 1024,
+    "screen": "week",
+    "pageWidth": 1366,
+    "sidebar": {
+      "width": 104,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1262,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 1262
+    },
+    "card": null,
+    "filter": null,
+    "week": {
+      "width": 1198,
+      "height": 455,
+      "top": 335,
+      "bottom": 790,
+      "scroll": 1198
+    },
+    "day": {
+      "width": 1198,
+      "height": 455,
+      "top": 335,
+      "bottom": 790,
+      "scroll": 1196
+    },
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1366,
+    "height": 1024,
+    "screen": "admin",
+    "pageWidth": 1351,
+    "sidebar": {
+      "width": 104,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1247,
+      "height": 5161,
+      "top": 0,
+      "bottom": 5161,
+      "scroll": 1247
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1366,
+    "height": 1024,
+    "screen": "detail",
+    "pageWidth": 1366,
+    "sidebar": {
+      "width": 104,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1262,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 1262
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": {
+      "width": 830,
+      "height": 698,
+      "top": 86,
+      "bottom": 784,
+      "scroll": 830
+    },
+    "kitchen": null,
+    "bottomNav": null
+  },
+  {
+    "width": 1366,
+    "height": 1024,
+    "screen": "kitchen",
+    "pageWidth": 1366,
+    "sidebar": {
+      "width": 104,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 103
+    },
+    "main": {
+      "width": 1262,
+      "height": 1024,
+      "top": 0,
+      "bottom": 1024,
+      "scroll": 1262
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": {
+      "width": 331,
+      "height": 58,
+      "top": 402,
+      "bottom": 460,
+      "scroll": 331
+    },
+    "components": null,
+    "kitchen": {
+      "width": 830,
+      "height": 675,
+      "top": 87,
+      "bottom": 762,
+      "scroll": 830
+    },
+    "bottomNav": null
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "screen": "today",
+    "pageWidth": 753,
+    "sidebar": null,
+    "main": {
+      "width": 753,
+      "height": 1303,
+      "top": 0,
+      "bottom": 1303,
+      "scroll": 753
+    },
+    "card": {
+      "width": 338,
+      "height": 248,
+      "top": 584,
+      "bottom": 832,
+      "scroll": 336
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 753,
+      "height": 69,
+      "top": 955,
+      "bottom": 1024,
+      "scroll": 753
+    }
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "screen": "explore",
+    "pageWidth": 753,
+    "sidebar": null,
+    "main": {
+      "width": 753,
+      "height": 2300,
+      "top": 0,
+      "bottom": 2300,
+      "scroll": 753
+    },
+    "card": {
+      "width": 338,
+      "height": 248,
+      "top": 511,
+      "bottom": 759,
+      "scroll": 336
+    },
+    "filter": {
+      "width": 689,
+      "height": 62,
+      "top": 359,
+      "bottom": 421,
+      "scroll": 778
+    },
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 753,
+      "height": 69,
+      "top": 955,
+      "bottom": 1024,
+      "scroll": 753
+    }
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "screen": "pantry",
+    "pageWidth": 753,
+    "sidebar": null,
+    "main": {
+      "width": 753,
+      "height": 1725,
+      "top": 0,
+      "bottom": 1725,
+      "scroll": 753
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 753,
+      "height": 69,
+      "top": 955,
+      "bottom": 1024,
+      "scroll": 753
+    }
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "screen": "favorites",
+    "pageWidth": 753,
+    "sidebar": null,
+    "main": {
+      "width": 753,
+      "height": 2132,
+      "top": 0,
+      "bottom": 2132,
+      "scroll": 753
+    },
+    "card": {
+      "width": 338,
+      "height": 270,
+      "top": 277,
+      "bottom": 547,
+      "scroll": 336
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 753,
+      "height": 69,
+      "top": 955,
+      "bottom": 1024,
+      "scroll": 753
+    }
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "screen": "history",
+    "pageWidth": 768,
+    "sidebar": null,
+    "main": {
+      "width": 768,
+      "height": 475,
+      "top": 0,
+      "bottom": 475,
+      "scroll": 768
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 768,
+      "height": 69,
+      "top": 955,
+      "bottom": 1024,
+      "scroll": 768
+    }
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "screen": "week",
+    "pageWidth": 753,
+    "sidebar": null,
+    "main": {
+      "width": 753,
+      "height": 1338,
+      "top": 0,
+      "bottom": 1338,
+      "scroll": 753
+    },
+    "card": null,
+    "filter": null,
+    "week": {
+      "width": 689,
+      "height": 649,
+      "top": 526,
+      "bottom": 1174,
+      "scroll": 689
+    },
+    "day": {
+      "width": 689,
+      "height": 649,
+      "top": 526,
+      "bottom": 1174,
+      "scroll": 687
+    },
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 753,
+      "height": 69,
+      "top": 955,
+      "bottom": 1024,
+      "scroll": 753
+    }
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "screen": "admin",
+    "pageWidth": 753,
+    "sidebar": null,
+    "main": {
+      "width": 753,
+      "height": 6062,
+      "top": 0,
+      "bottom": 6062,
+      "scroll": 753
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 753,
+      "height": 69,
+      "top": 955,
+      "bottom": 1024,
+      "scroll": 753
+    }
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "screen": "detail",
+    "pageWidth": 753,
+    "sidebar": null,
+    "main": {
+      "width": 753,
+      "height": 1853,
+      "top": 0,
+      "bottom": 1853,
+      "scroll": 753
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": {
+      "width": 689,
+      "height": 1010,
+      "top": 679,
+      "bottom": 1689,
+      "scroll": 689
+    },
+    "kitchen": null,
+    "bottomNav": {
+      "width": 753,
+      "height": 69,
+      "top": 955,
+      "bottom": 1024,
+      "scroll": 753
+    }
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "screen": "kitchen",
+    "pageWidth": 753,
+    "sidebar": null,
+    "main": {
+      "width": 753,
+      "height": 1765,
+      "top": 0,
+      "bottom": 1765,
+      "scroll": 753
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": {
+      "width": 680,
+      "height": 58,
+      "top": 429,
+      "bottom": 487,
+      "scroll": 680
+    },
+    "components": null,
+    "kitchen": {
+      "width": 680,
+      "height": 1055,
+      "top": 524,
+      "bottom": 1579,
+      "scroll": 680
+    },
+    "bottomNav": {
+      "width": 753,
+      "height": 69,
+      "top": 955,
+      "bottom": 1024,
+      "scroll": 753
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "screen": "today",
+    "pageWidth": 360,
+    "sidebar": null,
+    "main": {
+      "width": 360,
+      "height": 1986,
+      "top": 0,
+      "bottom": 1986,
+      "scroll": 360
+    },
+    "card": {
+      "width": 324,
+      "height": 248,
+      "top": 733,
+      "bottom": 981,
+      "scroll": 322
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 360,
+      "height": 69,
+      "top": 743,
+      "bottom": 812,
+      "scroll": 360
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "screen": "explore",
+    "pageWidth": 360,
+    "sidebar": null,
+    "main": {
+      "width": 360,
+      "height": 3858,
+      "top": 0,
+      "bottom": 3858,
+      "scroll": 360
+    },
+    "card": {
+      "width": 324,
+      "height": 248,
+      "top": 515,
+      "bottom": 763,
+      "scroll": 322
+    },
+    "filter": {
+      "width": 324,
+      "height": 62,
+      "top": 363,
+      "bottom": 425,
+      "scroll": 778
+    },
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 360,
+      "height": 69,
+      "top": 743,
+      "bottom": 812,
+      "scroll": 360
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "screen": "pantry",
+    "pageWidth": 360,
+    "sidebar": null,
+    "main": {
+      "width": 360,
+      "height": 1717,
+      "top": 0,
+      "bottom": 1717,
+      "scroll": 360
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 360,
+      "height": 69,
+      "top": 743,
+      "bottom": 812,
+      "scroll": 360
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "screen": "favorites",
+    "pageWidth": 360,
+    "sidebar": null,
+    "main": {
+      "width": 360,
+      "height": 3690,
+      "top": 0,
+      "bottom": 3690,
+      "scroll": 360
+    },
+    "card": {
+      "width": 324,
+      "height": 270,
+      "top": 281,
+      "bottom": 551,
+      "scroll": 322
+    },
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 360,
+      "height": 69,
+      "top": 743,
+      "bottom": 812,
+      "scroll": 360
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "screen": "history",
+    "pageWidth": 375,
+    "sidebar": null,
+    "main": {
+      "width": 375,
+      "height": 542,
+      "top": 0,
+      "bottom": 542,
+      "scroll": 375
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 375,
+      "height": 69,
+      "top": 743,
+      "bottom": 812,
+      "scroll": 375
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "screen": "week",
+    "pageWidth": 360,
+    "sidebar": null,
+    "main": {
+      "width": 360,
+      "height": 1809,
+      "top": 0,
+      "bottom": 1809,
+      "scroll": 360
+    },
+    "card": null,
+    "filter": null,
+    "week": {
+      "width": 324,
+      "height": 1037,
+      "top": 620,
+      "bottom": 1657,
+      "scroll": 324
+    },
+    "day": {
+      "width": 324,
+      "height": 1037,
+      "top": 620,
+      "bottom": 1657,
+      "scroll": 322
+    },
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 360,
+      "height": 69,
+      "top": 743,
+      "bottom": 812,
+      "scroll": 360
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "screen": "admin",
+    "pageWidth": 360,
+    "sidebar": null,
+    "main": {
+      "width": 360,
+      "height": 8622,
+      "top": 0,
+      "bottom": 8622,
+      "scroll": 360
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": null,
+    "kitchen": null,
+    "bottomNav": {
+      "width": 360,
+      "height": 69,
+      "top": 743,
+      "bottom": 812,
+      "scroll": 360
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "screen": "detail",
+    "pageWidth": 360,
+    "sidebar": null,
+    "main": {
+      "width": 360,
+      "height": 2095,
+      "top": 0,
+      "bottom": 2095,
+      "scroll": 360
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": null,
+    "components": {
+      "width": 324,
+      "height": 1106,
+      "top": 836,
+      "bottom": 1943,
+      "scroll": 324
+    },
+    "kitchen": null,
+    "bottomNav": {
+      "width": 360,
+      "height": 69,
+      "top": 743,
+      "bottom": 812,
+      "scroll": 360
+    }
+  },
+  {
+    "width": 375,
+    "height": 812,
+    "screen": "kitchen",
+    "pageWidth": 360,
+    "sidebar": null,
+    "main": {
+      "width": 360,
+      "height": 1830,
+      "top": 0,
+      "bottom": 1830,
+      "scroll": 360
+    },
+    "card": null,
+    "filter": null,
+    "week": null,
+    "day": null,
+    "cookingAction": {
+      "width": 320,
+      "height": 58,
+      "top": 494,
+      "bottom": 552,
+      "scroll": 320
+    },
+    "components": null,
+    "kitchen": {
+      "width": 320,
+      "height": 1055,
+      "top": 589,
+      "bottom": 1644,
+      "scroll": 320
+    },
+    "bottomNav": {
+      "width": 360,
+      "height": 69,
+      "top": 743,
+      "bottom": 812,
+      "scroll": 360
+    }
+  }
+]

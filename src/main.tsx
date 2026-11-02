@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import { installLegacyMode } from './platform/legacy'
 import './styles/index.css'
+import './styles/landscape.css'
 
 const root = document.getElementById('root')
 
@@ -15,4 +16,3 @@ createRoot(root).render(
     <App />
   </StrictMode>,
 )
-import './styles/landscape.css'

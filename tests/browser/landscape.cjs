@@ -1,4 +1,4 @@
-/* global module, URL, document, innerWidth, innerHeight, sessionStorage, localStorage, window, getComputedStyle, EventTarget, Event */
+/* global module, URL, document, sessionStorage, localStorage, window, EventTarget, Event */
 // All data and writes are synthetic. Evaluate the exported function with the Playwright browser tool.
 module.exports = async (page, phase = 'before', checksThrough = 7) => {
   const sizes = [[1024, 768], [1112, 834], [1180, 820], [1194, 834], [1366, 1024], [768, 1024], [375, 812]]
@@ -14,13 +14,19 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
   const entries = Array.from({ length: 35 }, (_, i) => ({ id: uuid(1000 + i), plannedDate: `2026-11-${String(2 + Math.floor(i / 5)).padStart(2, '0')}`, slot: slots[i % 5], mealOptionId: meals[i % 20].id, locked: false }))
   let plan = { id: uuid(900), startDate: '2026-11-02', name: 'Semana sintética', entries }
   const history = [{ id: uuid(950), mealOptionId: meals[0].id, eatenAt: '2026-11-01T12:00:00.000Z', rating: 4, note: null }]
-  const payload = () => ({ version: 'landscape-fixture', meals, ingredients, pantry: [], history })
+  let pantry = []
+  const payload = () => ({ version: 'landscape-fixture', meals, ingredients, pantry, history })
   await page.route('**/api/**', async route => {
     const request = route.request(), path = new URL(request.url()).pathname
     const reply = (body, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) })
     if (path === '/api/bootstrap') return reply(payload())
     if (path === '/api/weekly') { if (request.method() === 'POST') plan = request.postDataJSON(); return reply(plan) }
     if (path.startsWith('/api/preferences/')) { const meal = meals.find(m => m.id === path.split('/').pop()); Object.assign(meal, request.postDataJSON()); return reply(meal) }
+    if (path.startsWith('/api/pantry/')) {
+      const ingredientId = path.split('/').pop(), current = pantry.find(i => i.ingredientId === ingredientId) ?? { ingredientId, available: false, useSoon: false }
+      Object.assign(current, request.postDataJSON()); pantry = [...pantry.filter(i => i.ingredientId !== ingredientId), current]
+      return reply(current)
+    }
     return reply({ error: 'UNEXPECTED_SYNTHETIC_REQUEST' }, 400)
   })
   await page.route('**/catalog.json', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(payload()) }))
@@ -30,6 +36,11 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
     await page.reload()
     for (const [width, height] of sizes) {
       await page.setViewportSize({ width, height })
+      // Each comparison starts from the same whole week, before any synthetic edits.
+      plan = { id: uuid(900), startDate: '2026-11-02', name: 'Semana sintética', entries: entries.map(entry => ({ ...entry })) }
+      pantry = []
+      await page.goto('http://127.0.0.1:5180/#/today')
+      await Promise.all([page.waitForResponse(response => new URL(response.url()).pathname === '/api/weekly'), page.reload()])
       for (const screen of ['today', 'explore', 'pantry', 'favorites', 'history', 'week', 'admin', 'detail', 'kitchen']) {
         await page.goto(`http://127.0.0.1:5180/#/${screen}${['detail', 'kitchen'].includes(screen) ? `?id=${uuid(1)}` : ''}`)
         await page.locator('h1:visible').first().waitFor()
@@ -39,6 +50,7 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
         if (screen === 'week') await page.locator('.week-grid').waitFor()
         if (screen === 'history') await page.locator('.history-row').waitFor()
         if (screen === 'detail') await page.locator('.component-section').first().waitFor()
+        await page.evaluate(() => window.scrollTo(0, 0))
         const metrics = await page.evaluate(() => {
           const box = selector => { const e = document.querySelector(selector); if (!e) return null; const b = e.getBoundingClientRect(); if (!b.width) return null; return { width: Math.round(b.width), height: Math.round(b.height), top: Math.round(b.top), bottom: Math.round(b.bottom), scroll: e.scrollWidth } }
           return { pageWidth: document.documentElement.scrollWidth, sidebar: box('.desktop-sidebar'), main: box('.app-main'), card: box('.meal-card'), filter: box('.filter-row'), week: box('.week-grid'), day: box('.day-column'), cookingAction: box('.kitchen-done'), components: box('.component-list'), kitchen: box('.kitchen-ingredients'), bottomNav: box('.mobile-nav') }
@@ -52,6 +64,7 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
             if (screen === 'week' && checksThrough >= 4) assert(metrics.week.scroll <= metrics.week.width + 1, 'weekly meals must fit without horizontal calendar scrolling')
             if (screen === 'kitchen' && checksThrough >= 5) assert(metrics.cookingAction.top >= 0 && metrics.cookingAction.bottom <= height, 'preparation action must be initially visible in landscape')
             if (screen === 'admin' && checksThrough >= 6) {
+              if (checksThrough >= 7) assert((await page.locator('.admin-list__item').first().boundingBox()).width >= 180, 'catalog titles must retain readable width')
               const save = await page.getByRole('button', { name: 'Guardar cambios', exact: true }).boundingBox()
               assert(save.y >= 0 && save.y + save.height <= height, 'admin save must be reachable at the start')
               await page.evaluate(() => window.scrollTo(0, 1400))
@@ -62,6 +75,21 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
           }
         }
         reports.push({ width, height, screen, ...metrics })
+        if (phase === 'after' && checksThrough >= 7 && screen === 'explore') {
+          await page.emulateMedia({ reducedMotion: 'reduce' })
+          await page.evaluate(() => { window.__scrollLog = []; window.__scrollOriginal = window.Element.prototype.scrollIntoView; window.Element.prototype.scrollIntoView = function (options) { window.__scrollLog.push(options?.behavior ?? 'auto') } })
+          try {
+            await page.getByRole('button', { name: 'Siguiente' }).click()
+            await page.waitForFunction(() => window.__scrollLog.length > 0)
+            assert(await page.evaluate(() => window.__scrollLog.every(value => value !== 'smooth')), 'pagination must respect reduced motion')
+            await page.getByRole('button', { name: 'Anterior' }).click()
+            await page.waitForFunction(() => window.__scrollLog.length >= 2)
+          } finally {
+            await page.evaluate(() => { window.Element.prototype.scrollIntoView = window.__scrollOriginal; delete window.__scrollOriginal; delete window.__scrollLog })
+            await page.emulateMedia({ reducedMotion: 'no-preference' })
+          }
+        }
+        await page.evaluate(() => window.scrollTo(0, 0))
         if (['explore', 'week', 'detail', 'kitchen', 'admin'].includes(screen)) await page.screenshot({ path: `C:/Dev/dieta-app/docs/evidence/landscape/${phase}/${screen}-${width}.png` })
         if (phase === 'after' && checksThrough >= 4 && screen === 'week') {
           assert(await page.locator('.week-days button').count() === 7, 'all seven dates must remain available')
@@ -77,15 +105,39 @@ module.exports = async (page, phase = 'before', checksThrough = 7) => {
           await page.setViewportSize({ width: 768, height: 1024 })
           assert(await page.locator('.week-days button').nth(3).getAttribute('aria-pressed') === 'true', 'rotation must preserve selected day')
           await page.setViewportSize({ width, height })
+          await page.locator('.week-entry__title').first().click()
+          await page.getByRole('button', { name: 'Volver', exact: true }).click()
+          await page.waitForURL('**/#/week')
+          assert(await page.locator('.week-days button').nth(3).getAttribute('aria-pressed') === 'true', 'returning from a meal must preserve the selected day')
           await page.locator('.week-days button').nth(3).focus(); await page.keyboard.press('End')
           assert(await page.locator('.week-days button').nth(6).getAttribute('aria-pressed') === 'true', 'End must select final day')
           await page.keyboard.press('Home')
           assert(await page.locator('.week-days button').first().getAttribute('aria-pressed') === 'true', 'Home must select first day')
+          await page.getByRole('button', { name: /^Cambiar Desayuno / }).click()
+          const alternative = page.locator('.change-option:not(.is-selected)').first()
+          const chosenTitle = await alternative.locator('strong').innerText()
+          await alternative.click()
+          await page.waitForFunction(title => document.querySelector('.week-entry__title')?.textContent === title, chosenTitle)
           await page.getByRole('button', { name: /^Limpiar Comida / }).click()
           await page.locator('.week-entry').nth(2).locator('.week-entry__empty').waitFor()
           await page.locator('.week-entry').nth(2).locator('.week-entry__empty').click()
           await page.getByRole('button', { name: /^Cambiar Comida / }).waitFor()
           assert(plan.entries.length === 35, 'editing a selected day must retain the entire week')
+          await page.getByRole('button', { name: 'Lista del súper', exact: true }).click()
+          const shoppingCount = await page.locator('.shopping-row').count()
+          const purchasedName = await page.locator('.shopping-row strong').first().innerText()
+          const affectedRows = await page.locator('.shopping-row').filter({ has: page.getByText(purchasedName, { exact: true }) }).count()
+          await page.getByRole('button', { name: /^Marcar comprado:/ }).first().click()
+          await page.getByRole('button', { name: /^Quitar de comprados:/ }).first().waitFor()
+          await page.getByLabel('Ocultar lo que ya tengo').check()
+          assert(await page.locator('.shopping-row').count() === shoppingCount - affectedRows, 'shopping filter must use the entire week and respect pantry')
+          await page.getByLabel('Ocultar lo que ya tengo').uncheck()
+          await page.getByRole('button', { name: /^Quitar de comprados:/ }).first().click()
+          await page.getByRole('button', { name: 'Mi semana', exact: true }).click()
+          if (width === 1024) {
+            const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Exportar semana', exact: true }).click()])
+            assert(/^mi-semana\.(png|svg)$/.test(download.suggestedFilename()), 'export must still produce the full weekly image')
+          }
         }
       }
       await page.goto('http://127.0.0.1:5180/#/week')

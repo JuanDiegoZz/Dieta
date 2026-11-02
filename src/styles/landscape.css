@@ -113,3 +113,13 @@
   .week-actions .button { font-size: 14px; padding: 0 12px; white-space: nowrap; }
   .editor-save { position: -webkit-sticky; position: sticky; top: 12px; z-index: 4; margin: 18px 0; padding: 12px; justify-content: space-between; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow-sm); }
 }
+
+@media (min-width: 1000px) and (orientation: landscape) {
+  .admin-list__item-wrap { display: block; }
+  .admin-list__item-wrap .admin-list__item { width: 100%; }
+  .admin-list__actions { width: 100%; flex-direction: row; justify-content: flex-start; }
+  .admin-list__toggle { flex: 1; padding: 0 8px; font-size: 12px; }
+  .admin-list-panel .admin-filter-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+  .admin-list-panel .admin-filter-row .filter-chip { min-width: 0; margin: 0; padding: 0 4px; }
+  .admin-list { max-height: none; overflow: visible; }
+}

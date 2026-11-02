@@ -56,3 +56,20 @@ No hubo desbordamiento horizontal de página en las medidas iniciales; los probl
 - Modal sigue visualViewport (resize/scroll) cuando existe y usa innerHeight/resize como fallback. Encabezado/cierre y confirmación quedan accesibles en altura reducida. Listeners se limpian al cerrar.
 - Se corrigió un margen negativo que producía scroll horizontal interno en el resumen del detalle y un ajuste de pocos píxeles que partía el toolbar semanal.
 - Doce pruebas pertinentes y typecheck aprobados; diff revisado. Navegador aprobó siete tamaños, contención del foco, 1024×380 y visualViewport simulado de 280/240 px con offset. No se afirma teclado físico.
+
+## Fase 7 — Interacción y regresión
+
+- Se detectó y corrigió scrollIntoView suave explícito que ignoraba prefers-reduced-motion. Prueba de navegador roja antes y verde después.
+- Detalle ya no presenta disponibilidad cero con tono de éxito. No se cambió el cálculo de disponibilidad.
+- La suite funcional anterior se amplió de cuatro a ocho tamaños (incluye todos los solicitados y desktop 1366×900). Pasó guardado confirmado/idempotente, red/503, navegación, historial, favoritos, despensa, semana, borradores, modales y recuperación.
+- Auditoría horizontal nueva: las nueve pantallas, menús y diálogos; sin overflow de página; siete días y cinco franjas; rotación, teclado, guardado sticky, altura 380 px, visualViewport simulado y paginación con movimiento reducido.
+- 116 pruebas unitarias/integración en 26 archivos. Se corrigieron tres declaraciones globales de prueba sobrantes detectadas por lint. Después pasaron lint, typecheck, build legacy y diff --check.
+
+## Cierre de regresión
+
+- Pasada final contra build compilado con vite preview: runner horizontal completo y runner funcional previo ampliado a ocho tamaños aprobados. 116 pruebas, lint, typecheck, build y diff --check aprobados.
+- Se validaron también selección de alternativas, compras/filtro y descarga de la imagen semanal. Todas las API fueron simuladas.
+- Las capturas finales vuelven explícitamente a scroll cero y cada resolución comienza con la misma semana sintética para mantener comparaciones válidas.
+- Revisión visual final: catálogo largo requirió acciones debajo del nombre; se comprobó ancho legible mínimo de 180 px y un solo scroll interno.
+- Incidencia de entorno: watcher Windows EBUSY al observar descarga del test. Se repitieron suites contra preview compilado sin watcher, sin fallo.
+- Informe completo, evidencias antes/después y guía física/Preview: docs/landscape-review.md. Safari físico pendiente.
