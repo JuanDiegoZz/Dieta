@@ -29,3 +29,9 @@ No hubo desbordamiento horizontal de página en las medidas iniciales; los probl
 - Detalle y cocina: contexto/acciones a la izquierda e ingredientes a la derecha cuando hay ancho; columna única en vertical/móvil.
 - Formularios: tipografía de 16 px, acciones accesibles y modales ajustados a altura visible con fallback legacy.
 - Tras cada fase: diff, pruebas pertinentes y comprobación visual/funcional. Regresión general al cierre con la suite previa de 115 pruebas y ambos runners de navegador.
+
+## Fases 2–3 — Navegación y densidad
+
+- Rail fijo de 104 px con siete destinos desde 1000 px en horizontal; desaparecen barra inferior y Más solo en ese contexto. Vertical/móvil conservan su navegación.
+- Tarjetas auto-fit con mínimo 260 px; márgenes verticales moderados, franjas y filtros que envuelven sin recortar controles. Despensa en dos columnas y catálogo administrativo con contexto persistente. Campos editables a 16 px.
+- 23 pruebas pertinentes y typecheck aprobados; diff revisado. Auditoría de las nueve pantallas y modales en los siete tamaños aprobó navegación, ancho mínimo de tarjetas y ausencia de overflow de página. Las comprobaciones estructurales de Semana/cocina permanecen rojas hasta fases 4–5.

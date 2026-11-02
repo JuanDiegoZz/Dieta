@@ -1,0 +1,51 @@
+/* Horizontal tablet is the primary layout. Keep portrait/mobile rules in index.css. */
+@media (min-width: 1000px) and (orientation: landscape) {
+  .app-shell { display: block; }
+  .desktop-sidebar {
+    position: fixed; top: 0; bottom: 0; left: 0; z-index: 15;
+    width: 104px; width: calc(104px + env(safe-area-inset-left));
+    min-height: 0; padding: 18px 7px; padding-left: calc(7px + env(safe-area-inset-left));
+    display: flex; flex-direction: column; overflow-y: auto; background: #fbfaf7; border-right: 1px solid var(--line);
+  }
+  .brand-lockup { flex-direction: column; justify-content: center; font-size: 14px; }
+  .brand-lockup .brand-mark { margin: 0 0 7px; }
+  .sidebar-caption, .sidebar-footer, .nav-item__dot { display: none; }
+  .sidebar-nav { margin-top: 24px; }
+  .nav-item { width: 100%; min-height: 64px; padding: 8px 3px; flex-direction: column; justify-content: center; font-size: 12px; text-align: center; }
+  .nav-item svg { margin: 0 0 5px; }
+  .nav-item:hover, .nav-item.is-active:hover { transform: none; }
+  .app-main {
+    margin-left: 104px; margin-left: calc(104px + env(safe-area-inset-left));
+    min-height: 100vh; padding: 0; padding-right: env(safe-area-inset-right);
+  }
+  .mobile-nav, .mobile-more { display: none; }
+  .page { max-width: 1280px; padding: 26px 32px 40px; }
+  .page-header { margin-bottom: 20px; }
+  .page-header h1, .detail-header h1 { font-size: 36px; }
+  .card-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .meal-card { min-height: 238px; }
+  .toolbar-row { display: block; margin-bottom: 20px; }
+  .toolbar-row .search-field { margin: 12px 0 0; }
+  .meal-tabs { flex-wrap: wrap; overflow: visible; }
+  .meal-tab { margin-bottom: 5px; }
+  .filter-row { flex-wrap: wrap; overflow: visible; align-items: center; margin: 12px 0 20px; }
+  .filter-chip { margin-bottom: 8px; }
+  .repeat-setting { flex: 0 0 auto; white-space: nowrap; margin-bottom: 8px; }
+  .repeat-setting select { min-width: 74px; }
+  .pantry-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+  .pantry-row, .pantry-row__name { min-width: 0; }
+  .pantry-row__name strong { overflow-wrap: break-word; }
+  .pantry-row__actions { flex-shrink: 0; }
+  .admin-layout { grid-template-columns: minmax(200px, 240px) minmax(0, 1fr); gap: 20px; }
+  .admin-resource-layout { grid-template-columns: minmax(200px, 240px) minmax(0, 1fr); gap: 20px; }
+  .admin-list-panel { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; }
+  .admin-list { max-height: calc(100vh - 380px); min-height: 140px; }
+  .data-source-indicator { right: 12px; left: auto; pointer-events: none; }
+}
+
+.form-field input, .form-field select, .form-field textarea,
+.ingredient-editor input, .ingredient-editor select, .component-editor__title input { font-size: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop-sidebar, .nav-item { transition: none; }
+}

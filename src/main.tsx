@@ -15,3 +15,4 @@ createRoot(root).render(
     <App />
   </StrictMode>,
 )
+import './styles/landscape.css'

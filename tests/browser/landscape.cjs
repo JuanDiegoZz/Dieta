@@ -1,6 +1,6 @@
 /* global module, URL, document, innerWidth, innerHeight, sessionStorage, localStorage, window, getComputedStyle */
 // All data and writes are synthetic. Evaluate the exported function with the Playwright browser tool.
-module.exports = async (page, phase = 'before') => {
+module.exports = async (page, phase = 'before', checksThrough = 7) => {
   const sizes = [[1024, 768], [1112, 834], [1180, 820], [1194, 834], [1366, 1024], [768, 1024], [375, 812]]
   const uuid = n => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`
   const assert = (value, message) => { if (!value) throw Error(message) }
@@ -49,8 +49,8 @@ module.exports = async (page, phase = 'before') => {
             assert(metrics.sidebar.width <= 120, `navigation consumes too much width at ${width}`)
             assert(metrics.bottomNav.height === 0, 'landscape must not reserve a bottom navigation')
             if (metrics.card) assert(metrics.card.width >= 250, `cards compressed at ${width}`)
-            if (screen === 'week') assert(metrics.week.scroll <= metrics.week.width + 1, 'weekly meals must fit without horizontal calendar scrolling')
-            if (screen === 'kitchen') assert(metrics.cookingAction.top >= 0 && metrics.cookingAction.bottom <= height, 'preparation action must be initially visible in landscape')
+            if (screen === 'week' && checksThrough >= 4) assert(metrics.week.scroll <= metrics.week.width + 1, 'weekly meals must fit without horizontal calendar scrolling')
+            if (screen === 'kitchen' && checksThrough >= 5) assert(metrics.cookingAction.top >= 0 && metrics.cookingAction.bottom <= height, 'preparation action must be initially visible in landscape')
           }
         }
         reports.push({ width, height, screen, ...metrics })
